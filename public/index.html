@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Comgrid</title>
+
+<!--     update the version number as needed -->
+<!--    <script defer src="/__/firebase/9.6.4/firebase-app-compat.js"></script>-->
+<!--    &lt;!&ndash; include only the Firebase features as you need &ndash;&gt;-->
+<!--    <script defer src="/__/firebase/9.6.4/firebase-auth-compat.js"></script>-->
+<!--    <script defer src="/__/firebase/9.6.4/firebase-database-compat.js"></script>-->
+<!--    <script defer src="/__/firebase/9.6.4/firebase-firestore-compat.js"></script>-->
+<!--    <script defer src="/__/firebase/9.6.4/firebase-functions-compat.js"></script>-->
+<!--    <script defer src="/__/firebase/9.6.4/firebase-messaging-compat.js"></script>-->
+<!--    <script defer src="/__/firebase/9.6.4/firebase-storage-compat.js"></script>-->
+<!--    <script defer src="/__/firebase/9.6.4/firebase-analytics-compat.js"></script>-->
+<!--    <script defer src="/__/firebase/9.6.4/firebase-remote-config-compat.js"></script>-->
+<!--    <script defer src="/__/firebase/9.6.4/firebase-performance-compat.js"></script>-->
+    <!-- 
+      initialize the SDK after all desired features are loaded, set useEmulator to false
+      to avoid connecting the SDK to running emulators.
+    -->
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+          integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand navbar-light bg-light justify-content-between">
+        <div class="navbar-nav mx-2">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-table"></i>
+                Comgrid
+            </a>
+            <div class="navbar-elem ml-3">
+                <a id="home" class="nav-link active" href="#">Чаты</a>
+            </div>
+        </div>
+
+        <div class="navbar-nav">
+            <div class="clickable navbar-elem mx-3">
+                <a class="nav-link text-dark" type="button" data-toggle="modal" data-target="#modal-register">
+                    Sign up
+                </a>
+            </div>
+            <div class="clickable navbar-elem mx-3">
+                <a class="nav-link text-dark" type="button" data-toggle="modal" data-target="#modal-login">
+                    Sign in
+                </a>
+            </div>
+            <div class="clickable navbar-elem mx-3 d-none">
+                <a class="nav-link text-dark" type="button" data-toggle="modal" data-target="#modal-login">
+                    Sign out
+                </a>
+            </div>
+        </div>
+
+    </nav>
+
+
+</header>
+<main>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<script src="bootstrap/jQuery.js"></script>
+<script src="bootstrap/bootstrap.min.js"></script>
+<script>
+    $(window).on('load', () => {
+        $('.clickable').on('click', () => { $('.clickable').toggleClass('d-none') });
+    })
+</script>
+</body>
+</html>
