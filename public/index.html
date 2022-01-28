@@ -5,29 +5,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Comgrid</title>
 
-<!--     update the version number as needed -->
-<!--    <script defer src="/__/firebase/9.6.4/firebase-app-compat.js"></script>-->
-<!--    &lt;!&ndash; include only the Firebase features as you need &ndash;&gt;-->
-<!--    <script defer src="/__/firebase/9.6.4/firebase-auth-compat.js"></script>-->
-<!--    <script defer src="/__/firebase/9.6.4/firebase-database-compat.js"></script>-->
-<!--    <script defer src="/__/firebase/9.6.4/firebase-firestore-compat.js"></script>-->
-<!--    <script defer src="/__/firebase/9.6.4/firebase-functions-compat.js"></script>-->
-<!--    <script defer src="/__/firebase/9.6.4/firebase-messaging-compat.js"></script>-->
-<!--    <script defer src="/__/firebase/9.6.4/firebase-storage-compat.js"></script>-->
-<!--    <script defer src="/__/firebase/9.6.4/firebase-analytics-compat.js"></script>-->
-<!--    <script defer src="/__/firebase/9.6.4/firebase-remote-config-compat.js"></script>-->
-<!--    <script defer src="/__/firebase/9.6.4/firebase-performance-compat.js"></script>-->
+    <!--     update the version number as needed -->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-app-compat.js"></script>-->
+    <!--    &lt;!&ndash; include only the Firebase features as you need &ndash;&gt;-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-auth-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-database-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-firestore-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-functions-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-messaging-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-storage-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-analytics-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-remote-config-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-performance-compat.js"></script>-->
     <!-- 
       initialize the SDK after all desired features are loaded, set useEmulator to false
       to avoid connecting the SDK to running emulators.
     -->
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
           integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 
 </head>
 <body>
+<div class="chat card container bg-light d-none mt-lg-1 mt-2" role="button">
+    <div class="card-body row p-2 media align-items-center">
+        <div class="col-lg-1 p-1 m-n1">
+            <img class="img-fluid rounded-circle">
+        </div>
+        <div class="col-lg-7">
+            <h5 class="card-title chat-name text-truncate w-100"></h5>
+            <div class="text-truncate">
+                <span class="text-secondary chat-sender"></span>
+                <span class="chat-text"></span>
+            </div>
+        </div>
+        <div class="col-lg align-self-end text-truncate">
+            <small>size: <span class="chat-size"></span></small>
+        </div>
+        <div class="col-lg-2 text-right align-self-start ">
+            <div><small class="chat-time"></small></div>
+            <div class="badge badge-dark mt-2 chat-unread"></div>
+        </div>
+    </div>
+</div>
+
+<form id="create-table-form">
+    <div id="create-table-menu" class="modal" role="dialog" tabindex="-1" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content bg-light border-0">
+                <div class="modal-header bg-dark text-light">
+                    <h5 class="modal-title">Создаём таблицу, ура</h5>
+                    <button id="close-button" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="text-light">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body container">
+                    <div class="form-row row">
+                        <div class="form-group col-md-6 col-12">
+                            <label for="table-name-input">Название</label>
+                            <input id="table-name-input" type="text" class="form-control" placeholder="Беседа для тупых"
+                                   required/>
+                        </div>
+                        <div class="form-group col-md-3 col-6">
+                            <label for="table-width-input">Ширина</label>
+                            <input id="table-width-input" type="number" class="form-control" placeholder="100"
+                                   required/>
+                        </div>
+                        <div class="form-group col-md-3 col-6">
+                            <label for="table-height-input">Высота</label>
+                            <input id="table-height-input" type="number" class="form-control" placeholder="100"
+                                   required/>
+                        </div>
+                        <div class="form-group col-md-12 col-12">
+                            <label for="table-image-input">Ссылка на картинку</label>
+                            <input id="table-image-input" type="text" class="form-control"
+                                   placeholder="https://image.png" required/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer text-right p-1">
+                    <button type="submit" class="btn btn-dark mr-1">Создать</button>
+                    <button id="clear-button" type="reset" class="d-none"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
 <header>
     <nav class="navbar navbar-expand navbar-light bg-light justify-content-between">
         <div class="navbar-nav mx-2">
@@ -41,8 +108,8 @@
         </div>
 
         <div class="navbar-nav">
-            <div class="clickable navbar-elem mx-3">
-                <a class="nav-link text-dark" type="button" data-toggle="modal" data-target="#modal-register">
+            <div class="navbar-elem mx-3">
+                <a class="nav-link text-dark" href="game/index.html">
                     Sign up
                 </a>
             </div>
@@ -63,22 +130,150 @@
 
 </header>
 <main>
-    <div class="container">
-        <div class="card">
-            <div class="card-body">
-
+    <div class="container w-75 h-100 chat-container my-w-lg-50">
+        <div class="no-deletable card container bg-dark text-light mt-2">
+            <div class="card-body row p-2 align-items-center">
+                <div class="ml-1 pl-0 col">Мои чаты</div>
+                <div class="col text-right">
+                    <button class="btn btn-sm btn-light" data-toggle="modal" data-target="#create-table-menu">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </main>
+<footer class="bg-light text-center">
+    <small>Comgrid</small>
+</footer>
 
 
 <script src="bootstrap/jQuery.js"></script>
 <script src="bootstrap/bootstrap.min.js"></script>
 <script>
+    let store = {
+        dialogs: [
+            {
+                id: 0,
+                title: 'Виталя и компания',
+                lastSender: 'Виталя',
+                lastMessage: 'Привет, приходи пить кровь',
+                time: 'вчера',
+                messagesCount: 51,
+                imagePath: 'https://yt3.ggpht.com/a/AGF-l79vS6OfB-bTB6uu7s0OUn_JMKF83CFCORKG4w=s900-c-k-c0xffffffff-no-rj-mo',
+                width: 100,
+                height: 120
+            },
+            {
+                id: 1,
+                title: 'Беседа не для глупых',
+                lastSender: 'КтоТо НеГлупый',
+                lastMessage: 'Сколько будет 2+2?',
+                time: 'вчера',
+                messagesCount: 17,
+                imagePath: 'https://catnames.ru/sites/default/files/inline/images/gre_1_0.jpg',
+                width: 10,
+                height: 112
+            },
+            {
+                id: 2,
+                title: 'Беседа только для глупых',
+                lastSender: 'Самый Глупый',
+                lastMessage: 'Ребята, я только что доказал гипотезу Римана! Короче, там всё просто!',
+                time: '11:30',
+                messagesCount: 0,
+                imagePath: 'https://knigamir.com/upload/iblock/5c2/5c262cb3f924676f4a660a016e7acc86.jpg',
+                width: 20,
+                height: 40
+            },
+            {
+                id: 3,
+                title: 'Беседа с очень длинным названием. Ребята, я не представляю кому в голову пришло давать такое длинное название. Ребята, предлагаю ограничить длину названий',
+                lastSender: 'Виталя',
+                lastMessage: 'Привет, глянь лс',
+                time: '14:15',
+                messagesCount: 0,
+                imagePath: 'https://i01.fotocdn.net/s112/cb2f567bcb16e1c2/public_pin_l/2532724205.jpg',
+                width: 1000,
+                height: 1000
+            },
+            {
+                id: 4,
+                title: 'Виталя Трубоед',
+                lastSender: '',
+                lastMessage: 'Давно читал беседу?',
+                time: '19:51',
+                messagesCount: 4,
+                imagePath: 'https://im0-tub-ru.yandex.net/i?id=2230c274f7ef25b04f47e97469276467-l&n=13',
+                width: 1000,
+                height: 500
+            }
+        ]
+    }
     $(window).on('load', () => {
-        $('.clickable').on('click', () => { $('.clickable').toggleClass('d-none') });
+        $('.clickable').on('click', () => {
+            $('.clickable').toggleClass('d-none')
+        });
+        drawDialogs();
+        $('#create-table-form').on('submit', submit)
     })
+
+    function drawDialogs() {
+        let $container = $('.chat-container');
+        let $noDel = $('.no-deletable');
+        $container.html('');
+        $container.append($noDel);
+        store.dialogs.slice().reverse().forEach((dialog, index) => {
+            let $chat = $('.chat').clone();
+            $chat.removeClass('chat d-none');
+            $chat.find('.chat-name').text(dialog.title);
+            $chat.find('.chat-sender').text(dialog.lastSender + (dialog.lastSender === '' ? '' : ':'));
+            $chat.find('.chat-text').text(dialog.lastMessage);
+            $chat.find('.chat-time').text(dialog.time);
+            $chat.find('img').attr('src', dialog.imagePath);
+            $chat.find('.chat-size').text(dialog.width + '×' + dialog.height)
+            dialog.messagesCount === 0
+                ? $chat.find('.chat-unread').remove()
+                : $chat.find('.chat-unread').text(dialog.messagesCount);
+            $container.append($chat);
+            $chat.on('mouseenter', () => {
+                $chat.removeClass('bg-light')
+            });
+            $chat.on('mouseleave', () => {
+                $chat.addClass('bg-light')
+            });
+            $chat.on('click', () => {
+                dialog.messagesCount = Math.floor(Math.random() * 2) * Math.floor(Math.random() * 100);
+                drawDialogs();
+            })
+        });
+    }
+
+    function submit() {
+        store.dialogs.push({
+            id: store.dialogs.length,
+            title: $('#table-name-input').val(),
+            lastSender: '',
+            lastMessage: 'Будьте первым, кто ткнёт в ячейку!',
+            time: 'сейчас',
+            messagesCount: 0,
+            imagePath: $('#table-image-input').val(),
+            width: $('#table-width-input').val(),
+            height: $('#table-height-input').val()
+        });
+        clearMenu();
+        closeMenu();
+        drawDialogs();
+        return false;
+    }
+
+    function clearMenu() {
+        $('#clear-button').click();
+    }
+
+    function closeMenu() {
+        $('#close-button').click();
+    }
 </script>
 </body>
 </html>
