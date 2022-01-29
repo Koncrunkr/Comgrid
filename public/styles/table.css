@@ -1,0 +1,49 @@
+.comgrid-row {
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    min-height: 32px;
+    max-height: 32px;
+}
+
+.comgrid-cell {
+    min-width: 32px;
+    max-width: 32px;
+    z-index: 1;
+    border-color: rgba(10, 10, 10, 25);
+}
+
+.comgrid-cell > span {
+    z-index: 5;
+    width: fit-content;
+    height: fit-content
+}
+
+main {
+    width: 98vw;
+    max-height: 83vh;
+    display: flex;
+    flex: 1 0;
+    flex-direction: column;
+}
+
+.scrolling-element {
+    overflow: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: gray white;
+}
+
+.scrolling-element::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+
+.scrolling-element::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrolling-element::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 5px;
+    border: 3px solid gray;
+}

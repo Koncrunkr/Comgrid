@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Мы тут едим червей</title>
+
+    <!--     update the version number as needed -->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-app-compat.js"></script>-->
+    <!--    &lt;!&ndash; include only the Firebase features as you need &ndash;&gt;-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-auth-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-database-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-firestore-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-functions-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-messaging-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-storage-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-analytics-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-remote-config-compat.js"></script>-->
+    <!--    <script defer src="/__/firebase/9.6.4/firebase-performance-compat.js"></script>-->
+    <!--
+      initialize the SDK after all desired features are loaded, set useEmulator to false
+      to avoid connecting the SDK to running emulators.
+    -->
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/table.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+          integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+</head>
+<body class="bg-light">
+
+<header>
+    <nav class="navbar navbar-expand navbar-light bg-light justify-content-between">
+        <div class="navbar-nav mx-2">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-table"></i>
+                Comgrid
+            </a>
+            <div class="navbar-elem ml-3">
+                <a id="home" class="nav-link" href="../index.html">Чаты</a>
+            </div>
+        </div>
+
+        <div class="navbar-nav">
+            <div class="navbar-elem mx-3">
+                <a class="nav-link text-dark" href="../game/index.html">
+                    Sign up
+                </a>
+            </div>
+            <div class="clickable navbar-elem mx-3">
+                <a class="nav-link text-dark" type="button" data-toggle="modal" data-target="#modal-login">
+                    Sign in
+                </a>
+            </div>
+            <div class="clickable navbar-elem mx-3 d-none">
+                <a class="nav-link text-dark" type="button" data-toggle="modal" data-target="#modal-login">
+                    Sign out
+                </a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+<main class="mt-3 mx-3 overflow-auto scrolling-element">
+
+</main>
+<footer class="bg-light text-center">
+    <small>Comgrid</small>
+</footer>
+
+
+<script src="../bootstrap/jQuery.js"></script>
+<script src="../bootstrap/bootstrap.min.js"></script>
+<script>
+    let store = {
+        height: 50,
+        width: 50
+    }
+
+    $(window).on('load', () => {
+        $('body').on('mouseup', onBodyMouseup);
+        drawCells();
+    });
+
+    let wereClick;
+    let clicked = [];
+
+    function drawCells() {
+        let $container = $('main');
+        for (let i = 0; i < store.width; i++) {
+            let $row = $('<div class="comgrid-row"></div>');
+            for (let j = 0; j < store.height; j++) {
+                $row.append($createCell(i, j));
+            }
+            $container.append($row);
+        }
+    }
+
+    function $createCell(i, j){
+        let $cell = $(`<div id="${i + '-' + j}" class="comgrid-cell border text-dark"></div>`);
+        $cell.on('mouseenter', () => onCellMouseenter($cell, i, j))
+        $cell.on('mouseleave', () => onCellMouseleave($cell));
+        $cell.on('mousedown', () => onCellMousedown(i, j));
+        $cell.on('dragstart', onCellDragstart);
+        $cell.append($createSpan(i, j));
+        return $cell;
+    }
+
+    function $createSpan(i, j){
+        let $span = $('<span class="text-nowrap text-dark no-show-focus"></span>');
+        $span.keydown((event) => onSpanKeydown(event, i, j));
+        $span.attr('contenteditable', true);
+        return $span;
+    }
+
+    function onCellMouseenter($cell, i, j){
+        $cell.addClass('bg-dark');
+        if(wereClick) clicked.push(i, j);
+    }
+
+    function onCellMouseleave($cell){
+        if (!wereClick) {
+            $cell.removeClass('bg-dark');
+        }
+    }
+
+    function onSpanKeydown(event, i, j){
+        if(event.key === 'ArrowLeft')  $(`#${i}-${j-1}`).children().focus();
+        if(event.key === 'ArrowUp')  $(`#${i-1}-${j}`).children().focus();
+        if(event.key === 'ArrowDown')  $(`#${i+1}-${j}`).children().focus();
+        if(event.key === 'ArrowRight')  $(`#${i}-${j+1}`).children().focus();
+    }
+
+    function onCellMousedown(i, j){
+        wereClick = true;
+        clicked.push(i, j);
+    }
+
+    function onCellDragstart(){
+        return false;
+    }
+
+    function onBodyMouseup(){
+        wereClick = false;
+        while (clicked.length !== 0){
+            let jj = clicked.pop();
+            let ii = clicked.pop();
+            let $willBeCleared = $(`#${ii}-${jj}`)
+            $willBeCleared.mouseleave();
+            $willBeCleared.children().text('');
+        }
+    }
+</script>
+</body>
+</html>

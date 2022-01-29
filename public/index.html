@@ -30,25 +30,27 @@
 </head>
 <body>
 <div class="chat card container bg-light d-none mt-lg-1 mt-2" role="button">
-    <div class="card-body row p-2 media align-items-center">
-        <div class="col-lg-1 p-1 m-n1">
-            <img class="img-fluid rounded-circle">
-        </div>
-        <div class="col-lg-7">
-            <h5 class="card-title chat-name text-truncate w-100"></h5>
-            <div class="text-truncate">
-                <span class="text-secondary chat-sender"></span>
-                <span class="chat-text"></span>
+    <a href="pages/table.html" class="text-dark text-decoration-none">
+        <div class="card-body row p-2 media align-items-center">
+            <div class="col-lg-1 p-1 m-n1">
+                <img class="img-fluid rounded-circle">
+            </div>
+            <div class="col-lg-7">
+                <h5 class="card-title chat-name text-truncate w-100"></h5>
+                <div class="text-truncate">
+                    <span class="text-secondary chat-sender"></span>
+                    <span class="chat-text"></span>
+                </div>
+            </div>
+            <div class="col-lg align-self-end text-truncate">
+                <small>size: <span class="chat-size"></span></small>
+            </div>
+            <div class="col-lg-2 text-right align-self-start ">
+                <div><small class="chat-time"></small></div>
+                <div class="badge badge-dark mt-2 chat-unread"></div>
             </div>
         </div>
-        <div class="col-lg align-self-end text-truncate">
-            <small>size: <span class="chat-size"></span></small>
-        </div>
-        <div class="col-lg-2 text-right align-self-start ">
-            <div><small class="chat-time"></small></div>
-            <div class="badge badge-dark mt-2 chat-unread"></div>
-        </div>
-    </div>
+    </a>
 </div>
 
 <form id="create-table-form">
