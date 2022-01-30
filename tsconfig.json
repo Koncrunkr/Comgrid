@@ -1,0 +1,28 @@
+{
+  "allowSyntheticDefaultImports": true,
+  "compileOnSave": true,
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "target": "es5",
+    "jsx": "react",
+    "lib": [
+      "dom",
+      "es5",
+      "scripthost",
+      "es2015.promise",
+      "es2015.iterable",
+      "es2015.collection",
+      "ES2017.String"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "bin",
+    "obj"
+  ]
+}

@@ -11,6 +11,7 @@
     max-width: 32px;
     z-index: 1;
     border-color: rgba(10, 10, 10, 25);
+    cursor: context-menu;
 }
 
 .comgrid-cell > span {

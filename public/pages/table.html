@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+    <link rel="icon" type="image/png" href="../favicon.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Мы тут едим червей</title>
@@ -34,7 +35,7 @@
 <header>
     <nav class="navbar navbar-expand navbar-light bg-light justify-content-between">
         <div class="navbar-nav mx-2">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="../index.html">
                 <i class="fas fa-table"></i>
                 Comgrid
             </a>
@@ -74,85 +75,6 @@
 
 <script src="../bootstrap/jQuery.js"></script>
 <script src="../bootstrap/bootstrap.min.js"></script>
-<script>
-    let store = {
-        height: 50,
-        width: 50
-    }
-
-    $(window).on('load', () => {
-        $('body').on('mouseup', onBodyMouseup);
-        drawCells();
-    });
-
-    let wereClick;
-    let clicked = [];
-
-    function drawCells() {
-        let $container = $('main');
-        for (let i = 0; i < store.width; i++) {
-            let $row = $('<div class="comgrid-row"></div>');
-            for (let j = 0; j < store.height; j++) {
-                $row.append($createCell(i, j));
-            }
-            $container.append($row);
-        }
-    }
-
-    function $createCell(i, j){
-        let $cell = $(`<div id="${i + '-' + j}" class="comgrid-cell border text-dark"></div>`);
-        $cell.on('mouseenter', () => onCellMouseenter($cell, i, j))
-        $cell.on('mouseleave', () => onCellMouseleave($cell));
-        $cell.on('mousedown', () => onCellMousedown(i, j));
-        $cell.on('dragstart', onCellDragstart);
-        $cell.append($createSpan(i, j));
-        return $cell;
-    }
-
-    function $createSpan(i, j){
-        let $span = $('<span class="text-nowrap text-dark no-show-focus"></span>');
-        $span.keydown((event) => onSpanKeydown(event, i, j));
-        $span.attr('contenteditable', true);
-        return $span;
-    }
-
-    function onCellMouseenter($cell, i, j){
-        $cell.addClass('bg-dark');
-        if(wereClick) clicked.push(i, j);
-    }
-
-    function onCellMouseleave($cell){
-        if (!wereClick) {
-            $cell.removeClass('bg-dark');
-        }
-    }
-
-    function onSpanKeydown(event, i, j){
-        if(event.key === 'ArrowLeft')  $(`#${i}-${j-1}`).children().focus();
-        if(event.key === 'ArrowUp')  $(`#${i-1}-${j}`).children().focus();
-        if(event.key === 'ArrowDown')  $(`#${i+1}-${j}`).children().focus();
-        if(event.key === 'ArrowRight')  $(`#${i}-${j+1}`).children().focus();
-    }
-
-    function onCellMousedown(i, j){
-        wereClick = true;
-        clicked.push(i, j);
-    }
-
-    function onCellDragstart(){
-        return false;
-    }
-
-    function onBodyMouseup(){
-        wereClick = false;
-        while (clicked.length !== 0){
-            let jj = clicked.pop();
-            let ii = clicked.pop();
-            let $willBeCleared = $(`#${ii}-${jj}`)
-            $willBeCleared.mouseleave();
-            $willBeCleared.children().text('');
-        }
-    }
-</script>
+<script src="../scripts/TablePage.js"></script>
 </body>
 </html>
