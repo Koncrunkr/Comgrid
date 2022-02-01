@@ -10,6 +10,7 @@ export class Cell {
     private drawer: CellDrawer;
     private _friends: Cell[];
     private _blocked: boolean;
+    private _selected: boolean;
 
     constructor(
         public readonly x: number,
@@ -96,11 +97,15 @@ export class Cell {
     }
 
     public select(): void {
+        if(this._selected) return;
+        this._selected = true;
         this.table.selectedCells.push(this);
         this.drawer.select();
     }
 
     public selectNone(): void {
+        if(!this._selected) return;
+        this._selected = false;
         this.drawer.selectNone();
     }
 

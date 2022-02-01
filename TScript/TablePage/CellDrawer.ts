@@ -25,7 +25,7 @@ export class CellDrawer {
         $span.className = 'text-nowrap no-show-focus';
         $span.onkeydown = (event) => this.keeper.onKeydown(event);
         $span.onblur = () => this.keeper.onBlur($span.textContent);
-        //$span.oninput = (event) => this.keeper.onInput(event);
+        $span.oninput = (event) => this.keeper.onInput(event);
         $span.contentEditable = 'true';
         return $span;
     }

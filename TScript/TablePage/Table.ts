@@ -16,7 +16,7 @@ export class Table {
         this.fillTable();
         let $body = $('body');
         $body.on('mouseup', () => this.onBodyMouseup());
-        //$body.on('keydown', (event) => this.onBodyKeydown(event));
+        $body.on('keydown', (event) => this.onBodyKeydown(event));
     }
 
     private fillTable(): void {
@@ -69,9 +69,9 @@ export class Table {
             case ActionType.write:
                 this.undoWrite(action[1], action[2]);
                 return;
-            case ActionType.delete:
-                this.undoDelete(action[1], action[2], action[3]);
-                return;
+            // case ActionType.delete:
+            //     this.undoDelete(action[1], action[2], action[3]);
+            //     return;
             case ActionType.writeWithSpace:
                 this.undoWrite(action[1], action[2]);
                 return;

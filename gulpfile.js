@@ -20,3 +20,17 @@ gulp.task("table-page", function () {
     .pipe(source('tablePage.js'))
     .pipe(gulp.dest("public/scripts/"));
 });
+
+gulp.task("test-page", function () {
+    return browserify({
+        basedir: '.',
+        debug: true,
+        entries: ['TScript/TablePage/RealtimeRequests.ts'],
+        cache: {},
+        packageCache: {}
+    })
+        .plugin(tsify)
+        .bundle()
+        .pipe(source('testPage.js'))
+        .pipe(gulp.dest("public/scripts/"));
+});
