@@ -8,18 +8,26 @@ export class Table {
     public mod: TableMod;
     public readonly selectedCells: Cell[] = [];
     private actions: Action[] = [];
+    public readonly width: number;
+    public readonly height: number;
 
-    constructor(
-        public readonly width: number,
-        public readonly height: number
-    ) {
-        this.fillTable();
+    constructor(store) {
+        this.width = store.width;
+        this.height = store.height;
+        this.fillTable(store.cellsUnions, store.decorations, store.messages);
         let $body = $('body');
         $body.on('mouseup', () => this.onBodyMouseup());
         $body.on('keydown', (event) => this.onBodyKeydown(event));
     }
 
-    private fillTable(): void {
+    private fillTable(cellsUnions, decorations, messages): void {
+        this.fillStartTable();
+        this.union(cellsUnions);
+        this.decorate(decorations);
+        this.addMessages(messages);
+    }
+
+    private fillStartTable(): void {
         this.cells.length = 0;
         for (let i = 0; i < this.height; i++) {
             this.cells.push([]);
@@ -32,8 +40,37 @@ export class Table {
         }
     }
 
+    private union(cellsUnions): void {
+        cellsUnions.forEach(union => this.createUnion(union));
+    }
+
+    private createUnion(cellsUnion): void {
+        for (let i = cellsUnion.leftUpX; i <= cellsUnion.rightDownX; i++)
+            for (let j = cellsUnion.leftUpY; j <= cellsUnion.rightDownY; j++)
+                this.getCell(i, j).selectWithFriends(true);
+        this.selectDown();
+    }
+
+    private decorate(decorations): void {
+        decorations.forEach(decoration => this.decorateOne(decoration));
+    }
+
+    private decorateOne(decoration): void {
+        for (let i = decoration.leftUpX; i <= decoration.rightDownX; i++)
+            for (let j = decoration.leftUpY; j <= decoration.rightDownY; j++)
+                this.getCell(i, j).addDecor(decoration.cssText);
+    }
+
+    private addMessages(messages): void {
+        messages.forEach(message => this.getCell(message.x, message.y).addMessage(message.text));
+    }
+
     private onBodyMouseup(): void {
         this.mod = TableMod.none;
+        this.selectDown();
+    }
+
+    private selectDown(): void {
         let clone = this.selectedCells.map(elem => elem);
         while (this.selectedCells.length > 0) {
             let cell = this.selectedCells.pop();

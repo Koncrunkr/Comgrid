@@ -26,13 +26,14 @@
     -->
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/common-style.css">
     <link rel="preconnect" href="https://use.fontawesome.com">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
           integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 
 </head>
 <body>
+<!--Will be used for cloning-->
 <div class="chat card container bg-light d-none mt-lg-1 mt-2" role="button">
     <a href="pages/table.html" class="text-dark text-decoration-none">
         <div class="card-body row p-2 media align-items-center">
@@ -136,7 +137,8 @@
 
 </header>
 <main>
-    <div class="container w-75 h-100 chat-container my-w-lg-50">
+<!--    Container with chats-->
+    <div class="container w-75 h-100 my-w-lg-50">
         <div class="no-deletable card container bg-dark text-light mt-2">
             <div class="card-body row p-2 align-items-center">
                 <div class="ml-1 pl-0 col">Мои чаты</div>
@@ -146,6 +148,9 @@
                     </button>
                 </div>
             </div>
+        </div>
+        <div class="chat-container scrolling-element">
+
         </div>
     </div>
 </main>
@@ -216,6 +221,39 @@
                 imagePath: 'https://im0-tub-ru.yandex.net/i?id=2230c274f7ef25b04f47e97469276467-l&n=13',
                 width: 1000,
                 height: 500
+            },
+            {
+                id: 4,
+                title: 'Виталя Трубоед',
+                lastSender: '',
+                lastMessage: 'Давно читал беседу?',
+                time: '19:51',
+                messagesCount: 4,
+                imagePath: 'https://im0-tub-ru.yandex.net/i?id=2230c274f7ef25b04f47e97469276467-l&n=13',
+                width: 1000,
+                height: 500
+            },
+            {
+                id: 4,
+                title: 'Виталя Трубоед',
+                lastSender: '',
+                lastMessage: 'Давно читал беседу?',
+                time: '19:51',
+                messagesCount: 4,
+                imagePath: 'https://im0-tub-ru.yandex.net/i?id=2230c274f7ef25b04f47e97469276467-l&n=13',
+                width: 1000,
+                height: 500
+            },
+            {
+                id: 4,
+                title: 'Виталя Трубоед',
+                lastSender: '',
+                lastMessage: 'Давно читал беседу?',
+                time: '19:51',
+                messagesCount: 4,
+                imagePath: 'https://im0-tub-ru.yandex.net/i?id=2230c274f7ef25b04f47e97469276467-l&n=13',
+                width: 1000,
+                height: 500
             }
         ]
     }
@@ -229,10 +267,10 @@
 
     function drawDialogs() {
         let $container = $('.chat-container');
-        let $noDel = $('.no-deletable');
+        let $noDel = $container.find('.no-deletable');
         $container.html('');
         $container.append($noDel);
-        store.dialogs.slice().reverse().forEach((dialog, index) => {
+        store.dialogs.slice().reverse().forEach((dialog) => {
             let $chat = $('.chat').clone();
             $chat.removeClass('chat d-none');
             $chat.find('.chat-name').text(dialog.title);

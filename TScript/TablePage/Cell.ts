@@ -128,4 +128,12 @@ export class Cell {
     public undoDelete(text: string): void {
         this.drawer.undoDelete(text);
     }
+
+    public addDecor(cssString): void {
+        this.drawer.addDecor(cssString);
+    }
+
+    public addMessage(text): void {
+        this.drawer.addMessage(text);
+    }
 }
