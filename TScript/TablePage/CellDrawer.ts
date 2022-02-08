@@ -1,7 +1,6 @@
 import {Cell} from "./Cell";
 import {store} from "./TablePage";
 import {Direction} from "./Direction";
-import {event} from "jquery";
 
 export class CellDrawer {
     private $cell: HTMLElement;
@@ -120,5 +119,13 @@ export class CellDrawer {
 
     public undoDelete(text): void {
         this.$span.textContent += text;
+    }
+
+    public addDecor(cssString): void {
+        this.$cell.setAttribute("style", cssString);
+    }
+
+    public addMessage(text): void {
+        this.$span.textContent = text;
     }
 }
