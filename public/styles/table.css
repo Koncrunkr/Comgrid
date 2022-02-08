@@ -15,9 +15,12 @@
 }
 
 .comgrid-cell > span {
-    z-index: 5;
+    position: relative;
+    z-index: 9999;
+    min-height: 32px;
+    min-width: 25px;
     width: fit-content;
-    height: fit-content
+    background-color: inherit;
 }
 
 main {
