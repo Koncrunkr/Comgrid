@@ -11,7 +11,7 @@ gulp.task("table-page", function () {
     return browserify({
         basedir: '.',
         debug: true,
-        entries: ['TScript/TablePage/TablePage.ts'],
+        entries: ['TScript/TablePage/Main/TablePage.ts'],
         cache: {},
         packageCache: {}
     })

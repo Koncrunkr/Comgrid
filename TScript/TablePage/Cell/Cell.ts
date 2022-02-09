@@ -1,8 +1,8 @@
 import {CellDrawer} from "./CellDrawer";
-import {Table} from "./Table";
-import {TableMod} from "./TableMod";
-import {Direction} from "./Direction";
-import {ActionType} from "./Action";
+import {Table} from "../Main/Table";
+import {TableMod} from "../Main/TableMod";
+import {Direction} from "../Utilities/Direction";
+import {ActionType} from "../Utilities/Action";
 
 type onTrigger = (event?: any) => void | boolean
 
@@ -68,6 +68,13 @@ export class Cell {
                 else this.table.pushAction([ActionType.write, this.x, this.y]);
             else if(event.inputType[0] === 'd')
                 this.table.pushAction([ActionType.delete, this.x, this.y, event.dataTransfer.getData('text/html')]);
+        }
+    }
+
+    public get onContextmenu(): onTrigger {
+        return () => {
+            this.table.showPopover(this.x, this.y);
+            return false;
         }
     }
 

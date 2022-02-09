@@ -30,3 +30,7 @@ main {
     flex: 1 0;
     flex-direction: column;
 }
+
+#popover {
+    z-index: 10;
+}

@@ -1,6 +1,6 @@
 import {Cell} from "./Cell";
-import {store} from "./TablePage";
-import {Direction} from "./Direction";
+import {store} from "../Main/TablePage";
+import {Direction} from "../Utilities/Direction";
 
 export class CellDrawer {
     private $cell: HTMLElement;
@@ -35,6 +35,7 @@ export class CellDrawer {
         $cell.onmouseenter = () => this.keeper.onMouseenter();
         $cell.onmousedown = () => this.keeper.onMousedown();
         $cell.ondragstart = () => false;
+        $cell.oncontextmenu = () => this.keeper.onContextmenu();
         $cell.append($span);
         return $cell;
     }

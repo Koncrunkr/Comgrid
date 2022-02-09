@@ -1,6 +1,6 @@
-import {Cell} from "./Cell";
+import {Cell} from "../Cell/Cell";
 import {TableMod} from "./TableMod";
-import {Action, ActionType} from "./Action";
+import {Action, ActionType} from "../Utilities/Action";
 
 export class Table {
     private $tableContainer = $('main');
@@ -10,6 +10,7 @@ export class Table {
     private actions: Action[] = [];
     public readonly width: number;
     public readonly height: number;
+    private _$popover = $('#popover');
 
     constructor(store) {
         this.width = store.width;
@@ -68,6 +69,7 @@ export class Table {
     private onBodyMouseup(): void {
         this.mod = TableMod.none;
         this.selectDown();
+        this.hidePopover();
     }
 
     private selectDown(): void {
@@ -121,5 +123,14 @@ export class Table {
 
     private undoDelete(x: number, y: number, text: string) {
         this.getCell(x, y).undoDelete(text);
+    }
+
+    public showPopover(x: number, y: number){
+        this._$popover.removeClass('d-none');
+        this._$popover.attr('style', `left: ${y*32 + 16}px; top: ${x*32 + 16}px;`);
+    }
+
+    public hidePopover(){
+        this._$popover.addClass('d-none');
     }
 }
