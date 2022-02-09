@@ -129,4 +129,16 @@ export class CellDrawer {
     public addMessage(text): void {
         this.$span.textContent = text;
     }
+
+    public getCssStyle(): string {
+        return this.$cell.getAttribute('style');
+    }
+
+    public get screenX(): number {
+        return this.$cell.getBoundingClientRect().x;
+    }
+
+    public get screenY(): number {
+        return this.$cell.getBoundingClientRect().y;
+    }
 }

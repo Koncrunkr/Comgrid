@@ -3,6 +3,7 @@ import {Table} from "../Main/Table";
 import {TableMod} from "../Main/TableMod";
 import {Direction} from "../Utilities/Direction";
 import {ActionType} from "../Utilities/Action";
+import {css} from "jquery";
 
 type onTrigger = (event?: any) => void | boolean
 
@@ -73,7 +74,7 @@ export class Cell {
 
     public get onContextmenu(): onTrigger {
         return () => {
-            this.table.showPopover(this.x, this.y);
+            this.table.showPopover(this.x, this.y, this);
             return false;
         }
     }
@@ -140,7 +141,26 @@ export class Cell {
         this.drawer.addDecor(cssString);
     }
 
+    public addDecorWithFriends(cssString): void {
+        if (this._friends == null || this._friends.length === 0)
+            this.addDecor(cssString);
+        else
+            this._friends.forEach((friend) => friend.addDecor(cssString));
+    }
+
     public addMessage(text): void {
         this.drawer.addMessage(text);
+    }
+
+    public getCssStyle(): string {
+        return this.drawer.getCssStyle();
+    }
+
+    public get screenX(): number {
+        return this.drawer.screenX;
+    }
+
+    public get screenY(): number {
+        return this.drawer.screenY;
     }
 }

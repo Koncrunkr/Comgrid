@@ -19,6 +19,11 @@ export class Table {
         let $body = $('body');
         $body.on('mouseup', () => this.onBodyMouseup());
         $body.on('keydown', (event) => this.onBodyKeydown(event));
+        this._$popover.on('mouseup', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        });
     }
 
     private fillTable(cellsUnions, decorations, messages): void {
@@ -74,10 +79,12 @@ export class Table {
 
     private selectDown(): void {
         let clone = this.selectedCells.map(elem => elem);
+        let style = clone[0].getCssStyle();
         while (this.selectedCells.length > 0) {
             let cell = this.selectedCells.pop();
             cell.setFriends(clone);
             cell.selectNone();
+            cell.addDecor(style);
         }
     }
 
@@ -125,9 +132,20 @@ export class Table {
         this.getCell(x, y).undoDelete(text);
     }
 
-    public showPopover(x: number, y: number){
+    public showPopover(x: number, y: number, cell: Cell){
         this._$popover.removeClass('d-none');
-        this._$popover.attr('style', `left: ${y*32 + 16}px; top: ${x*32 + 16}px;`);
+        this._$popover.attr('style', `left: ${cell.screenX + 16}px; top: ${cell.screenY + 16}px;`);
+        this._$popover.find('#coords').text(`${x}, ${y}`);
+        let $input = this._$popover.find('#cssStyleInput');
+        $input.val(cell.getCssStyle());
+        $input.off('change');
+        $input.on('change', () => cell.addDecorWithFriends($input.val()));
+        let $button = this._$popover.find('#editTextButton');
+        $button.off('click');
+        $button.on('click', () => {
+            cell.focus();
+            this.hidePopover();
+        });
     }
 
     public hidePopover(){
