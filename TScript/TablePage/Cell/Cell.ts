@@ -163,4 +163,14 @@ export class Cell {
     public get screenY(): number {
         return this.drawer.screenY;
     }
+
+    public separate(): void {
+        this.setFriends([this]);
+    }
+
+    public separateWithFriends(): void {
+        if (this._friends == null) return;
+        let clone = this._friends;
+        clone.forEach((elem) => elem.separate());
+    }
 }

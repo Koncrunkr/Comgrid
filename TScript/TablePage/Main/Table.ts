@@ -12,10 +12,10 @@ export class Table {
     public readonly height: number;
     private _$popover = $('#popover');
 
-    constructor(store) {
-        this.width = store.width;
-        this.height = store.height;
-        this.fillTable(store.cellsUnions, store.decorations, store.messages);
+    constructor(private _store) {
+        this.width = _store.width;
+        this.height = _store.height;
+        this.fillTable(_store.cellsUnions, _store.decorations, _store.messages);
         let $body = $('body');
         $body.on('mouseup', () => this.onBodyMouseup());
         $body.on('keydown', (event) => this.onBodyKeydown(event));
@@ -136,16 +136,26 @@ export class Table {
         this._$popover.removeClass('d-none');
         this._$popover.attr('style', `left: ${cell.screenX + 16}px; top: ${cell.screenY + 16}px;`);
         this._$popover.find('#coords').text(`${x}, ${y}`);
+
         let $input = this._$popover.find('#cssStyleInput');
         $input.val(cell.getCssStyle());
         $input.off('change');
         $input.on('change', () => cell.addDecorWithFriends($input.val()));
-        let $button = this._$popover.find('#editTextButton');
-        $button.off('click');
-        $button.on('click', () => {
+
+        let $button1 = this._$popover.find('#editTextButton');
+        $button1.off('click');
+        $button1.on('click', () => {
             cell.focus();
             this.hidePopover();
         });
+
+        let $button2 = this._$popover.find('#divideButton');
+        $button2.off('click');
+        $button2.on('click', () => {
+            cell.separateWithFriends();
+            cell.focus();
+            this.hidePopover();
+        })
     }
 
     public hidePopover(){
