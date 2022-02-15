@@ -24,14 +24,14 @@ export let store = {
             leftUpY: 14,
             rightDownX: 17,
             rightDownY: 17,
-            cssText: "background-color: blue !important; color: yellow !important; border-color: red !important;"
+            cssText: "background-color: blue; color: yellow !important; border-color: red !important;"
         },
         {
             leftUpX: 31,
             leftUpY: 41,
             rightDownX: 31,
             rightDownY: 41,
-            cssText: "background-color: rgb(204,11,11) !important; color: green !important; border-color: blue !important;"
+            cssText: "background-color: rgb(204,11,11); color: green !important; border-color: blue !important;"
         }
     ],
     messages: [

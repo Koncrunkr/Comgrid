@@ -15,7 +15,7 @@
 
 .comgrid-cell > span {
     position: relative;
-    z-index: 9999;
+    z-index: 1;
     min-height: 32px;
     min-width: 25px;
     width: fit-content;

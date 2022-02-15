@@ -155,7 +155,7 @@ export class Table {
             cell.separateWithFriends();
             cell.focus();
             this.hidePopover();
-        })
+        });
     }
 
     public hidePopover(){

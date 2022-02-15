@@ -164,8 +164,16 @@ export class Cell {
         return this.drawer.screenY;
     }
 
-    public separate(): void {
+    private separate(): void {
         this.setFriends([this]);
+    }
+
+    public separateWithoutFriends(): void {
+        if (this._friends != null){
+            let index = this._friends.indexOf(this);
+            this._friends.splice(index, index);
+        }
+        this.separate();
     }
 
     public separateWithFriends(): void {
