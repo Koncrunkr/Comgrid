@@ -8,23 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Comgrid</title>
 
-    <!--     update the version number as needed -->
-    <!--    <script defer src="/__/firebase/9.6.4/firebase-app-compat.js"></script>-->
-    <!--    &lt;!&ndash; include only the Firebase features as you need &ndash;&gt;-->
-    <!--    <script defer src="/__/firebase/9.6.4/firebase-auth-compat.js"></script>-->
-    <!--    <script defer src="/__/firebase/9.6.4/firebase-database-compat.js"></script>-->
-    <!--    <script defer src="/__/firebase/9.6.4/firebase-firestore-compat.js"></script>-->
-    <!--    <script defer src="/__/firebase/9.6.4/firebase-functions-compat.js"></script>-->
-    <!--    <script defer src="/__/firebase/9.6.4/firebase-messaging-compat.js"></script>-->
-    <!--    <script defer src="/__/firebase/9.6.4/firebase-storage-compat.js"></script>-->
-    <!--    <script defer src="/__/firebase/9.6.4/firebase-analytics-compat.js"></script>-->
-    <!--    <script defer src="/__/firebase/9.6.4/firebase-remote-config-compat.js"></script>-->
-    <!--    <script defer src="/__/firebase/9.6.4/firebase-performance-compat.js"></script>-->
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="styles/common-style.css">
     <link rel="preconnect" href="https://use.fontawesome.com">
@@ -160,70 +143,89 @@
 <script src="bootstrap/bootstrap.min.js"></script>
 <script>
     let store = {
-        dialogs: [
+        dialogs2: [
             {
                 id: 0,
-                title: 'Виталя и компания',
+                name: 'Виталя и компания',
                 lastSender: 'Виталя',
                 lastMessage: 'Привет, приходи пить кровь',
                 time: 'вчера',
                 messagesCount: 51,
-                imagePath: './pictures/1.png',
+                avatar: './pictures/1.png',
                 width: 100,
                 height: 120
             },
             {
                 id: 1,
-                title: 'Беседа не для глупых',
+                name: 'Беседа не для глупых',
                 lastSender: 'КтоТо НеГлупый',
                 lastMessage: 'Сколько будет 2+2?',
                 time: 'вчера',
                 messagesCount: 17,
-                imagePath: './pictures/2.png',
+                avatar: './pictures/2.png',
                 width: 10,
                 height: 112
             },
             {
                 id: 2,
-                title: 'Беседа только для глупых',
+                name: 'Беседа только для глупых',
                 lastSender: 'Самый Глупый',
                 lastMessage: 'Ребята, я только что доказал гипотезу Римана! Короче, там всё просто!',
                 time: '11:30',
                 messagesCount: 0,
-                imagePath: './pictures/3.png',
+                avatar: './pictures/3.png',
                 width: 20,
                 height: 40
             },
             {
                 id: 3,
-                title: 'Беседа с очень длинным названием. Ребята, я не представляю кому в голову пришло давать такое длинное название. Ребята, предлагаю ограничить длину названий',
+                name: 'Беседа с очень длинным названием. Ребята, я не представляю кому в голову пришло давать такое длинное название. Ребята, предлагаю ограничить длину названий',
                 lastSender: 'Виталя',
                 lastMessage: 'Привет, глянь лс',
                 time: '14:15',
                 messagesCount: 0,
-                imagePath: './pictures/4.png',
+                avatar: './pictures/4.png',
                 width: 1000,
                 height: 1000
             },
             {
                 id: 4,
-                title: 'Виталя Трубоед',
+                name: 'Виталя Трубоед',
                 lastSender: '',
                 lastMessage: 'Давно читал беседу?',
                 time: '19:51',
                 messagesCount: 4,
-                imagePath: './pictures/5.png',
+                avatar: './pictures/5.png',
                 width: 1000,
                 height: 500
             }
         ]
     }
+    let link = "https://comgrid.ru:8443";
+    let something;
+
     $(window).on('load', () => {
+        fetch(
+            link + "/user/info?includeChats=true",
+            {
+                method: "GET",
+                headers: {"Content-Type": "application/json"}
+            }
+        ).then((result) =>
+            result.text()
+        ).then((html) => {
+            something = JSON.parse(html);
+            store.dialogs = something.chats;
+            console.log(something);
+        }).then(() =>
+            drawDialogs()
+        );
+
         $('.clickable').on('click', () => {
             $('.clickable').toggleClass('d-none')
         });
-        drawDialogs();
-        $('#create-table-form').on('submit', submit)
+
+        $('#create-table-form').on('submit', submit);
     })
 
     function drawDialogs() {
@@ -231,18 +233,19 @@
         let $noDel = $container.find('.no-deletable');
         $container.html('');
         $container.append($noDel);
-        store.dialogs.slice().reverse().forEach((dialog) => {
+        store.dialogs.slice().reverse().forEach((dialog, index) => {
+            let dialog2 = store.dialogs2[index];
             let $chat = $('.chat').clone();
             $chat.removeClass('chat d-none');
-            $chat.find('.chat-name').text(dialog.title);
-            $chat.find('.chat-sender').text(dialog.lastSender + (dialog.lastSender === '' ? '' : ':'));
-            $chat.find('.chat-text').text(dialog.lastMessage);
-            $chat.find('.chat-time').text(dialog.time);
-            $chat.find('img').attr('src', dialog.imagePath);
+            $chat.find('.chat-name').text(dialog.name);
+            $chat.find('.chat-sender').text(dialog2.lastSender + (dialog2.lastSender === '' ? '' : ':'));
+            $chat.find('.chat-text').text(dialog2.lastMessage);
+            $chat.find('.chat-time').text(dialog2.time);
+            $chat.find('img').attr('src', dialog.avatar);
             $chat.find('.chat-size').text(dialog.width + '×' + dialog.height)
-            dialog.messagesCount === 0
+            dialog2.messagesCount === 0
                 ? $chat.find('.chat-unread').remove()
-                : $chat.find('.chat-unread').text(dialog.messagesCount);
+                : $chat.find('.chat-unread').text(dialog2.messagesCount);
             $container.append($chat);
             $chat.on('mouseenter', () => {
                 $chat.removeClass('bg-light')
@@ -251,21 +254,21 @@
                 $chat.addClass('bg-light')
             });
             $chat.on('click', () => {
-                dialog.messagesCount = Math.floor(Math.random() * 2) * Math.floor(Math.random() * 100);
+                dialog.messagesCount = 0;
                 drawDialogs();
-            })
+            });
         });
     }
 
     function submit() {
         store.dialogs.push({
             id: store.dialogs.length,
-            title: $('#table-name-input').val(),
+            name: $('#table-name-input').val(),
             lastSender: '',
             lastMessage: 'Будьте первым, кто ткнёт в ячейку!',
             time: 'сейчас',
             messagesCount: 0,
-            imagePath: $('#table-image-input').val(),
+            avatar: $('#table-image-input').val(),
             width: $('#table-width-input').val(),
             height: $('#table-height-input').val()
         });
