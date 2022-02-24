@@ -202,33 +202,18 @@
         ]
     }
     let link = "https://comgrid.ru:8443";
-    let something;
 
     $(window).on('load', () => {
-        fetch(
-            link + "/user/info?includeChats=true",
-            {
-                mode: "no-cors",
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            }
-        ).then((result) =>
-            result.text()
-        ).then((html) => {
-            something = JSON.parse(html);
-            store.dialogs = something.chats;
-            console.log(something);
-        }).then(() =>
-            drawDialogs()
-        );
+        checkAuthorization(() => {
+            loadStore(() => {
+                $('#create-table-form').on('submit', submit);
+                drawDialogs()
 
-        $('.clickable').on('click', () => {
-            $('.clickable').toggleClass('d-none')
+                $('.clickable').on('click', () => {
+                    $('.clickable').toggleClass('d-none')
+                });
+            });
         });
-
-        $('#create-table-form').on('submit', submit);
     })
 
     function drawDialogs() {
@@ -240,6 +225,7 @@
             let dialog2 = store.dialogs2[index];
             let $chat = $('.chat').clone();
             $chat.removeClass('chat d-none');
+            $chat.find('a').attr('href', 'pages/table.html?id=' + dialog.id);
             $chat.find('.chat-name').text(dialog.name);
             $chat.find('.chat-sender').text(dialog2.lastSender + (dialog2.lastSender === '' ? '' : ':'));
             $chat.find('.chat-text').text(dialog2.lastMessage);
@@ -264,21 +250,39 @@
     }
 
     function submit() {
-        store.dialogs.push({
-            id: store.dialogs.length,
+        let newTable = {
             name: $('#table-name-input').val(),
-            lastSender: '',
-            lastMessage: 'Будьте первым, кто ткнёт в ячейку!',
-            time: 'сейчас',
-            messagesCount: 0,
-            avatar: $('#table-image-input').val(),
             width: $('#table-width-input').val(),
-            height: $('#table-height-input').val()
-        });
+            height: $('#table-height-input').val(),
+            avatar: $('#table-image-input').val()
+        };
+        if(newTable.width * newTable.height > 2500){
+            alert("Размер таблицы не может превышать 2500 ячеек");
+            return false;
+        }
+        postTable(newTable);
         clearMenu();
         closeMenu();
-        drawDialogs();
         return false;
+    }
+
+    function postTable(table) {
+        return fetch(
+            link + "/table/create",
+            {
+                credentials: "include",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(table)
+            }
+        ).then((response) =>
+            response.text().then(text => {
+                console.log(text);
+                loadStore().then(() => drawDialogs());
+            })
+        )
     }
 
     function clearMenu() {
@@ -287,6 +291,45 @@
 
     function closeMenu() {
         $('#close-button').click();
+    }
+
+    function loadStore(invokeAfterSuccess) {
+        return fetch(
+            link + "/user/info?includeChats=true",
+            {
+                credentials: "include",
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        ).then((response) => {
+            if(response.status === 200){
+                response.text().then((json) => {
+                    store.dialogs = JSON.parse(json).chats;
+                    invokeAfterSuccess()
+                })
+            }else{
+                response.text().then(text => console.log(response.status + ", " + text));
+            }
+        });
+    }
+
+    function checkAuthorization(invokeAfterSuccess) {
+        return fetch(
+            link + "/user/login",
+            {
+                credentials: "include",
+                method: "GET",
+                headers: {"Content-Type": "application/json"}
+            }
+        ).then((response) =>{
+            if(response.status === 200){
+                invokeAfterSuccess()
+            }else{
+                window.location.href = link + "/oauth2/authorization/google"
+            }
+        });
     }
 </script>
 </body>

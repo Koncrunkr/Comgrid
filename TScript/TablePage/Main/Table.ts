@@ -19,6 +19,7 @@ export class Table {
         let $body = $('body');
         $body.on('mouseup', () => this.onBodyMouseup());
         $body.on('keydown', (event) => this.onBodyKeydown(event));
+        $('#page-name').text(_store.name);
         this._$popover.on('mouseup', (event) => {
             event.preventDefault();
             event.stopPropagation();
