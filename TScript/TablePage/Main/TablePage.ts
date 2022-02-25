@@ -60,15 +60,40 @@ export let store = {
     noSelectedClasses: ['text-dark']
 }
 
-$(window).on('load', async () => {
-    await getTableInfo();
-    await getTableMessages();
-    store.cellsUnions = cellsUnions;
-    table = new Table(store);
+$(window).on('load', () => {
+    checkAuthorization(() => {
+            Promise.all([getTableInfo(), getTableMessages()]).then(() =>{
+                store.cellsUnions = cellsUnions;
+                table = new Table(store);
+            })
+        }
+    )
 });
 
+function checkAuthorization(invokeAfterSuccess: () => unknown) {
+    return fetch(
+        link + "/user/login",
+        {
+            credentials: "include",
+            method: "GET",
+            headers: {"Content-Type": "application/json"}
+        }
+    ).then((response) =>{
+        if(response.status === 200){
+            invokeAfterSuccess()
+        }else{
+            window.location.href = link + "/oauth2/authorization/google"
+        }
+    });
+}
+
+function getParam(name: string): string{
+    const urlParams = new URLSearchParams(window.location.search)
+    return urlParams.get(name)
+}
+
 function getTableInfo() {
-    let id = window.location.href.match(/id=.*/)[0].slice(3);
+    const id = getParam("id")
     return fetch(
         link + "/table/info?chatId=" + id,
         {
@@ -76,15 +101,20 @@ function getTableInfo() {
             method: "GET",
             headers: {"Content-Type": "application/json"}
         }
-    ).then((result) =>
-        result.text()
-    ).then((html) =>
-        store = JSON.parse(html)
-    );
+    ).then((result) =>{
+        result.text().then((text) => {
+            if(result.status == 200){
+                store = JSON.parse(text)
+            }else{
+                console.log(result.status + ", " + text)
+                alert("Error occurred: see console for more details")
+            }
+        })
+    });
 }
 
 function getTableMessages() {
-    let id = window.location.href.match(/id=.*/)[0].slice(3);
+    const id = getParam("id")
     return fetch(
         link + "/table/messages",
         {
@@ -100,8 +130,13 @@ function getTableMessages() {
             })
         }
     ).then((result) =>
-        result.text()
-    ).then((html) =>
-        store.messages = JSON.parse(html)
+        result.text().then((text) => {
+            if(result.status == 200){
+                store.messages = JSON.parse(text)
+            }else{
+                console.log(result.status + ", " + text)
+                alert("Error occurred: see console for more details")
+            }
+        })
     );
 }
