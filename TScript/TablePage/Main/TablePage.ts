@@ -62,10 +62,14 @@ export let store = {
 
 $(window).on('load', () => {
     checkAuthorization(() => {
-            Promise.all([getTableInfo(), getTableMessages()]).then(() =>{
-                store.cellsUnions = cellsUnions;
-                table = new Table(store);
-            })
+            getTableInfo(
+                () => getTableMessages(
+                    () => {
+                        store.cellsUnions = cellsUnions;
+                        table = new Table(store);
+                    }
+                )
+            )
         }
     )
 });
@@ -92,7 +96,7 @@ function getParam(name: string): string{
     return urlParams.get(name)
 }
 
-function getTableInfo() {
+function getTableInfo(invokeAfterSuccess: () => unknown) {
     const id = getParam("id")
     return fetch(
         link + "/table/info?chatId=" + id,
@@ -113,7 +117,7 @@ function getTableInfo() {
     });
 }
 
-function getTableMessages() {
+function getTableMessages(invokeAfterSuccess: () => unknown) {
     const id = getParam("id")
     return fetch(
         link + "/table/messages",
@@ -133,6 +137,7 @@ function getTableMessages() {
         result.text().then((text) => {
             if(result.status == 200){
                 store.messages = JSON.parse(text)
+                invokeAfterSuccess()
             }else{
                 console.log(result.status + ", " + text)
                 alert("Error occurred: see console for more details")
