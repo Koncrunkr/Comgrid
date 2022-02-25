@@ -111,6 +111,7 @@ function getTableInfo(invokeAfterSuccess: () => unknown) {
             if(result.status == 200){
                 store = JSON.parse(text)
                 console.log(store)
+                invokeAfterSuccess()
             }else{
                 console.log(result.status + ", " + text)
                 alert("Error occurred: see console for more details")
