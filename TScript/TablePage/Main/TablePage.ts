@@ -65,6 +65,7 @@ $(window).on('load', () => {
             getTableInfo(
                 () => getTableMessages(
                     () => {
+                        console.log("Table messages")
                         store.cellsUnions = cellsUnions;
                         table = new Table(store);
                     }
@@ -109,6 +110,7 @@ function getTableInfo(invokeAfterSuccess: () => unknown) {
         result.text().then((text) => {
             if(result.status == 200){
                 store = JSON.parse(text)
+                console.log(store)
             }else{
                 console.log(result.status + ", " + text)
                 alert("Error occurred: see console for more details")
@@ -137,6 +139,7 @@ function getTableMessages(invokeAfterSuccess: () => unknown) {
         result.text().then((text) => {
             if(result.status == 200){
                 store.messages = JSON.parse(text)
+                console.log(store.messages)
                 invokeAfterSuccess()
             }else{
                 console.log(result.status + ", " + text)
