@@ -61,21 +61,17 @@ export let store = {
 }
 
 $(window).on('load', () => {
-    checkAuthorization(() => {
-            getTableInfo(
-                () => getTableMessages(
-                    () => {
-                        console.log("Table messages")
-                        store.cellsUnions = cellsUnions;
-                        table = new Table(store);
-                    }
-                )
-            )
-        }
-    )
+    checkAuthorization()
+    .then(() => getTableInfo())
+    .then(() => getTableMessages())
+    .then(() => {
+        console.log("Table messages")
+        store.cellsUnions = cellsUnions;
+        table = new Table(store);
+    })
 });
 
-function checkAuthorization(invokeAfterSuccess: () => unknown) {
+function checkAuthorization() {
     return fetch(
         link + "/user/login",
         {
@@ -84,10 +80,9 @@ function checkAuthorization(invokeAfterSuccess: () => unknown) {
             headers: {"Content-Type": "application/json"}
         }
     ).then((response) =>{
-        if(response.status === 200){
-            invokeAfterSuccess()
-        }else{
+        if(response.status !== 200){
             window.location.href = link + "/oauth2/authorization/google"
+            return Promise.reject()
         }
     });
 }
@@ -97,7 +92,7 @@ function getParam(name: string): string{
     return urlParams.get(name)
 }
 
-function getTableInfo(invokeAfterSuccess: () => unknown) {
+function getTableInfo() {
     const id = getParam("id")
     return fetch(
         link + "/table/info?chatId=" + id,
@@ -111,16 +106,16 @@ function getTableInfo(invokeAfterSuccess: () => unknown) {
             if(result.status == 200){
                 store = JSON.parse(text)
                 console.log(store)
-                invokeAfterSuccess()
             }else{
                 console.log(result.status + ", " + text)
                 alert("Error occurred: see console for more details")
+                throw new TypeError("Error occurred: see console for more details")
             }
         })
     });
 }
 
-function getTableMessages(invokeAfterSuccess: () => unknown) {
+function getTableMessages() {
     const id = getParam("id")
     return fetch(
         link + "/table/messages",
@@ -141,10 +136,10 @@ function getTableMessages(invokeAfterSuccess: () => unknown) {
             if(result.status == 200){
                 store.messages = JSON.parse(text)
                 console.log(store.messages)
-                invokeAfterSuccess()
             }else{
                 console.log(result.status + ", " + text)
                 alert("Error occurred: see console for more details")
+                throw new TypeError("Error occurred: see console for more details")
             }
         })
     );
