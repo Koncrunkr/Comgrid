@@ -108,8 +108,7 @@ function getTableInfo() {
                 console.log(store)
             }else{
                 console.log(result.status + ", " + text)
-                alert("Error occurred: see console for more details")
-                throw new TypeError("Error occurred: see console for more details")
+                throw new TypeError(`${result.text().then(haha => haha)}`)
             }
         })
     });
@@ -138,8 +137,7 @@ function getTableMessages() {
                 console.log(store.messages)
             }else{
                 console.log(result.status + ", " + text)
-                alert("Error occurred: see console for more details")
-                throw new TypeError("Error occurred: see console for more details")
+                throw new TypeError(`${result.text().then(haha => haha)}`)
             }
         })
     );
