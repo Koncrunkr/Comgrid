@@ -118,7 +118,7 @@ function getTableInfo() {
 function getTableMessages() {
     const id = getParam("id")
     return fetch(
-        link + "/table/messages",
+        link + "/message/list",
         {
             credentials: "include",
             method: "POST",
