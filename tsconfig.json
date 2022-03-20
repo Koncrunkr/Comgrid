@@ -14,10 +14,11 @@
       "dom",
       "es5",
       "scripthost",
+      "es2021.intl",
       "es2015.promise",
       "es2015.iterable",
       "es2015.collection",
-      "ES2017.String"
+      "ES2021"
     ]
   },
   "exclude": [

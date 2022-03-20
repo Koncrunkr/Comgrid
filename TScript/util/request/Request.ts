@@ -1,7 +1,7 @@
 import {MethodType} from "../HttpClient";
 
 
-export interface RequestWrapper {
+export abstract class RequestWrapper {
     readonly endpoint: string
     readonly headers?: HeadersInit
     readonly parameters?: Record<string, string> | undefined

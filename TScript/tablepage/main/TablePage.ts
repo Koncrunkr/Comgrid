@@ -63,11 +63,6 @@ export let store = {
 }
 
 $(window).on('load', () => {
-    const httpClient = new HttpClient("https://comgrid.ru:8443");
-    httpClient.proceedRequest(
-        new TableInfoRequest({chatId: 5}),
-        (text) => console.log(text)
-    )
     checkAuthorization()
     .then(() => getTableInfo())
     .then(() => getTableMessages())

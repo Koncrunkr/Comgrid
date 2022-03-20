@@ -2,6 +2,9 @@
   "dependencies": {
     "@types/bootstrap": "^5.1.9",
     "@types/jquery": "^3.5.13",
+    "@types/sockjs-client": "^1.5.1",
+    "@stomp/stompjs": "^6.1.2",
+    "sockjs-client": "^1.6.0",
     "bootstrap-4": "^4.0.0",
     "browserify": "^17.0.0",
     "gulp": "^4.0.2",

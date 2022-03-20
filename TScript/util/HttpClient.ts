@@ -26,6 +26,7 @@ export class HttpClient {
             }
         ).then((response) => {
             if(response.status === 200){
+
                 if(response.headers.get("Content-Type").startsWith("image")) {
                     response.blob().then(blob => {
                         onSuccess(blob)
