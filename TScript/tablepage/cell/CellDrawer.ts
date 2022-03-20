@@ -1,6 +1,6 @@
 import {Cell} from "./Cell";
-import {store} from "../Main/TablePage";
-import {Direction} from "../Utilities/Direction";
+import {store} from "../main/TablePage";
+import {Direction} from "../utilities/Direction";
 
 export class CellDrawer {
     private $cell: HTMLElement;

@@ -1,4 +1,6 @@
 import {Table} from "./Table";
+import {HttpClient} from "../../util/HttpClient";
+import {TableInfoRequest} from "../../util/request/TableInfoRequest";
 
 let table;
 const link = "https://comgrid.ru:8443";
@@ -61,6 +63,11 @@ export let store = {
 }
 
 $(window).on('load', () => {
+    const httpClient = new HttpClient("https://comgrid.ru:8443");
+    httpClient.proceedRequest(
+        new TableInfoRequest({chatId: 5}),
+        (text) => console.log(text)
+    )
     checkAuthorization()
     .then(() => getTableInfo())
     .then(() => getTableMessages())

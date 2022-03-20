@@ -1,8 +1,8 @@
 import {CellDrawer} from "./CellDrawer";
-import {Table} from "../Main/Table";
-import {TableMod} from "../Main/TableMod";
-import {Direction} from "../Utilities/Direction";
-import {ActionType} from "../Utilities/Action";
+import {Table} from "../main/Table";
+import {TableMod} from "../main/TableMod";
+import {Direction} from "../utilities/Direction";
+import {ActionType} from "../utilities/Action";
 import {css} from "jquery";
 
 type onTrigger = (event?: any) => void | boolean

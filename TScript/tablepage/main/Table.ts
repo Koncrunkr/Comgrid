@@ -1,6 +1,6 @@
-import {Cell} from "../Cell/Cell";
+import {Cell} from "../cell/Cell";
 import {TableMod} from "./TableMod";
-import {Action, ActionType} from "../Utilities/Action";
+import {Action, ActionType} from "../utilities/Action";
 
 export class Table {
     private $tableContainer = $('main');
