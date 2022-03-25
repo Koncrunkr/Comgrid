@@ -68,10 +68,14 @@
                             <input id="table-height-input" type="number" class="form-control" placeholder="100"
                                    required/>
                         </div>
-                        <div class="form-group col-md-12 col-12">
-                            <label for="table-image-input">Ссылка на картинку</label>
-                            <input id="table-image-input" type="text" class="form-control"
-                                   placeholder="https://image.png" required/>
+                        <div class="form-group col-md-6 col-6">
+                            <label for="table-image-link-input">Ссылка на картинку</label>
+                            <input id="table-image-link-input" type="text" class="form-control"
+                                   placeholder="https://image.png"/>
+                        </div>
+                        <div class="form-group col-md-6 col-6">
+                            <label for="table-image-file-input">Или картинка</label>
+                            <input id="table-image-file-input" type="file" class="form-control"/>
                         </div>
                     </div>
                 </div>
@@ -142,6 +146,9 @@
 <script src="bootstrap/jQuery.js"></script>
 <script src="bootstrap/bootstrap.min.js"></script>
 <script>
+    import {HttpClient} from "../TScript/util/HttpClient";
+    import {CreateTableRequest} from "../TScript/util/request/CreateTableRequest";
+
     let store = {
         dialogs2: [
             {
@@ -202,6 +209,7 @@
         ]
     }
     let link = "https://comgrid.ru:8443";
+    const httpClient = new HttpClient(link)
 
     $(window).on('load', () => {
         checkAuthorization(() => {
@@ -250,13 +258,22 @@
     }
 
     function submit() {
-        let newTable = {
+        let avatarFile = document.getElementById('table-image-file-input')
+        let avatarLink = $('#table-image-link-input').val();
+        if(avatarLink === "" && avatarFile.files[0] === null){
+            alert("You must specify either image or link to image")
+            return false
+        }
+        let height = $('#table-height-input').val();
+        let width = $('#table-width-input').val();
+        const newTable = new CreateTableRequest({
             name: $('#table-name-input').val(),
-            width: $('#table-width-input').val(),
-            height: $('#table-height-input').val(),
-            avatar: $('#table-image-input').val()
-        };
-        if(newTable.width * newTable.height > 2500){
+            width: width,
+            height: height,
+            avatarLink: avatarLink,
+            avatarFile: avatarFile?.files[0]
+        })
+        if(parseInt(height) * parseInt(width) > 2500){
             alert("Размер таблицы не может превышать 2500 ячеек");
             return false;
         }
@@ -267,23 +284,15 @@
     }
 
     function postTable(table) {
-
-        return fetch(
-            link + "/table/create",
-            {
-                credentials: "include",
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(table)
+        httpClient.proceedRequest(
+            table,
+            (code, errorText) => {
+                alert(`Error happened: ${code}, ${errorText}`)
             }
-        ).then((response) =>
-            response.text().then(text => {
-                console.log(text);
-                loadStore().then(() => drawDialogs());
-            })
-        )
+        ).then((table) => {
+            console.log(table)
+            loadStore().then(drawDialogs)
+        })
     }
 
     function clearMenu() {
