@@ -21,7 +21,7 @@ export class TableMessagesRequest implements RequestWrapper<MessageResponse[]>{
         sinceDateTimeMillis?: number,
         untilDateTimeMillis?: number,
     }) {}
-    readonly endpoint: string = '/messages/list';
+    readonly endpoint: string = '/message/list';
     readonly headers: HeadersInit = {
         "Content-Type": "application/json"
     };
