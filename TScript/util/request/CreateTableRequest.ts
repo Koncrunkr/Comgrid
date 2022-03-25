@@ -1,7 +1,28 @@
 import {MethodType} from "../HttpClient";
 import {RequestWrapper} from "./Request";
 
-export class CreateTableRequest implements RequestWrapper {
+export class UserResponse{
+    readonly id!: string
+    readonly name!: string
+    readonly email!: string
+    readonly avatar!: string
+    readonly created!: Date
+    readonly chats?: TableResponse[]
+}
+
+export class TableResponse {
+    readonly id!: number
+    readonly name!: string
+    readonly creator!: number
+    readonly width!: number
+    readonly height!: number
+    readonly avatar!: number
+    readonly created!: Date
+    readonly lastMessageId?: number
+    readonly participants?: UserResponse[]
+}
+
+export class CreateTableRequest implements RequestWrapper<TableResponse> {
     readonly body?: FormData
 
     constructor(body: {
@@ -21,6 +42,11 @@ export class CreateTableRequest implements RequestWrapper {
             this.body.append('avatarFile', body.avatarFile)
         if (body.avatarLink != undefined)
             this.body.append('avatarLink', body.avatarLink)
+    }
+
+    async proceedRequest(response: Response): Promise<TableResponse> {
+        const text = await response.text()
+        return JSON.parse(text) as TableResponse
     }
 
     endpoint: string = "/table/create";

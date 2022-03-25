@@ -1,7 +1,7 @@
 import {MethodType} from "../HttpClient";
 import {RequestWrapper} from "./Request";
 
-export class AddParticipantRequest implements RequestWrapper {
+export class AddParticipantRequest implements RequestWrapper<number> {
     readonly body: string;
     constructor(body: { chatId: number, userId: string }) {
         this.body = JSON.stringify(body)
@@ -12,4 +12,8 @@ export class AddParticipantRequest implements RequestWrapper {
         "Content-Types": "application/json"
     };
     readonly methodType: MethodType = MethodType.POST;
+
+    async proceedRequest(response: Response): Promise<number> {
+        return response.status;
+    }
 }
