@@ -11,10 +11,12 @@ export class TableInfoRequest implements RequestWrapper<TableResponse> {
             includeParticipants?: boolean
         }
     ) {
-        this.parameters = {
-            chatId: parameters.chatId.toString(),
-            includeParticipants: parameters.includeParticipants?.toString(),
-        };
+        let params: any = {}
+        params.chatId = parameters.chatId.toString()
+        if(parameters.includeParticipants)
+            params.includeParticipants = parameters.includeParticipants?.toString()
+
+        this.parameters = params;
     }
 
     readonly endpoint: string = "/table/info";
