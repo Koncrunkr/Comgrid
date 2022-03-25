@@ -167,11 +167,12 @@ function loadStore() {
         }
     ).then((response) => {
         if(response.status === 200){
-            response.text().then((json) => {
+            return response.text().then((json) => {
                 store.dialogs = JSON.parse(json).chats;
             })
         }else{
             response.text().then(text => console.log(response.status + ", " + text));
+            return Promise.reject("nothing")
         }
     });
 }
