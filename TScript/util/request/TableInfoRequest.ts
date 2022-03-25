@@ -3,15 +3,18 @@ import {RequestWrapper} from "./Request";
 import {TableResponse} from "./CreateTableRequest";
 
 export class TableInfoRequest implements RequestWrapper<TableResponse> {
-    readonly body: string;
+    readonly parameters: Record<string, string>;
 
     constructor(
-        body: {
+        parameters: {
             chatId: number,
             includeParticipants?: boolean
         }
     ) {
-        this.body = JSON.stringify(body)
+        this.parameters = {
+            chatId: parameters.chatId.toString(),
+            includeParticipants: parameters.includeParticipants?.toString(),
+        };
     }
 
     readonly endpoint: string = "/table/info";
