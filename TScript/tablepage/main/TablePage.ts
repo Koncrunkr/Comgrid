@@ -103,7 +103,7 @@ function loadTableMessages(){
     let chatId = parseInt(getParam('id'));
     return httpClient.proceedRequest(
         new TableMessagesRequest({
-            chatid: chatId,
+            chatId: chatId,
             xcoordLeftTop: 0,
             ycoordLeftTop: 0,
             xcoordRightBottom: store.width - 1,

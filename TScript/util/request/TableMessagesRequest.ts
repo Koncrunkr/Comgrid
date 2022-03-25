@@ -13,7 +13,7 @@ export class MessageResponse{
 
 export class TableMessagesRequest implements RequestWrapper<MessageResponse[]>{
     constructor(readonly body: {
-        chatid: number,
+        chatId: number,
         xcoordLeftTop: number,
         ycoordLeftTop: number,
         xcoordRightBottom: number,
