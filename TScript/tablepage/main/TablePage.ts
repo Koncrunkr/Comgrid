@@ -6,7 +6,7 @@ import {TableMessagesRequest} from "../../util/request/TableMessagesRequest";
 
 let table;
 const link = "https://comgrid.ru:8443";
-let cellsUnions = [
+const cellsUnions = [
     {
         leftUpX: 11,
         leftUpY: 14,
@@ -20,6 +20,22 @@ let cellsUnions = [
         rightDownY: 30
     }
 ];
+const decorations = [
+    {
+        leftUpX: 11,
+        leftUpY: 14,
+        rightDownX: 17,
+        rightDownY: 17,
+        cssText: "background-color: blue; color: yellow !important; border-color: red !important;"
+    },
+    {
+        leftUpX: 31,
+        leftUpY: 41,
+        rightDownX: 31,
+        rightDownY: 41,
+        cssText: "background-color: rgb(204,11,11); color: green !important; border-color: blue !important;"
+    }
+]
 export let store: any = {
     height: 50,
     width: 50,
@@ -35,22 +51,6 @@ export let store: any = {
             leftUpY: 17,
             rightDownX: 24,
             rightDownY: 30
-        }
-    ],
-    decorations: [
-        {
-            leftUpX: 11,
-            leftUpY: 14,
-            rightDownX: 17,
-            rightDownY: 17,
-            cssText: "background-color: blue; color: yellow !important; border-color: red !important;"
-        },
-        {
-            leftUpX: 31,
-            leftUpY: 41,
-            rightDownX: 31,
-            rightDownY: 41,
-            cssText: "background-color: rgb(204,11,11); color: green !important; border-color: blue !important;"
         }
     ],
     messages: [
@@ -76,6 +76,7 @@ $(window).on('load', () => {
     .then(() => {
         console.log("Table messages")
         store.cellsUnions = cellsUnions;
+        store.decorations = decorations;
         table = new Table(store);
     })
 });
