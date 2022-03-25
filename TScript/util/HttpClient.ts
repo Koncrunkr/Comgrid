@@ -15,6 +15,7 @@ export class HttpClient {
         if(request.parameters != undefined)
             finalLink.search = new URLSearchParams(request.parameters).toString()
 
+        console.log(request)
         return fetch(
             finalLink.toString(),
             {
@@ -26,15 +27,6 @@ export class HttpClient {
         ).then((response) => {
             if(response.status === 200){
                 return request.proceedRequest(response)
-                // if(response.headers.get("Content-Type").startsWith("image")) {
-                //     response.blob().then(blob => {
-                //         onSuccess(blob)
-                //     })
-                // }else {
-                //     response.text().then(text => {
-                //         onSuccess(text)
-                //     })
-                // }
             }else{
                 response.text().then(text => {
                     onFailure(response.status, text)
