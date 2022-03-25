@@ -12,7 +12,8 @@ export class MessageResponse{
 }
 
 export class TableMessagesRequest implements RequestWrapper<MessageResponse[]>{
-    constructor(readonly body: {
+    readonly body: any
+    constructor(body: {
         chatId: number,
         xcoordLeftTop: number,
         ycoordLeftTop: number,
@@ -20,7 +21,9 @@ export class TableMessagesRequest implements RequestWrapper<MessageResponse[]>{
         ycoordRightBottom: number,
         sinceDateTimeMillis?: number,
         untilDateTimeMillis?: number,
-    }) {}
+    }) {
+        this.body = JSON.stringify(body)
+    }
     readonly endpoint: string = '/message/list';
     readonly headers: HeadersInit = {
         "Content-Type": "application/json"
