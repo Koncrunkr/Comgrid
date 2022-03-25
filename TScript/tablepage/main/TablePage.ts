@@ -110,9 +110,13 @@ function loadTableMessages(){
             ycoordRightBottom: store.height - 1,
         }),
         (code, errorText) => {
-            if(code === 403 && errorText === "access.chat.read_messages"){
+            if(code === 404){
+                alert("code: " + code + ", error: " + errorText);
+                console.log("code: " + code + ", error: " + errorText);
+            } else if(code === 403 && errorText === "access.chat.read_messages"){
                 alert("You don't have enough rights to access this chat")
-            }else if(code === 422 && (errorText === "out_of_bounds" ||
+            }else if(
+                code === 422 && (errorText === "out_of_bounds" ||
                 errorText === "time.negative-or-future"
             )){ // should not happen
                 console.log(`height: ${store.height - 1}, width: ${store.width - 1}`)
