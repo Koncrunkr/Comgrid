@@ -110,6 +110,9 @@ function loadTableMessages(){
             ycoordRightBottom: store.height - 1,
         }),
         (code, errorText) => {
+            if(code === 400){
+                console.log(code + ", " + errorText)
+            }
             if(code === 404){
                 alert("code: " + code + ", error: " + errorText);
                 console.log("code: " + code + ", error: " + errorText);
