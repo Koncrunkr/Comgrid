@@ -90,6 +90,8 @@ function drawDialogs() {
         $chat.find('.chat-sender').text(dialog2.lastSender + (dialog2.lastSender === '' ? '' : ':'));
         $chat.find('.chat-text').text(dialog2.lastMessage);
         $chat.find('.chat-time').text(dialog2.time);
+        if(dialog.avatar.startsWith("/"))
+            dialog.avatar = link + dialog.avatar
         $chat.find('img').attr('src', dialog.avatar);
         $chat.find('.chat-size').text(dialog.width + '×' + dialog.height)
         dialog2.messagesCount === 0
