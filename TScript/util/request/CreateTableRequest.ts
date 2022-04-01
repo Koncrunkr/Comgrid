@@ -50,6 +50,8 @@ export class CreateTableRequest implements RequestWrapper<TableResponse> {
     }
 
     endpoint: string = "/table/create";
-    headers?: HeadersInit = null;
+    headers?: HeadersInit = {
+        "Content-Types": "application/json"
+    };
     methodType: MethodType = MethodType.POST;
 }
