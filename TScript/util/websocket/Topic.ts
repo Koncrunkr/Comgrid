@@ -1,10 +1,13 @@
-export abstract class Topic {
+export abstract class Topic<ReceivedMessage, SentMessage> {
     constructor(
-        readonly path: string,
+        readonly destinationPath: string,
+        readonly receivePath: string,
         readonly identifier: any
     ) {}
 
     destination(): string {
-        return this.path.replace("{id}", this.identifier)
+        return this.destinationPath.replace("{id}", this.identifier)
     }
+
+    abstract proceedMessage(message): ReceivedMessage
 }

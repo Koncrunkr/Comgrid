@@ -27,12 +27,12 @@ export class WebSocketClient{
         this.connected = false
     }
 
-    subscribe(topic: Topic, onMessage: (message) => unknown){
-        this.stompClient.subscribe(topic.destination(), onMessage)
+    subscribe<In, Out>(topic: Topic<In, Out>, onMessage: (In) => unknown){
+        this.stompClient.subscribe(topic.destination(), message => onMessage(topic.proceedMessage(message)))
     }
 
-    sendMessage(topic: Topic, message: any){
-        this.stompClient.send(topic.destination(), {}, JSON.stringify(message))
+    sendMessage<In, Out>(topic: Topic<In, Out>, message: Out){
+        this.stompClient.send(topic.receivePath, {}, JSON.stringify(message))
     }
 }
 

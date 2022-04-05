@@ -1,8 +1,11 @@
-import {Cell} from "../cell/Cell";
-import {TableMod} from "./TableMod";
-import {Action, ActionType} from "../utilities/Action";
+import { Cell } from "../cell/Cell";
+import { TableMod } from "./TableMod";
+import { Action, ActionType } from "../utilities/Action";
+import { WebSocketClient } from "../../util/WebSocketClient";
+import { TableTopic } from "../../util/websocket/TableTopic";
 
 export class Table {
+    private readonly tableTopic: TableTopic;
     private $tableContainer = $('main');
     public readonly cells: Cell[][] = [];
     public mod: TableMod;
@@ -11,6 +14,7 @@ export class Table {
     public readonly width: number;
     public readonly height: number;
     private _$popover = $('#popover');
+    public readonly websocket: WebSocketClient = new WebSocketClient("https://comgrid.ru:8443/connection");
 
     constructor(private _store) {
         this.width = _store.width;
@@ -20,6 +24,7 @@ export class Table {
         $body.on('mouseup', () => this.onBodyMouseup());
         $body.on('keydown', (event) => this.onBodyKeydown(event));
         $('#page-name').text(_store.name);
+        this.tableTopic = new TableTopic(parseInt(getParam('id')));
         this._$popover.on('mouseup', (event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -104,10 +109,29 @@ export class Table {
 
     public pushAction(action: Action) {
         let lastAction = this.actions[this.actions.length - 1];
-        if (lastAction != null && lastAction[0] === ActionType.write && action[0] <= ActionType.writeWithSpace
-            && lastAction[1] === action[1] && lastAction[2] === action[2])
+        if (
+              lastAction != null &&
+              lastAction[0] === ActionType.write &&
+              action[0] <= ActionType.writeWithSpace &&
+              lastAction[1] === action[1] &&
+              lastAction[2] === action[2]
+        ) {
             this.actions.pop();
+        }
+
         this.actions.push(action);
+
+        if(action[0] === ActionType.write ||
+          action[0] === ActionType.writeWithSpace ||
+          action[0] === ActionType.delete
+        ){
+            this.websocket.sendMessage(this.tableTopic, {
+                x: action[1],
+                y: action[2],
+                chatId: this.tableTopic.tableId,
+                text: this.cells[action[1]][action[2]].text
+            })
+        }
     }
 
     public popAction() {

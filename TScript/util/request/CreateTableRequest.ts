@@ -1,14 +1,6 @@
 import {MethodType} from "../HttpClient";
 import {RequestWrapper} from "./Request";
-
-export class UserResponse{
-    readonly id!: string
-    readonly name!: string
-    readonly email!: string
-    readonly avatar!: string
-    readonly created!: Date
-    readonly chats?: TableResponse[]
-}
+import {UserResponse} from "./UserInfoRequest";
 
 export class TableResponse {
     readonly id!: number

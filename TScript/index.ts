@@ -1,5 +1,8 @@
 import {HttpClient} from "./util/HttpClient";
 import {CreateTableRequest} from "./util/request/CreateTableRequest";
+import {TableInfoRequest} from "./util/request/TableInfoRequest";
+import {UserInfoRequest} from "./util/request/UserInfoRequest";
+import {IsLoggedInRequest} from "./util/request/IsLoggedInRequest";
 
 let store: any = {
     dialogs2: [
@@ -64,14 +67,14 @@ let link = "https://comgrid.ru:8443";
 const httpClient = new HttpClient(link)
 
 $(window).on('load', () => {
-    checkAuthorization(() => {
-        loadStore().then(() => {
-            $('#create-table-form').on('submit', submit);
-            drawDialogs()
+    checkAuthorization()
+    .then(loadStore)
+    .then(() => {
+        $('#create-table-form').on('submit', submit);
+        drawDialogs()
 
-            $('.clickable').on('click', () => {
-                $('.clickable').toggleClass('d-none')
-            });
+        $('.clickable').on('click', () => {
+            $('.clickable').toggleClass('d-none')
         });
     });
 })
@@ -131,22 +134,23 @@ function submit() {
         alert("Размер таблицы не может превышать 2500 ячеек");
         return false;
     }
-    postTable(newTable);
+    postTable(newTable)
+    .then((table) => {
+        console.log(table)
+        loadStore().then(drawDialogs)
+    });
     clearMenu();
     closeMenu();
     return false;
 }
 
 function postTable(table) {
-    httpClient.proceedRequest(
+    return httpClient.proceedRequest(
         table,
         (code, errorText) => {
-            alert(`Error happened: ${code}, ${errorText}`)
+            alert(`Error happened while creating table: ${code}, ${errorText}`)
         }
-    ).then((table) => {
-        console.log(table)
-        loadStore().then(drawDialogs)
-    })
+    )
 }
 
 function clearMenu() {
@@ -158,40 +162,19 @@ function closeMenu() {
 }
 
 function loadStore() {
-    return fetch(
-        link + "/user/info?includeChats=true",
-        {
-            credentials: "include",
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
+    return httpClient.proceedRequest(
+        new UserInfoRequest({ includeChats: true }),
+        (code, errorText) => {
+            alert(`Error happened while loading user info: ${code}, ${errorText}`)
         }
-    ).then((response) => {
-        if(response.status === 200){
-            return response.text().then((json) => {
-                store.dialogs = JSON.parse(json).chats;
-            })
-        }else{
-            response.text().then(text => console.log(response.status + ", " + text));
-            return Promise.reject("nothing")
-        }
-    });
+    ).then(user => {
+        store.dialogs = user.chats;
+    })
 }
 
-function checkAuthorization(invokeAfterSuccess) {
-    return fetch(
-        link + "/user/login",
-        {
-            credentials: "include",
-            method: "GET",
-            headers: {"Content-Type": "application/json"}
-        }
-    ).then((response) =>{
-        if(response.status === 200){
-            invokeAfterSuccess()
-        }else{
-            window.location.href = link + "/oauth2/authorization/google"
-        }
-    });
+function checkAuthorization() {
+    return httpClient.proceedRequest(
+        new IsLoggedInRequest(),
+        () => window.location.href = link + "/oauth2/authorization/google"
+    );
 }

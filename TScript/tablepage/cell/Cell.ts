@@ -56,19 +56,24 @@ export class Cell {
 
     public get onBlur(): onTrigger {
         return (text: string) => {
-            if(text.length !== 0)
+            if(text.length !== 0) {
                 this.block();
+            }
         }
     }
 
     public get onInput(): onTrigger {
         return (event: any) => {
             console.log(event.inputType);
-            if(event.inputType[0] === 'i')
-                if(event.data === ' ') this.table.pushAction([ActionType.writeWithSpace, this.x, this.y]);
-                else this.table.pushAction([ActionType.write, this.x, this.y]);
-            else if(event.inputType[0] === 'd')
+            if(event.inputType[0] === 'i') {
+                if (event.data === ' ') {
+                    this.table.pushAction([ActionType.writeWithSpace, this.x, this.y]);
+                }else {
+                    this.table.pushAction([ActionType.write, this.x, this.y]);
+                }
+            }else if(event.inputType[0] === 'd') {
                 this.table.pushAction([ActionType.delete, this.x, this.y, event.dataTransfer.getData('text/html')]);
+            }
         }
     }
 
@@ -180,5 +185,9 @@ export class Cell {
         if (this._friends == null) return;
         let clone = this._friends;
         clone.forEach((elem) => elem.separate());
+    }
+
+    public get text(): string{
+        return this.drawer.text;
     }
 }

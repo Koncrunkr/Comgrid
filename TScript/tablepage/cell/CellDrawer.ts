@@ -141,4 +141,8 @@ export class CellDrawer {
     public get screenY(): number {
         return this.$cell.getBoundingClientRect().y;
     }
+
+    public get text(): string {
+        return this.$span.textContent;
+    }
 }
