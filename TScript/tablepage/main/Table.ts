@@ -4,9 +4,12 @@ import { Action, ActionType } from "../utilities/Action";
 import { WebSocketClient } from "../../util/WebSocketClient";
 import { TableTopic } from "../../util/websocket/TableTopic";
 import { getParam } from "../../util/Util";
+import { UserTopic } from "../../util/websocket/UserTopic";
+import { HttpClient } from "../../util/HttpClient";
 
 export class Table {
     private readonly tableTopic: TableTopic;
+    private readonly userTopic: UserTopic;
     private $tableContainer = $('main');
     public readonly cells: Cell[][] = [];
     public mod: TableMod;
@@ -16,9 +19,13 @@ export class Table {
     public readonly height: number;
     private _$popover = $('#popover');
     public readonly websocket: WebSocketClient = new WebSocketClient("https://comgrid.ru:8443/websocket");
+    public readonly httpServer: HttpClient = new HttpClient("https://comgrid.ru:8443");
 
     constructor(private _store) {
         this.tableTopic = new TableTopic(parseInt(getParam('id')));
+        this.websocket.subscribe(this.tableTopic, message => {
+            this.cells[message.x][message.y].text = message.text;
+        });
         this.width = _store.width;
         this.height = _store.height;
         this.fillTable(_store.cellsUnions, _store.decorations, _store.messages);

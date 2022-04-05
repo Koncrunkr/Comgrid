@@ -190,4 +190,7 @@ export class Cell {
     public get text(): string{
         return this.drawer.text;
     }
+    public set text(text: string){
+        this.drawer.text = text;
+    }
 }

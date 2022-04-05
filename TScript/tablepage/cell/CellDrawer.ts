@@ -145,4 +145,7 @@ export class CellDrawer {
     public get text(): string {
         return this.$span.textContent;
     }
+    public set text(text: string) {
+        this.$span.textContent = text;
+    }
 }
