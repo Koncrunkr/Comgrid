@@ -8,6 +8,9 @@ export abstract class Topic<ReceivedMessage, SentMessage> {
     destination(): string {
         return this.destinationPath.replace("{id}", this.identifier)
     }
+    receive(): string{
+        return this.receivePath;
+    }
 
     abstract proceedMessage(message): ReceivedMessage
 }

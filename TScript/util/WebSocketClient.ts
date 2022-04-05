@@ -32,7 +32,7 @@ export class WebSocketClient{
     }
 
     sendMessage<In, Out>(topic: Topic<In, Out>, message: Out){
-        this.stompClient.send(topic.receivePath, {}, JSON.stringify(message))
+        this.stompClient.send(topic.receive(), {}, JSON.stringify(message))
     }
 }
 
