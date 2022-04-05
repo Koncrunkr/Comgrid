@@ -19,7 +19,6 @@ export class Table {
     public readonly height: number;
     private _$popover = $('#popover');
     public readonly websocket: WebSocketClient = new WebSocketClient("https://comgrid.ru:8443/websocket");
-    public readonly httpServer: HttpClient = new HttpClient("https://comgrid.ru:8443");
 
     constructor(private _store) {
         this.tableTopic = new TableTopic(parseInt(getParam('id')));

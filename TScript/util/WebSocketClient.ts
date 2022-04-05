@@ -13,14 +13,8 @@ export class WebSocketClient{
         this.connect()
     }
 
-    private connect(){
-        this.stompClient.connect({},
-            (frame) => {
-                this.connected = true
-            },
-            this.disconnect,
-            this.disconnect
-        )
+    public connect(){
+        this.stompClient.activate()
     }
 
     private disconnect(){
@@ -28,7 +22,14 @@ export class WebSocketClient{
     }
 
     subscribe<In, Out>(topic: Topic<In, Out>, onMessage: (In) => unknown){
-        this.stompClient.subscribe(topic.destination(), message => onMessage(topic.proceedMessage(message)))
+        if(this.stompClient.active){
+            this.stompClient.subscribe(topic.destination(), message => onMessage(topic.proceedMessage(message)))
+        }else{
+            this.stompClient.onConnect = (frame) => {
+                this.stompClient.onConnect(frame)
+                this.stompClient.subscribe(topic.destination(), message => onMessage(topic.proceedMessage(message)))
+            }
+        }
     }
 
     sendMessage<In, Out>(topic: Topic<In, Out>, message: Out){
