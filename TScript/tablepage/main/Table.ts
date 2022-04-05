@@ -18,6 +18,7 @@ export class Table {
     public readonly websocket: WebSocketClient = new WebSocketClient("https://comgrid.ru:8443/connection");
 
     constructor(private _store) {
+        this.tableTopic = new TableTopic(parseInt(getParam('id')));
         this.width = _store.width;
         this.height = _store.height;
         this.fillTable(_store.cellsUnions, _store.decorations, _store.messages);
@@ -25,7 +26,6 @@ export class Table {
         $body.on('mouseup', () => this.onBodyMouseup());
         $body.on('keydown', (event) => this.onBodyKeydown(event));
         $('#page-name').text(_store.name);
-        this.tableTopic = new TableTopic(parseInt(getParam('id')));
         this._$popover.on('mouseup', (event) => {
             event.preventDefault();
             event.stopPropagation();
