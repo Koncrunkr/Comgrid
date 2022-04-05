@@ -72,7 +72,7 @@ export class Cell {
                     this.table.pushAction([ActionType.write, this.x, this.y]);
                 }
             }else if(event.inputType[0] === 'd') {
-                this.table.pushAction([ActionType.delete, this.x, this.y, event.dataTransfer.getData('text/html')]);
+                this.table.pushAction([ActionType.delete, this.x, this.y]);
             }
         }
     }
