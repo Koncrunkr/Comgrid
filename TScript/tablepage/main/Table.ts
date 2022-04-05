@@ -129,7 +129,7 @@ export class Table {
             this.websocket.sendMessage(this.tableTopic, {
                 x: action[1],
                 y: action[2],
-                chatId: this.tableTopic.tableId,
+                chatId: getParam("id"),
                 text: this.cells[action[1]][action[2]].text
             })
         }
