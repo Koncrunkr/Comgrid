@@ -3,6 +3,7 @@ import { TableMod } from "./TableMod";
 import { Action, ActionType } from "../utilities/Action";
 import { WebSocketClient } from "../../util/WebSocketClient";
 import { TableTopic } from "../../util/websocket/TableTopic";
+import { getParam } from "../../util/Util";
 
 export class Table {
     private readonly tableTopic: TableTopic;

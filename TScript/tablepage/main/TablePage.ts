@@ -3,6 +3,7 @@ import {HttpClient} from "../../util/HttpClient";
 import {TableInfoRequest} from "../../util/request/TableInfoRequest";
 import {IsLoggedInRequest} from "../../util/request/IsLoggedInRequest";
 import {TableMessagesRequest} from "../../util/request/TableMessagesRequest";
+import { getParam } from "../../util/Util";
 
 let table;
 const link = "https://comgrid.ru:8443";
