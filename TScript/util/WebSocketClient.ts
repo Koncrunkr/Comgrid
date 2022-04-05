@@ -10,11 +10,17 @@ export class WebSocketClient{
     constructor(apiLink: string) {
         this.socket = new SockJS(apiLink);
         this.stompClient = Stomp.over(this.socket)
-        this.connect()
     }
 
-    public connect(){
-        this.stompClient.activate()
+    public connect<In, Out>(topic: Topic<In, Out>, onMessage: (In) => unknown){
+        this.stompClient.connect({},
+            (frame) => {
+                this.stompClient.subscribe(topic.destination(), message => onMessage(topic.proceedMessage(message)))
+                this.connected = true
+            },
+            this.disconnect,
+            this.disconnect
+        )
     }
 
     private disconnect(){
@@ -22,14 +28,7 @@ export class WebSocketClient{
     }
 
     subscribe<In, Out>(topic: Topic<In, Out>, onMessage: (In) => unknown){
-        if(this.stompClient.active){
-            this.stompClient.subscribe(topic.destination(), message => onMessage(topic.proceedMessage(message)))
-        }else{
-            this.stompClient.onConnect = (frame) => {
-                this.stompClient.onConnect(frame)
-                this.stompClient.subscribe(topic.destination(), message => onMessage(topic.proceedMessage(message)))
-            }
-        }
+        this.stompClient.subscribe(topic.destination(), message => onMessage(topic.proceedMessage(message)))
     }
 
     sendMessage<In, Out>(topic: Topic<In, Out>, message: Out){

@@ -22,7 +22,7 @@ export class Table {
 
     constructor(private _store) {
         this.tableTopic = new TableTopic(parseInt(getParam('id')));
-        this.websocket.subscribe(this.tableTopic, message => {
+        this.websocket.connect(this.tableTopic, message => {
             this.cells[message.x][message.y].text = message.text;
         });
         this.width = _store.width;
