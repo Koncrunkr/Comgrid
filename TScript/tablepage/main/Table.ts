@@ -6,10 +6,11 @@ import { TableTopic } from "../../util/websocket/TableTopic";
 import { getParam } from "../../util/Util";
 import { UserTopic } from "../../util/websocket/UserTopic";
 import { HttpClient } from "../../util/HttpClient";
+import { UserInfoRequest } from "../../util/request/UserInfoRequest";
 
 export class Table {
     private readonly tableTopic: TableTopic;
-    private readonly userTopic: UserTopic;
+    private userTopic: UserTopic;
     private $tableContainer = $('main');
     public readonly cells: Cell[][] = [];
     public mod: TableMod;
@@ -19,6 +20,7 @@ export class Table {
     public readonly height: number;
     private _$popover = $('#popover');
     public readonly websocket: WebSocketClient = new WebSocketClient("https://comgrid.ru:8443/websocket");
+    private readonly http: HttpClient = new HttpClient("https://comgrid.ru:8443");
 
     constructor(private _store) {
         this.tableTopic = new TableTopic(parseInt(getParam('id')));
@@ -26,6 +28,14 @@ export class Table {
             console.log(message);
             this.cells[message.x][message.y].text = message.text;
         });
+        this.http.proceedRequest(
+          new UserInfoRequest({}),
+        ).then(user => {
+            this.userTopic = new UserTopic(user.id)
+            this.websocket.subscribe(this.userTopic, message => {
+                console.log(message)
+            })
+        })
         this.width = _store.width;
         this.height = _store.height;
         this.fillTable(_store.cellsUnions, _store.decorations, _store.messages);
