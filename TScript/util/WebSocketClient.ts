@@ -37,7 +37,9 @@ export class WebSocketClient{
                 onMessage(topic.proceedMessage(str))
             })
         }else{
-            this.stompClient.onConnect = () => this.stompClient.subscribe(topic.destination(), message => {
+            const currentOnConnect = this.stompClient.onConnect
+            this.stompClient.onConnect = (frame) => this.stompClient.subscribe(topic.destination(), message => {
+                currentOnConnect(frame)
                 const str = new TextDecoder().decode(message.binaryBody)
                 onMessage(topic.proceedMessage(str))
             })
