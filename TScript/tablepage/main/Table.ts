@@ -48,7 +48,7 @@ export class Table {
         $body.on('keydown', (event) => this.onBodyKeydown(event));
         $('#page-name').text(_store.name);
         $(document).prop("title", _store.name);
-        $('#add-to-table-form').on('submit', () => this.addParticipant($('#id-input').text()));
+        $('#add-to-table-form').on('submit', () => this.addParticipant());
 
         this._$popover.on('mouseup', (event) => {
             event.preventDefault();
@@ -57,9 +57,9 @@ export class Table {
         });
     }
 
-    private addParticipant(id): boolean {
+    private addParticipant(): boolean {
         this.http.proceedRequest(
-            new AddParticipantRequest({chatId: this._store.id, userId: id}),
+            new AddParticipantRequest({chatId: this._store.id, userId: $('#id-input').text()}),
             (code, errorText) => alert(errorText)
         ).then(() => alert("succeed"));
         return false;
