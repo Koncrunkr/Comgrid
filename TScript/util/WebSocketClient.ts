@@ -16,7 +16,7 @@ export class WebSocketClient{
         this.stompClient.connect({},
             (frame) => {
                 this.stompClient.subscribe(topic.destination(), message => {
-                    let str = String.fromCharCode.apply(String, message.binaryBody)
+                    const str = new TextDecoder().decode(message.binaryBody)
                     onMessage(topic.proceedMessage(str))
                 })
                 this.connected = true
