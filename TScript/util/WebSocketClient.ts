@@ -7,10 +7,15 @@ export class WebSocketClient{
     private readonly socket: WebSocket
     private readonly stompClient: CompatClient
     private connected: boolean = false
+    private subscribers = new Array<() => unknown>()
     constructor(apiLink: string) {
         this.socket = new SockJS(apiLink);
         this.stompClient = Stomp.over(this.socket)
-        this.stompClient.connect({}, () => {})
+        this.stompClient.connect({}, () => {
+            for (let subscriber of this.subscribers) {
+                subscriber()
+            }}
+        )
     }
 
     public connect<In, Out>(topic: Topic<In, Out>, onMessage: (In) => unknown){
@@ -33,18 +38,16 @@ export class WebSocketClient{
 
     subscribe<In, Out>(topic: Topic<In, Out>, onMessage: (In) => unknown){
         if(this.stompClient.connected) {
-            console.log("Connected")
             this.stompClient.subscribe(topic.destination(), message => {
                 const str = new TextDecoder().decode(message.binaryBody)
                 onMessage(topic.proceedMessage(str))
             })
         }else{
-            console.log("not connected")
-            const currentOnConnect = this.stompClient.onConnect
-            this.stompClient.onConnect = (frame) => this.stompClient.subscribe(topic.destination(), message => {
-                currentOnConnect(frame)
-                const str = new TextDecoder().decode(message.binaryBody)
-                onMessage(topic.proceedMessage(str))
+            this.subscribers.push(() => {
+                this.stompClient.subscribe(topic.destination(), message => {
+                    const str = new TextDecoder().decode(message.binaryBody)
+                    onMessage(topic.proceedMessage(str))
+                })
             })
         }
     }
