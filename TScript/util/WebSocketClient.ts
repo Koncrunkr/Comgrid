@@ -15,7 +15,10 @@ export class WebSocketClient{
     public connect<In, Out>(topic: Topic<In, Out>, onMessage: (In) => unknown){
         this.stompClient.connect({},
             (frame) => {
-                this.stompClient.subscribe(topic.destination(), message => onMessage(topic.proceedMessage(message)))
+                this.stompClient.subscribe(topic.destination(), message => {
+                    let str = String.fromCharCode.apply(String, message.binaryBody)
+                    onMessage(topic.proceedMessage(str))
+                })
                 this.connected = true
             },
             this.disconnect,
