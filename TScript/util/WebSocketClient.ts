@@ -32,11 +32,13 @@ export class WebSocketClient{
 
     subscribe<In, Out>(topic: Topic<In, Out>, onMessage: (In) => unknown){
         if(this.stompClient.connected) {
+            console.log("Connected")
             this.stompClient.subscribe(topic.destination(), message => {
                 const str = new TextDecoder().decode(message.binaryBody)
                 onMessage(topic.proceedMessage(str))
             })
         }else{
+            console.log("not connected")
             const currentOnConnect = this.stompClient.onConnect
             this.stompClient.onConnect = (frame) => this.stompClient.subscribe(topic.destination(), message => {
                 currentOnConnect(frame)
