@@ -31,7 +31,10 @@ export class WebSocketClient{
     }
 
     subscribe<In, Out>(topic: Topic<In, Out>, onMessage: (In) => unknown){
-        this.stompClient.subscribe(topic.destination(), message => onMessage(topic.proceedMessage(message)))
+        this.stompClient.subscribe(topic.destination(), message => {
+            const str = new TextDecoder().decode(message.binaryBody)
+            onMessage(topic.proceedMessage(str))
+        })
     }
 
     sendMessage<In, Out>(topic: Topic<In, Out>, message: Out){
