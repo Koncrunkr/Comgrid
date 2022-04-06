@@ -7,6 +7,8 @@ import { getParam } from "../../util/Util";
 import { UserTopic } from "../../util/websocket/UserTopic";
 import { HttpClient } from "../../util/HttpClient";
 import { UserInfoRequest } from "../../util/request/UserInfoRequest";
+import {AddParticipantRequest} from "../../util/request/AddParticipantRequest";
+import {store} from "./TablePage";
 
 export class Table {
     private readonly tableTopic: TableTopic;
@@ -57,7 +59,7 @@ export class Table {
 
     private addParticipant(id): void {
         this.http.proceedRequest(
-            new this.addParticipant(id),
+            new AddParticipantRequest({chatId: this._store.id, userId: id}),
             (code, errorText) => alert(errorText)
         ).then(() => alert("succeed"));
     }
