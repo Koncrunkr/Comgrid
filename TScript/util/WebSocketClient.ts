@@ -31,10 +31,17 @@ export class WebSocketClient{
     }
 
     subscribe<In, Out>(topic: Topic<In, Out>, onMessage: (In) => unknown){
-        this.stompClient.subscribe(topic.destination(), message => {
-            const str = new TextDecoder().decode(message.binaryBody)
-            onMessage(topic.proceedMessage(str))
-        })
+        if(this.stompClient.connected) {
+            this.stompClient.subscribe(topic.destination(), message => {
+                const str = new TextDecoder().decode(message.binaryBody)
+                onMessage(topic.proceedMessage(str))
+            })
+        }else{
+            this.stompClient.onConnect = () => this.stompClient.subscribe(topic.destination(), message => {
+                const str = new TextDecoder().decode(message.binaryBody)
+                onMessage(topic.proceedMessage(str))
+            })
+        }
     }
 
     sendMessage<In, Out>(topic: Topic<In, Out>, message: Out){

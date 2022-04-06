@@ -32,7 +32,7 @@ export class Table {
           new UserInfoRequest({}),
         ).then(user => {
             this.userTopic = new UserTopic(user.id)
-            this.websocket.connect(this.userTopic, message => {
+            this.websocket.subscribe(this.userTopic, message => {
                 console.log(message)
             })
         })
