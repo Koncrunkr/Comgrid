@@ -22,6 +22,7 @@ export class TableTopic extends Topic<MessageIn, MessageOut>{
     }
 
     proceedMessage(message): MessageIn {
+        console.log(message);
         return JSON.parse(message) as MessageIn;
     }
 }
