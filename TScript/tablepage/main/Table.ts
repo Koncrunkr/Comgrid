@@ -36,6 +36,7 @@ export class Table {
                 console.log(message)
             })
         })
+
         this.width = _store.width;
         this.height = _store.height;
         this.fillTable(_store.cellsUnions, _store.decorations, _store.messages);
