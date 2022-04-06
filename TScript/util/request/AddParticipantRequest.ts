@@ -9,7 +9,7 @@ export class AddParticipantRequest implements RequestWrapper<number> {
 
     readonly endpoint: string = "/table/add_participant";
     readonly headers: HeadersInit = {
-        "Content-Types": "application/json"
+        "Content-Type": "application/json"
     };
     readonly methodType: MethodType = MethodType.POST;
 
