@@ -4,7 +4,7 @@
     <link rel="icon" type="image/png" href="../favicon.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Виталя Трубоед</title>
+    <title>Таблица</title>
 
     <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../styles/common-style.css">
@@ -14,6 +14,35 @@
 
 </head>
 <body class="bg-light">
+
+<form id="add-to-table-form">
+    <div id="add-to-table-menu" class="modal" role="dialog" tabindex="-1" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content bg-light border-0">
+                <div class="modal-header bg-dark text-light">
+                    <h5 class="modal-title">Давайте добавим когонебуд</h5>
+                    <button id="close-button" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="text-light">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body container">
+                    <div class="form-row row">
+                        <div class="form-group col-md-6 col-12">
+                            <label for="id-input">ID пользователя</label>
+                            <input id="id-input" type="text" class="form-control" placeholder="100000000000000000000"
+                                   required/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer text-right p-1">
+                    <button type="submit" class="btn btn-dark mr-1">Добавить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
 
 <header>
     <nav class="navbar navbar-expand navbar-light bg-light justify-content-between">
@@ -29,8 +58,8 @@
                 <span id="id-keeper"></span>
             </div>
         </div>
-        <div id="page-name" class="navbar-nav">
-            Виталя Трубоед
+        <div class="navbar-nav">
+            <a id="page-name" class="text-dark" type="button" data-toggle="modal" data-target="#add-to-table-menu"></a>
         </div>
 
         <div class="navbar-nav">

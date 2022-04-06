@@ -46,11 +46,20 @@ export class Table {
         $body.on('keydown', (event) => this.onBodyKeydown(event));
         $('#page-name').text(_store.name);
         $(document).prop("title", _store.name);
+        $('#add-to-table-form').on('submit', () => this.addParticipant($('#id-input').text()));
+
         this._$popover.on('mouseup', (event) => {
             event.preventDefault();
             event.stopPropagation();
             return false;
         });
+    }
+
+    private addParticipant(id): void {
+        this.http.proceedRequest(
+            new this.addParticipant(id),
+            (code, errorText) => alert(errorText)
+        ).then(() => alert("succeed"));
     }
 
     private fillTable(cellsUnions, decorations, messages): void {
