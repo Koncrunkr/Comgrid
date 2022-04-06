@@ -1,5 +1,6 @@
 import {IsLoggedInRequest} from "./util/request/IsLoggedInRequest";
 import {HttpClient} from "./util/HttpClient";
+import {UserInfoRequest} from "./util/request/UserInfoRequest";
 
 window.onload = () => {
     let httpClient = new HttpClient("https://comgrid.ru:8443");
@@ -8,7 +9,13 @@ window.onload = () => {
         () => {
             console.log("unauthorizated");
         }
-    ).then(() => {
+    ).then((response) => {
         $('.clickable').toggleClass('d-none');
+
+        httpClient.proceedRequest(
+            new UserInfoRequest({includeChats: false})
+        ).then(response => {
+            $('#id-keeper').text(`id: ${response.id}`);
+        })
     })
 }
