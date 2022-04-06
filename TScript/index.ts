@@ -88,7 +88,7 @@ function drawDialogs() {
         let dialog2 = store.dialogs2[index];
         let $chat = $('.chat').clone();
         $chat.removeClass('chat d-none');
-        $chat.find('a').attr('href', 'pages/table.html?id=' + dialog.id);
+        $chat.find('a').attr('href', 'pages/table?id=' + dialog.id);
         $chat.find('.chat-name').text(dialog.name);
         $chat.find('.chat-sender').text(dialog2.lastSender + (dialog2.lastSender === '' ? '' : ':'));
         $chat.find('.chat-text').text(dialog2.lastMessage);
