@@ -57,11 +57,12 @@ export class Table {
         });
     }
 
-    private addParticipant(id): void {
+    private addParticipant(id): boolean {
         this.http.proceedRequest(
             new AddParticipantRequest({chatId: this._store.id, userId: id}),
             (code, errorText) => alert(errorText)
         ).then(() => alert("succeed"));
+        return false;
     }
 
     private fillTable(cellsUnions, decorations, messages): void {
