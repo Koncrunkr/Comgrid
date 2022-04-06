@@ -10,6 +10,7 @@ export class WebSocketClient{
     constructor(apiLink: string) {
         this.socket = new SockJS(apiLink);
         this.stompClient = Stomp.over(this.socket)
+        this.stompClient.connect()
     }
 
     public connect<In, Out>(topic: Topic<In, Out>, onMessage: (In) => unknown){
