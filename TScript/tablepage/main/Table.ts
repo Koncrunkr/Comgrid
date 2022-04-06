@@ -59,7 +59,7 @@ export class Table {
 
     private addParticipant(): boolean {
         this.http.proceedRequest(
-            new AddParticipantRequest({chatId: this._store.id, userId: $('#id-input').text()}),
+            new AddParticipantRequest({chatId: this._store.id, userId: $('#id-input').val().toString()}),
             (code, errorText) => alert(errorText)
         ).then(() => alert("succeed"));
         return false;
