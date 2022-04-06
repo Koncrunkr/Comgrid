@@ -169,6 +169,7 @@ function loadStore() {
         }
     ).then(user => {
         store.dialogs = user.chats;
+        $('.clickable').toggleClass('d-none');
     })
 }
 

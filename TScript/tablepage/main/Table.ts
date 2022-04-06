@@ -19,6 +19,7 @@ export class Table {
     public readonly width: number;
     public readonly height: number;
     private _$popover = $('#popover');
+
     public readonly websocket: WebSocketClient = new WebSocketClient("https://comgrid.ru:8443/websocket");
     private readonly http: HttpClient = new HttpClient("https://comgrid.ru:8443");
 
