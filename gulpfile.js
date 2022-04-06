@@ -30,7 +30,18 @@ gulp.task("table-page", function () {
         .bundle()
         .pipe(source('indexPage.js'))
         .pipe(gulp.dest("public/scripts/"));
-    return Promise.all([gulp1, gulp2])
+    let gulp0 = browserify({
+        basedir: '.',
+        debug: true,
+        entries: ['TScript/headerScript.ts'],
+        cache: {},
+        packageCache: {}
+    })
+        .plugin(tsify)
+        .bundle()
+        .pipe(source('header.js'))
+        .pipe(gulp.dest("public/scripts/"));
+    return Promise.all([gulp0, gulp1, gulp2])
 });
 
 gulp.task("test-page", function () {

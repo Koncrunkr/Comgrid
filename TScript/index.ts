@@ -169,11 +169,10 @@ function loadStore() {
         }
     ).then(user => {
         store.dialogs = user.chats;
-        $('.clickable').toggleClass('d-none');
     })
 }
 
-function checkAuthorization() {
+export function checkAuthorization() {
     return httpClient.proceedRequest(
         new IsLoggedInRequest(),
         () => window.location.href = link + "/oauth2/authorization/google"

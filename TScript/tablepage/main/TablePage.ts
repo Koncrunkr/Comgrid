@@ -7,52 +7,18 @@ import { getParam } from "../../util/Util";
 
 let table;
 const link = "https://comgrid.ru:8443";
+export let settings: any = {
+    selectedClasses: ['bg-dark', 'text-light'],
+    noSelectedClasses: ['text-dark']
+}
 const cellsUnions = [
-    {
-        leftUpX: 11,
-        leftUpY: 14,
-        rightDownX: 17,
-        rightDownY: 17
-    },
-    {
-        leftUpX: 22,
-        leftUpY: 17,
-        rightDownX: 24,
-        rightDownY: 30
-    }
 ];
 const decorations = [
-    {
-        leftUpX: 11,
-        leftUpY: 14,
-        rightDownX: 17,
-        rightDownY: 17,
-        cssText: "background-color: blue; color: yellow !important; border-color: red !important;"
-    },
-    {
-        leftUpX: 31,
-        leftUpY: 41,
-        rightDownX: 31,
-        rightDownY: 41,
-        cssText: "background-color: rgb(204,11,11); color: green !important; border-color: blue !important;"
-    }
 ]
 export let store: any = {
     height: 50,
     width: 50,
     cellsUnions: [
-        {
-            leftUpX: 11,
-            leftUpY: 14,
-            rightDownX: 17,
-            rightDownY: 17
-        },
-        {
-            leftUpX: 22,
-            leftUpY: 17,
-            rightDownX: 24,
-            rightDownY: 30
-        }
     ],
     messages: [
         {
@@ -60,9 +26,7 @@ export let store: any = {
             y: 17,
             text: "Ребята, привет, что задали по прекрасной жизни без забот?"
         }
-    ],
-    selectedClasses: ['bg-dark', 'text-light'],
-    noSelectedClasses: ['text-dark']
+    ]
 }
 
 const httpClient = new HttpClient(link);

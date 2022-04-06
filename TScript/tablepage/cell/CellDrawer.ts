@@ -1,5 +1,5 @@
 import {Cell} from "./Cell";
-import {store} from "../main/TablePage";
+import {settings} from "../main/TablePage";
 import {Direction} from "../utilities/Direction";
 
 export class CellDrawer {
@@ -45,13 +45,13 @@ export class CellDrawer {
     }
 
     public select(): void {
-        this.$cell.classList.remove(...store.noSelectedClasses);
-        this.$cell.classList.add(...store.selectedClasses);
+        this.$cell.classList.remove(...settings.noSelectedClasses);
+        this.$cell.classList.add(...settings.selectedClasses);
     }
 
     public selectNone(): void {
-        this.$cell.classList.remove(...store.selectedClasses);
-        this.$cell.classList.add(...store.noSelectedClasses);
+        this.$cell.classList.remove(...settings.selectedClasses);
+        this.$cell.classList.add(...settings.noSelectedClasses);
     }
 
     public isEmpty(): boolean {
