@@ -24,14 +24,13 @@ export class HttpClient {
                 headers: request.headers,
                 body: request.body
             }
-        ).then((response) => {
+        ).then(async (response) => {
             if(response.status === 200){
                 return request.proceedRequest(response)
             }else{
-                return response.text().then(text => {
-                    onFailure(response.status, text)
-                    throw new TypeError(text)
-                })
+                const errorText = await response.text();
+                onFailure(response.status, errorText);
+                throw new TypeError(errorText);
             }
         })
     }
