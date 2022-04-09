@@ -105,6 +105,7 @@ function drawDialogs() {
         $img[0].onload = () => {
             let width = $img[0].getBoundingClientRect().width;
             $img.height(width);
+            $img.width(width);
         }
         $chat.find('.chat-size').text(dialog.width + '×' + dialog.height)
         dialog2.messagesCount === 0
