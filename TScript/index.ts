@@ -70,12 +70,14 @@ $(window).on('load', () => {
     checkAuthorization()
     .then(loadStore)
     .then(() => {
-        $('#create-table-form').on('submit', submit);
         drawDialogs()
+        $('#create-table-form').on('submit', submit);
+        let input = $('#table-image-file-input');
+        input.on('change', () => showImage(input));
+    });
 
-        $('.clickable').on('click', () => {
-            $('.clickable').toggleClass('d-none')
-        });
+    $('.clickable').on('click', () => {
+        $('.clickable').toggleClass('d-none')
     });
 })
 
@@ -177,4 +179,17 @@ export function checkAuthorization() {
         new IsLoggedInRequest(),
         () => window.location.href = link + "/oauth2/authorization/google"
     );
+}
+
+function showImage(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            $('#image').attr('src', e.target.result as string);
+            $('#image').removeClass('d-none');
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
 }

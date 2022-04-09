@@ -57,7 +57,8 @@ function loadTable(){
         (code, errorText) => {
             if(code === 404) {
                 console.log("Table not found")
-            }else{
+            }
+            else{
                 console.log(`Error: '${code}, ${errorText}' while loading table info`)
             }
         }
