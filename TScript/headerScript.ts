@@ -20,12 +20,7 @@ window.onload = () => {
             new UserInfoRequest({includeChats: false})
         ).then(response => {
             $('#id-keeper').text(`id: ${response.id}`);
-            info.userId = response.id;
-            console.log(info.userId);
+            localStorage.setItem("userId", response.id);
         })
     })
-}
-
-export function getUserId() {
-    return info.userId;
 }

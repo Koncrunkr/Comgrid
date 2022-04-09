@@ -3,7 +3,6 @@ import {Table} from "../main/Table";
 import {TableMod} from "../main/TableMod";
 import {Direction} from "../utilities/Direction";
 import {ActionType} from "../utilities/Action";
-import {getUserId} from "../../headerScript";
 
 type onTrigger = (event?: any) => void | boolean
 
@@ -71,7 +70,7 @@ export class Cell {
                     this.table.pushAction([ActionType.write, this.x, this.y]);
                 }
                 if (this.text.length === 1) {
-                    this.drawer.addMessage(this.text, this.table.getColor(getUserId()));
+                    this.drawer.addMessage(this.text, this.table.getColor(localStorage.getItem("userId")));
                 }
             } else if(event.inputType[0] === 'd') {
                 this.table.pushAction([ActionType.delete, this.x, this.y]);
