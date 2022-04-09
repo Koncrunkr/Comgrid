@@ -2,7 +2,7 @@ import {IsLoggedInRequest} from "./util/request/IsLoggedInRequest";
 import {HttpClient} from "./util/HttpClient";
 import {UserInfoRequest} from "./util/request/UserInfoRequest";
 
-export let info = {
+let info = {
     userId: ''
 }
 
@@ -23,4 +23,8 @@ window.onload = () => {
             info.userId = response.id;
         })
     })
+}
+
+export function getUserId() {
+    return info.userId;
 }
