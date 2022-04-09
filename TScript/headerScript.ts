@@ -21,6 +21,7 @@ window.onload = () => {
         ).then(response => {
             $('#id-keeper').text(`id: ${response.id}`);
             info.userId = response.id;
+            console.log(info.userId);
         })
     })
 }

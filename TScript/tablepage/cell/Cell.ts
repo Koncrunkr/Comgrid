@@ -71,8 +71,7 @@ export class Cell {
                     this.table.pushAction([ActionType.write, this.x, this.y]);
                 }
                 if (this.text.length === 1) {
-                    this.addMessage(this.text, getUserId());
-                    this.blockNo();
+                    this.drawer.addMessage(this.text, this.table.getColor(getUserId()));
                 }
             } else if(event.inputType[0] === 'd') {
                 this.table.pushAction([ActionType.delete, this.x, this.y]);
