@@ -100,7 +100,9 @@ function drawDialogs() {
         $chat.find('.chat-time').text(dialog2.time);
         if(dialog.avatar.startsWith("/"))
             dialog.avatar = link + dialog.avatar
-        $chat.find('img').attr('src', dialog.avatar);
+        let $img = $chat.find('img');
+        $img.attr('src', dialog.avatar);
+        $img.height($img.width());
         $chat.find('.chat-size').text(dialog.width + '×' + dialog.height)
         dialog2.messagesCount === 0
             ? $chat.find('.chat-unread').remove()
