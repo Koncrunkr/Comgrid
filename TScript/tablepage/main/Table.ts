@@ -8,7 +8,7 @@ import { UserTopic } from "../../util/websocket/UserTopic";
 import { HttpClient } from "../../util/HttpClient";
 import { UserInfoRequest } from "../../util/request/UserInfoRequest";
 import {AddParticipantRequest} from "../../util/request/AddParticipantRequest";
-import {store} from "./TablePage";
+import {settings} from "./TablePage";
 
 export class Table {
     private readonly tableTopic: TableTopic;
@@ -21,6 +21,7 @@ export class Table {
     public readonly width: number;
     public readonly height: number;
     private _$popover = $('#popover');
+    private readonly _colorParticipants = [];
 
     public readonly websocket: WebSocketClient = new WebSocketClient("https://comgrid.ru:8443/websocket");
     private readonly http: HttpClient = new HttpClient("https://comgrid.ru:8443");
@@ -68,8 +69,8 @@ export class Table {
     private fillTable(cellsUnions, decorations, messages): void {
         this.fillStartTable();
         this.union(cellsUnions);
-        this.decorate(decorations);
         this.addMessages(messages);
+        this.decorate(decorations);
     }
 
     private fillStartTable(): void {
@@ -107,7 +108,22 @@ export class Table {
     }
 
     private addMessages(messages): void {
-        messages.forEach(message => this.getCell(message.x, message.y).addMessage(message.text));
+        messages.forEach(message => {
+            this.getCell(message.x, message.y).addMessage(message.text, message.senderId);
+        });
+    }
+
+    public getColor(authorId): string {
+        let i = -1;
+        for (i = 0; i < this._colorParticipants.length; i++) {
+            if (this._colorParticipants[i] == authorId)
+                break;
+        }
+        if (i !== this._colorParticipants.length)
+            return this._colorParticipants[i][1];
+        let colorMap = settings.colorMap;
+        this._colorParticipants.push([authorId, colorMap[i % colorMap.length]]);
+        return colorMap[i % colorMap.length];
     }
 
     private onBodyMouseup(): void {

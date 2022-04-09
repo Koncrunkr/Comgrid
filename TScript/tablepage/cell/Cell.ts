@@ -3,14 +3,12 @@ import {Table} from "../main/Table";
 import {TableMod} from "../main/TableMod";
 import {Direction} from "../utilities/Direction";
 import {ActionType} from "../utilities/Action";
-import {css} from "jquery";
 
 type onTrigger = (event?: any) => void | boolean
 
 export class Cell {
     private drawer: CellDrawer;
     private _friends: Cell[];
-    private _blocked: boolean;
     private _selected: boolean;
 
     constructor(
@@ -153,8 +151,9 @@ export class Cell {
             this._friends.forEach((friend) => friend.addDecor(cssString));
     }
 
-    public addMessage(text): void {
-        this.drawer.addMessage(text);
+    public addMessage(text, authorId): void {
+        let color = this.table.getColor(authorId);
+        this.drawer.addMessage(text, color);
     }
 
     public getCssStyle(): string {
@@ -190,6 +189,7 @@ export class Cell {
     public get text(): string{
         return this.drawer.text;
     }
+
     public set text(text: string){
         this.drawer.text = text;
     }
