@@ -30,6 +30,7 @@ export class Table {
 
     constructor(private _store) {
         this.tableTopic = new TableTopic(parseInt(getParam('id')));
+        this.cellUnionTopic = new CellUnionTopic(_store.id);
         this.websocket.subscribe(this.tableTopic, message => {
             if (message.senderId !== localStorage.getItem("userId"))
                 this.cells[message.x][message.y].addMessage(message.text, message.senderId);
@@ -145,7 +146,8 @@ export class Table {
             cell.selectNone();
             cell.addDecor(style);
         }
-        this.websocket.sendMessage(this.cellUnionTopic, this.getUnionByArr(clone));
+        let union = this.getUnionByArr(clone)
+        this.websocket.sendMessage(this.cellUnionTopic, union);
     }
 
     private getUnionByArr(array): UnionOut {
