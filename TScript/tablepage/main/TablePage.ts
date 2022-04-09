@@ -10,7 +10,7 @@ const link = "https://comgrid.ru:8443";
 export let settings: any = {
     selectedClasses: ['bg-dark', 'text-light'],
     noSelectedClasses: ['text-dark'],
-    colorMap: ['#124561', '#177745', '#775781', '#741258', '#987654']
+    colorMap: ['#FFCECE', '#CEFFCE', '#CECEFF', '#FFFFCE', '#FFCCFF', '#CCFFFF']
 }
 const cellsUnions = [
 ];
