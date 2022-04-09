@@ -28,9 +28,9 @@ export class HttpClient {
             if(response.status === 200){
                 return request.proceedRequest(response)
             }else{
-                response.text().then(text => {
+                return response.text().then(text => {
                     onFailure(response.status, text)
-                    return Promise.reject(text)
+                    throw new TypeError(text)
                 })
             }
         })
