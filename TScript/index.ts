@@ -73,7 +73,6 @@ $(window).on('load', () => {
     .then(loadStore)
     .then(() => {
         drawDialogs()
-        $('#create-table-form').on('submit', submit);
     });
 
     $('.clickable').on('click', () => {
@@ -84,6 +83,7 @@ $(window).on('load', () => {
     $("#shower").on("dragstart", () => false);
     $("#shower-cut").on("dragstart", () => false);
     $("#save-canvas").on("click", saveCanvas);
+    $('#create-table-form').on('submit', submit);
 })
 
 function drawDialogs() {
