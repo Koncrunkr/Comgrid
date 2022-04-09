@@ -1,9 +1,7 @@
 import {HttpClient} from "./util/HttpClient";
 import {CreateTableRequest} from "./util/request/CreateTableRequest";
-import {TableInfoRequest} from "./util/request/TableInfoRequest";
 import {UserInfoRequest} from "./util/request/UserInfoRequest";
 import {IsLoggedInRequest} from "./util/request/IsLoggedInRequest";
-import MouseMoveEvent = JQuery.MouseMoveEvent;
 
 let store: any = {
     dialogs2: [
@@ -134,7 +132,8 @@ function submit() {
         alert("Размер таблицы не может превышать 2500 ячеек");
         return false;
     }
-    let image = document.getElementById("#shower") as HTMLImageElement;
+    let image = document.getElementById("shower") as HTMLImageElement;
+    console.log(image.naturalHeight, image.naturalWidth);
     if(image.naturalHeight !== image.naturalWidth) {
         alert("Картинка должна быть квадратной. Обрежьте её!");
         return false;
