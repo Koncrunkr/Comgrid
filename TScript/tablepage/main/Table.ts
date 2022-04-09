@@ -29,7 +29,8 @@ export class Table {
     constructor(private _store) {
         this.tableTopic = new TableTopic(parseInt(getParam('id')));
         this.websocket.subscribe(this.tableTopic, message => {
-            this.cells[message.x][message.y].addMessage(message.text, message.senderId);
+            if (message.senderId !== localStorage.getItem("userId"))
+                this.cells[message.x][message.y].addMessage(message.text, message.senderId);
         })
         this.http.proceedRequest(
           new UserInfoRequest({}),
