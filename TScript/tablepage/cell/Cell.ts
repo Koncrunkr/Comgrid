@@ -3,6 +3,7 @@ import {Table} from "../main/Table";
 import {TableMod} from "../main/TableMod";
 import {Direction} from "../utilities/Direction";
 import {ActionType} from "../utilities/Action";
+import {info} from "../../headerScript";
 
 type onTrigger = (event?: any) => void | boolean
 
@@ -68,6 +69,9 @@ export class Cell {
                     this.table.pushAction([ActionType.writeWithSpace, this.x, this.y]);
                 }else {
                     this.table.pushAction([ActionType.write, this.x, this.y]);
+                }
+                if (this.isEmpty()) {
+                    this.addMessage('', info.userId);
                 }
             }else if(event.inputType[0] === 'd') {
                 this.table.pushAction([ActionType.delete, this.x, this.y]);
