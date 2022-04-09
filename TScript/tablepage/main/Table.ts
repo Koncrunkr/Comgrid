@@ -170,9 +170,10 @@ export class Table {
 
         this.actions.push(action);
 
-        if(action[0] === ActionType.write ||
-          action[0] === ActionType.writeWithSpace ||
-          action[0] === ActionType.delete
+        if(
+            (action[0] === ActionType.write ||
+            action[0] === ActionType.writeWithSpace ||
+            action[0] === ActionType.delete) && this.cells[action[1]][action[2]].text !== ''
         ){
             this.websocket.sendMessage(this.tableTopic, {
                 x: action[1],

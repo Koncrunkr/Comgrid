@@ -70,10 +70,10 @@ export class Cell {
                 }else {
                     this.table.pushAction([ActionType.write, this.x, this.y]);
                 }
-                if (this.isEmpty()) {
-                    this.addMessage('', info.userId);
+                if (this.text.length === 1) {
+                    this.addMessage(this.text, info.userId);
                 }
-            }else if(event.inputType[0] === 'd') {
+            } else if(event.inputType[0] === 'd') {
                 this.table.pushAction([ActionType.delete, this.x, this.y]);
             }
         }
@@ -158,6 +158,7 @@ export class Cell {
     public addMessage(text, authorId): void {
         let color = this.table.getColor(authorId);
         this.drawer.addMessage(text, color);
+        this.block();
     }
 
     public getCssStyle(): string {
