@@ -108,7 +108,7 @@ function drawParticipants() {
     $container.append($noDel);
     store.participants.forEach((user) => {
         let $user = $('.user-card').clone();
-        $user.removeClass('chat d-none');
+        $user.removeClass('user d-none');
         $user.find('.username').text(user.name);
         $user.find('.user-id').text(user.id);
         let $img = $user.find('img');
@@ -118,5 +118,6 @@ function drawParticipants() {
             $img.height(width);
             $img.width(width);
         }
+        $container.append($user);
     });
 }
