@@ -14,7 +14,7 @@ import {CellUnionTopic, UnionOut} from "../../util/websocket/CellUnionTopic";
 export class Table {
     private readonly tableTopic: TableTopic;
     private userTopic: UserTopic;
-    private cellUnionTopic: CellUnionTopic;
+    //private cellUnionTopic: CellUnionTopic;
     private $tableContainer = $('main');
     public readonly cells: Cell[][] = [];
     public mod: TableMod;
@@ -35,9 +35,9 @@ export class Table {
             if (message.senderId !== localStorage.getItem("userId"))
                 this.cells[message.x][message.y].addMessage(message.text, message.senderId);
         })
-        this.websocket.subscribe(this.cellUnionTopic, message => {
-            this.createUnion(message);
-        })
+        // this.websocket.subscribe(this.cellUnionTopic, message => {
+        //     this.createUnion(message);
+        // })
         this.http.proceedRequest(
           new UserInfoRequest({}),
         ).then(user => {
@@ -147,7 +147,7 @@ export class Table {
             cell.addDecor(style);
         }
         let union = this.getUnionByArr(clone)
-        this.websocket.sendMessage(this.cellUnionTopic, union);
+        //this.websocket.sendMessage(this.cellUnionTopic, union);
     }
 
     private getUnionByArr(array): UnionOut {
