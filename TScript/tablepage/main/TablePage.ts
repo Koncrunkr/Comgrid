@@ -113,11 +113,6 @@ function drawParticipants() {
         $user.find('.user-id').text(user.id);
         let $img = $user.find('img');
         $img.attr('src', user.avatar);
-        $img[0].onload = () => {
-            let width = $img[0].getBoundingClientRect().width;
-            $img.height(width);
-            $img.width(width);
-        }
         $container.append($user);
     });
 }
