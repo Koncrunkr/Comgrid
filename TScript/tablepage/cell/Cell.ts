@@ -69,9 +69,6 @@ export class Cell {
                 }else {
                     this.table.pushAction([ActionType.write, this.x, this.y]);
                 }
-                if (this.text.length === 1) {
-                    this.drawer.addMessage(this.text, this.table.getColor(localStorage.getItem("userId")));
-                }
             } else if(event.inputType[0] === 'd') {
                 this.table.pushAction([ActionType.delete, this.x, this.y]);
             }
