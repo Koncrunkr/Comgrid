@@ -3,6 +3,7 @@ import {CreateTableRequest} from "./util/request/CreateTableRequest";
 import {TableInfoRequest} from "./util/request/TableInfoRequest";
 import {UserInfoRequest} from "./util/request/UserInfoRequest";
 import {IsLoggedInRequest} from "./util/request/IsLoggedInRequest";
+import MouseMoveEvent = JQuery.MouseMoveEvent;
 
 let store: any = {
     dialogs2: [
@@ -65,6 +66,7 @@ let store: any = {
 }
 let link = "https://comgrid.ru:8443";
 const httpClient = new HttpClient(link)
+let leftButtonClicked = false;
 
 $(window).on('load', () => {
     checkAuthorization()
@@ -72,13 +74,16 @@ $(window).on('load', () => {
     .then(() => {
         drawDialogs()
         $('#create-table-form').on('submit', submit);
-        let input = $('#table-image-file-input');
-        input.on('change', () => showImage(input));
     });
 
     $('.clickable').on('click', () => {
         $('.clickable').toggleClass('d-none')
     });
+    let input = document.getElementById('table-image-file-input');
+    input.onchange = () => showImage(input);
+    $("#shower").on("dragstart", () => false);
+    $("#shower-cut").on("dragstart", () => false);
+    $("#save-canvas").on("click", saveCanvas);
 })
 
 function drawDialogs() {
@@ -117,25 +122,32 @@ function drawDialogs() {
 }
 
 function submit() {
-    const avatarFile: any = document.getElementById('table-image-file-input')
+    const avatarFile = (document.getElementById('table-image-file-input') as HTMLInputElement)?.files[0];
     let avatarLink = $('#table-image-link-input').val();
-    if(avatarLink === "" && avatarFile.files[0] === null){
-        alert("You must specify either image or link to image")
-        return false
+    if(avatarLink === "" && avatarFile === null){
+        alert("You must specify either image or link to image");
+        return false;
     }
     let height = $('#table-height-input').val();
     let width = $('#table-width-input').val();
+    if((+height) * (+width) > 2500) {
+        alert("Размер таблицы не может превышать 2500 ячеек");
+        return false;
+    }
+    let image = document.getElementById("#shower") as HTMLImageElement;
+    if(image.naturalHeight !== image.naturalWidth) {
+        alert("Картинка должна быть квадратной. Обрежьте её!");
+        return false;
+    }
+    return false;
     const newTable = new CreateTableRequest({
         name: $('#table-name-input').val() as string,
         width: width as number,
         height: height as number,
         avatarLink: avatarLink as string,
-        avatarFile: avatarFile?.files[0]
+        avatarFile: avatarFile
     })
-    if(parseInt(height as string) * parseInt(width as string) > 2500){
-        alert("Размер таблицы не может превышать 2500 ячеек");
-        return false;
-    }
+
     postTable(newTable)
     .then((table) => {
         console.log(table)
@@ -183,13 +195,123 @@ export function checkAuthorization() {
 
 function showImage(input) {
     if (input.files && input.files[0]) {
-        var reader = new FileReader();
+        let reader = new FileReader();
+        let shower = document.getElementById('shower') as HTMLImageElement;
+        console.log(shower.naturalWidth, shower.naturalHeight);
 
         reader.onload = function(e) {
-            $('#image').attr('src', e.target.result as string);
-            $('#image').removeClass('d-none');
+            shower.classList.remove('d-none');
+
+            let method = () => {
+                let dark = $('.dark-background');
+                shower.width = 500;
+                shower.height = shower.naturalHeight * shower.width / shower.naturalWidth;
+                dark.removeClass('d-none');
+                dark.width(shower.width);
+                dark.height(shower.height);
+
+                let showerCut: HTMLCanvasElement = document.getElementById('shower-cut') as HTMLCanvasElement;
+                showerCut.classList.remove('d-none');
+                showerCut.width = shower.width * 2 / 3;
+                showerCut.height = shower.width * 2 / 3;
+                let offset = shower.width / 6;
+                showerCut.style.top = `${offset}px`;
+                showerCut.style.left = `${offset}px`;
+
+                showerCut.removeEventListener('mousedown', showerCutMove);
+                showerCut.addEventListener('mousedown', showerCutMove);
+
+                let context = showerCut.getContext('2d');
+                context.drawImage(shower, -offset, -offset, shower.width, shower.width);
+                //context.strokeRect(0, 0, shower.width, shower.width);
+                shower.setAttribute('src', e.target.result as string);
+                shower.removeEventListener('load', method);
+
+                $('#save-canvas').removeClass('d-none');
+            }
+
+            shower.addEventListener('load', method);
+            shower.setAttribute('src', e.target.result as string);
         };
 
         reader.readAsDataURL(input.files[0]);
     }
+}
+
+function saveCanvas() {
+    let showerCut = document.getElementById('shower-cut') as HTMLCanvasElement;
+    let keeper = document.getElementById('shower') as HTMLImageElement;
+
+
+    showerCut.toBlob(blob => {
+        let dt = new DataTransfer();
+        dt.items.add(new File([blob], 'image.png', {type: 'image/png'}));
+        let file_list = dt.files;
+
+        console.log('Коллекция файлов создана:');
+        console.dir(file_list);
+
+        let input = document.getElementById('table-image-file-input') as HTMLInputElement
+        input.files = file_list;
+        showImage(input);
+    })
+}
+
+let showerCutMove = function(event) {
+    let shower = document.getElementById('shower-cut') as HTMLCanvasElement;
+    let keeper = document.getElementById('shower') as HTMLImageElement;
+    let bounding = keeper.getBoundingClientRect();
+    let shiftX = event.clientX - shower.getBoundingClientRect().left;
+    let shiftY = event.clientY - shower.getBoundingClientRect().top;
+
+    shower.style.position = 'absolute';
+
+    moveAt(event.pageX, event.pageY);
+
+    function moveAt(pageX, pageY) {
+        let left = Math.min(Math.max(pageX - shiftX - bounding.left, 0), bounding.width - shower.width);
+        let top = Math.min(Math.max(pageY - shiftY - bounding.top, 0), bounding.height - shower.height);
+        shower.style.left = left + 'px';
+        shower.style.top = top + 'px';
+        let context = shower.getContext('2d')
+        context.clearRect(0, 0, bounding.width, bounding.height);
+        context.drawImage(keeper, -left, -top, bounding.width, bounding.height);
+        //context.strokeRect(0, 0, shower.width, shower.height);
+    }
+
+    function resize(increase: boolean) {
+        let width = Math.min(shower.width + (increase ? 6 : -6), bounding.width, bounding.height);
+        shower.width = width;
+        shower.height = width;
+        let boundingIn = shower.getBoundingClientRect();
+
+        let left = Math.min(Math.max(+shower.style.left.slice(0,-2), 0), bounding.width - shower.width);
+        let top = Math.min(Math.max(+shower.style.top.slice(0,-2), 0), bounding.height - shower.height);
+        shower.style.left = left + 'px';
+        shower.style.top = top + 'px';
+        let context = shower.getContext('2d')
+        context.clearRect(0, 0, bounding.width, bounding.height);
+        context.drawImage(keeper, -left, -top, bounding.width, bounding.height);
+        //context.strokeRect(0, 0, shower.width, shower.height);
+    }
+
+    function onMouseMove(event: MouseEvent) {
+        if (event.ctrlKey) {
+            let newShiftX = event.clientX - shower.getBoundingClientRect().left;
+            let newShiftY = event.clientY - shower.getBoundingClientRect().top;
+            let increase = (newShiftX - newShiftY - shiftX + shiftY) > 0;
+            shiftX = newShiftX;
+            shiftY = newShiftY;
+            resize(increase);
+        }
+        else
+            moveAt(event.pageX, event.pageY);
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+
+    shower.onmouseup = function () {
+        document.removeEventListener('mousemove', onMouseMove);
+        shower.onmouseup = null;
+    };
 }

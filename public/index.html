@@ -1,5 +1,5 @@
 <!DOCTYPE html >
-<html lang="ru">
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
 <head>
     <link rel="icon" type="image/png" href="./favicon.png">
     <meta charset="utf-8" />
@@ -79,13 +79,17 @@
                                 <a type="button" class="btn btn-dark">Тыкалка</a>
                             </label>
                             <input id="table-image-file-input" type="file" class="d-none"/>
+                        </div>
+                        <div class="form-group col-12 img-keeper user-select-none">
                             <img id="shower" class="d-none" />
+                            <span class="dark-background d-none"></span>
+                            <canvas id="shower-cut" class="d-none" width="256px" height="256px" ></canvas>
+                            <button type="button" id="save-canvas" class="btn btn-dark d-none">Сохранить</button>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer text-right p-1">
                     <button type="submit" class="btn btn-dark mr-1">Создать</button>
-                    <button id="clear-button" type="reset" class="d-none"></button>
                 </div>
             </div>
         </div>
