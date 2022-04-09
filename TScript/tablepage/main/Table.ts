@@ -116,7 +116,7 @@ export class Table {
     public getColor(authorId): string {
         let i = -1;
         for (i = 0; i < this._colorParticipants.length; i++) {
-            if (this._colorParticipants[i] == authorId)
+            if (this._colorParticipants[i][0] == authorId)
                 break;
         }
         if (i !== this._colorParticipants.length)
