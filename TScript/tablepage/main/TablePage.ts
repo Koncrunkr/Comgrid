@@ -51,7 +51,8 @@ function loadTable(){
     let chatId = parseInt(getParam('id'));
     return httpClient.proceedRequest(
         new TableInfoRequest({
-            chatId: chatId
+            chatId: chatId,
+            includeParticipants: true
         }),
         (code, errorText) => {
             if(code === 404) {

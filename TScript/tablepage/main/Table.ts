@@ -9,10 +9,12 @@ import { HttpClient } from "../../util/HttpClient";
 import { UserInfoRequest } from "../../util/request/UserInfoRequest";
 import {AddParticipantRequest} from "../../util/request/AddParticipantRequest";
 import {settings} from "./TablePage";
+import {CellUnionTopic, UnionOut} from "../../util/websocket/CellUnionTopic";
 
 export class Table {
     private readonly tableTopic: TableTopic;
     private userTopic: UserTopic;
+    private cellUnionTopic: CellUnionTopic;
     private $tableContainer = $('main');
     public readonly cells: Cell[][] = [];
     public mod: TableMod;
@@ -32,12 +34,14 @@ export class Table {
             if (message.senderId !== localStorage.getItem("userId"))
                 this.cells[message.x][message.y].addMessage(message.text, message.senderId);
         })
+        this.websocket.subscribe(this.cellUnionTopic, message => {
+            this.createUnion(message);
+        })
         this.http.proceedRequest(
           new UserInfoRequest({}),
         ).then(user => {
             this.userTopic = new UserTopic(user.id)
             this.websocket.subscribe(this.userTopic, message => {
-                console.log(message)
             })
         })
 
@@ -140,6 +144,17 @@ export class Table {
             cell.setFriends(clone);
             cell.selectNone();
             cell.addDecor(style);
+        }
+        this.websocket.sendMessage(this.cellUnionTopic, this.getUnionByArr(clone));
+    }
+
+    private getUnionByArr(array): UnionOut {
+        return {
+            chatId: this._store.chatId,
+            xcoordLeftTop: array.reduce((current, result) => current[0] < result ? current[0] : result, array[0][0]),
+            ycoordLeftTop: array.reduce((current, result) => current[1] < result ? current[1] : result, array[0][1]),
+            xcoordRightBottom: array.reduce((current, result) => current[0] > result ? current[0] : result, array[0][0]),
+            ycoordRightBottom: array.reduce((current, result) => current[1] > result ? current[1] : result, array[0][1])
         }
     }
 
