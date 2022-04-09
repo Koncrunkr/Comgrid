@@ -139,7 +139,6 @@ function submit() {
         alert("Картинка должна быть квадратной. Обрежьте её!");
         return false;
     }
-    return false;
     const newTable = new CreateTableRequest({
         name: $('#table-name-input').val() as string,
         width: width as number,
