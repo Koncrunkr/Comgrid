@@ -44,6 +44,7 @@ $(window).on('load', () => {
         store.cellsUnions = cellsUnions;
         store.decorations = decorations;
         table = new Table(store);
+        drawParticipants();
     })
 });
 
@@ -97,5 +98,25 @@ function loadTableMessages(){
         }
     ).then((messages) => {
         store.messages = messages
+    });
+}
+
+function drawParticipants() {
+    let $container = $('.user-container');
+    let $noDel = $container.find('.no-deletable');
+    $container.html('');
+    $container.append($noDel);
+    store.participants.forEach((user) => {
+        let $user = $('.user-card').clone();
+        $user.removeClass('chat d-none');
+        $user.find('.username').text(user.name);
+        $user.find('.user-id').text(user.id);
+        let $img = $user.find('img');
+        $img.attr('src', user.avatar);
+        $img[0].onload = () => {
+            let width = $img[0].getBoundingClientRect().width;
+            $img.height(width);
+            $img.width(width);
+        }
     });
 }

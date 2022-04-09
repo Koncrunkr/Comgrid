@@ -26,6 +26,14 @@
                     </button>
                 </div>
                 <div class="modal-body container">
+                    <div class="user-container">
+                        <div class="no-deletable card container bg-dark text-light mt-2">
+                            <div class="card-body row p-2 align-items-center">
+                                <div class="ml-1 pl-0 col">Участники:</div>
+                            </div>
+                        </div>
+
+                    </div>
                     <div class="form-row row">
                         <div class="form-group col-md-6 col-12">
                             <label for="id-input">ID пользователя</label>
@@ -41,6 +49,20 @@
         </div>
     </div>
 </form>
+
+<div class="user-card card container bg-light d-none mt-lg-1 mt-2" role="button">
+    <div class="card-body row p-2 media align-items-center">
+        <div class="col-lg-1 p-1 m-n1">
+            <img class="img-fluid rounded-circle" />
+        </div>
+        <div class="col-lg-11">
+            <h5 class="card-title username text-truncate w-100"></h5>
+            <div class="text-truncate">
+                <span class="text-secondary user-id"></span>
+            </div>
+        </div>
+    </div>
+</div>
 
 <header>
     <nav class="navbar navbar-expand navbar-light bg-light justify-content-between">
