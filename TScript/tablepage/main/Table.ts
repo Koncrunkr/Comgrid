@@ -30,7 +30,7 @@ export class Table {
 
     constructor(private _store) {
         this.tableTopic = new TableTopic(parseInt(getParam('id')));
-        this.cellUnionTopic = new CellUnionTopic(_store.id);
+        //this.cellUnionTopic = new CellUnionTopic(_store.id);
         this.websocket.subscribe(this.tableTopic, message => {
             if (message.senderId !== localStorage.getItem("userId"))
                 this.cells[message.x][message.y].addMessage(message.text, message.senderId);
