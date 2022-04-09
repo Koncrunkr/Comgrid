@@ -92,7 +92,7 @@ function drawDialogs() {
     $container.html('');
     $container.append($noDel);
     store.dialogs.slice().reverse().forEach((dialog, index) => {
-        let dialog2 = store.dialogs2[index];
+        let dialog2 = store.dialogs2[index % store.dialogs2.length];
         let $chat = $('.chat').clone();
         $chat.removeClass('chat d-none');
         $chat.find('a').attr('href', 'pages/table?id=' + dialog.id);
