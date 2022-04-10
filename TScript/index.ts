@@ -189,13 +189,6 @@ function loadStore() {
     })
 }
 
-export function checkAuthorization() {
-    return httpClient.proceedRequest(
-        new IsLoggedInRequest(),
-        () => window.location.href = link + "/oauth2/authorization/google"
-    );
-}
-
 function showImage(input) {
     if (input.files && input.files[0]) {
         let reader = new FileReader();
