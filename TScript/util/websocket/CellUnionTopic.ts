@@ -20,11 +20,10 @@ export class UnionOut {
 
 export class CellUnionTopic extends Topic<UnionIn, UnionOut> {
     constructor(readonly tableId: number) {
-        super("/connection/table_cell_union", "/connection/table_cell_union/edit", tableId);
+        super("/connection/table_cell_union/{id}", "/connection/table_cell_union", tableId);
     }
 
     proceedMessage(message): UnionIn {
         return JSON.parse(message) as UnionIn;
     }
-
 }

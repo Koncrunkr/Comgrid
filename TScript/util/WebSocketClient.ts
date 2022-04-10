@@ -22,15 +22,15 @@ export class WebSocketClient{
         this.connected = false
     }
 
-    subscribe<In, Out>(topic: Topic<In, Out>, onMessage: (In) => unknown){
+    subscribe<MessageIn, MessageOut>(topic: Topic<MessageIn, MessageOut>, onMessage: (MessageIn) => unknown){
         if(this.stompClient.connected) {
-            this.stompClient.subscribe(topic.destination(), message => {
+            this.stompClient.subscribe(topic.receiveDestination(), message => {
                 const str = new TextDecoder().decode(message.binaryBody)
                 onMessage(topic.proceedMessage(str))
             })
         }else{
             this.subscribers.push(() => {
-                this.stompClient.subscribe(topic.destination(), message => {
+                this.stompClient.subscribe(topic.receiveDestination(), message => {
                     const str = new TextDecoder().decode(message.binaryBody)
                     onMessage(topic.proceedMessage(str))
                 })
@@ -38,8 +38,8 @@ export class WebSocketClient{
         }
     }
 
-    sendMessage<In, Out>(topic: Topic<In, Out>, message: Out){
-        this.stompClient.send(topic.receive(), {}, JSON.stringify(message))
+    sendMessage<MessageIn, MessageOut>(topic: Topic<MessageIn, MessageOut>, message: MessageOut){
+        this.stompClient.send(topic.receiveDestination(), {}, JSON.stringify(message))
     }
 }
 

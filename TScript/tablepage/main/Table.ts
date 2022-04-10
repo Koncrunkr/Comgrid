@@ -2,19 +2,20 @@ import { Cell } from "../cell/Cell";
 import { TableMod } from "./TableMod";
 import { Action, ActionType } from "../utilities/Action";
 import { WebSocketClient } from "../../util/WebSocketClient";
-import { TableTopic } from "../../util/websocket/TableTopic";
 import { getParam } from "../../util/Util";
 import { UserTopic } from "../../util/websocket/UserTopic";
 import { HttpClient } from "../../util/HttpClient";
 import { UserInfoRequest } from "../../util/request/UserInfoRequest";
 import {AddParticipantRequest} from "../../util/request/AddParticipantRequest";
 import {settings} from "./TablePage";
-import {CellUnionTopic, UnionOut} from "../../util/websocket/CellUnionTopic";
+import { CellUnionTopic, UnionOut } from "../../util/websocket/CellUnionTopic";
+import { MessageTopic } from "../../util/websocket/MessageTopic";
 
 export class Table {
-    private readonly tableTopic: TableTopic;
     private readonly userTopic: UserTopic;
-    //private cellUnionTopic: CellUnionTopic;
+    private readonly messageTopic: MessageTopic;
+    private readonly cellUnionTopic: CellUnionTopic;
+
     private $tableContainer = $('main');
     public readonly cells: Cell[][] = [];
     public mod: TableMod;
@@ -29,7 +30,7 @@ export class Table {
     private readonly http: HttpClient = new HttpClient("https://comgrid.ru:8443");
 
     constructor(private _store) {
-        [this.tableTopic, this.userTopic] = this.setWebsocketSubscriptions();
+        [this.messageTopic, this.userTopic, this.cellUnionTopic] = this.setWebsocketSubscriptions();
 
         this.width = _store.width;
         this.height = _store.height;
@@ -48,19 +49,23 @@ export class Table {
         });
     }
 
-    private setWebsocketSubscriptions(): [TableTopic, UserTopic] {
-        const tableTopic = new TableTopic(parseInt(getParam('id')));
-        //this.cellUnionTopic = new CellUnionTopic(_store.id);
-        this.websocket.subscribe(this.tableTopic, message => {
+    private setWebsocketSubscriptions(): [MessageTopic, UserTopic, CellUnionTopic] {
+        let tableId = parseInt(getParam('id'));
+
+        const tableReceiveTopic = new MessageTopic(tableId);
+        this.websocket.subscribe(tableReceiveTopic, message => {
             if (message.senderId !== localStorage.getItem("userId"))
                 this.cells[message.x][message.y].addMessage(message.text, message.senderId);
         })
-        // this.websocket.subscribe(this.cellUnionTopic, message => {
-        //     this.createUnion(message);
-        // })
+
+        const cellUnionReceiveTopic = new CellUnionTopic(tableId);
+        this.websocket.subscribe(cellUnionReceiveTopic, message => {
+            this.createUnion(message);
+        })
+
         const userTopic = new UserTopic(localStorage.getItem("userId"))
-        this.websocket.subscribe(this.userTopic, message => console.log(message))
-        return [tableTopic, userTopic]
+        this.websocket.subscribe(userTopic, message => console.log(message))
+        return [tableReceiveTopic, userTopic, cellUnionReceiveTopic]
     }
 
     private addParticipant(): boolean {
@@ -147,7 +152,7 @@ export class Table {
             cell.addDecor(style);
         }
         let union = this.getUnionByArr(clone)
-        //this.websocket.sendMessage(this.cellUnionTopic, union);
+        this.websocket.sendMessage(this.cellUnionTopic, union);
     }
 
     private getUnionByArr(array): UnionOut {
@@ -192,10 +197,10 @@ export class Table {
             action[0] === ActionType.writeWithSpace ||
             action[0] === ActionType.delete) && this.cells[action[1]][action[2]].text !== ''
         ){
-            this.websocket.sendMessage(this.tableTopic, {
+            this.websocket.sendMessage(this.messageTopic, {
                 x: action[1],
                 y: action[2],
-                chatId: getParam("id"),
+                chatId: parseInt(getParam("id")),
                 text: this.cells[action[1]][action[2]].text
             })
         }
