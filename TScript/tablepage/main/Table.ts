@@ -159,7 +159,7 @@ export class Table {
 
     private getUnionByArr(array: Cell[]): UnionOut {
         return {
-            chatId: this._store.chatId,
+            chatId: this._store.id,
             xcoordLeftTop: array.reduce((result, current) => current.x < result ? current.x : result, array[0].x),
             ycoordLeftTop: array.reduce((result, current) => current.y < result ? current.y : result, array[0].y),
             xcoordRightBottom: array.reduce((result, current) => current.x > result ? current.x : result, array[0].x),

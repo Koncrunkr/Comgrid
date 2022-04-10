@@ -4,6 +4,7 @@ import {TableInfoRequest} from "../../util/request/TableInfoRequest";
 import {IsLoggedInRequest} from "../../util/request/IsLoggedInRequest";
 import {TableMessagesRequest} from "../../util/request/TableMessagesRequest";
 import { getParam } from "../../util/Util";
+import {CellUnionsRequest} from "../../util/request/CellUnionsRequest";
 
 let table;
 const link = "https://comgrid.ru:8443";
@@ -38,10 +39,10 @@ $(window).on('load', () => {
             alert("You're not logged in, please log in")
         }
     ).then(loadTable)
+    .then(loadTableUnions)
     .then(loadTableMessages)
     .then(() => {
         console.log("Table messages")
-        store.cellsUnions = cellsUnions;
         store.decorations = decorations;
         table = new Table(store);
         drawParticipants();
@@ -98,6 +99,38 @@ function loadTableMessages(){
         }
     ).then((messages) => {
         store.messages = messages
+    });
+}
+
+function loadTableUnions(){
+    let chatId = parseInt(getParam('id'));
+    return httpClient.proceedRequest(
+        new CellUnionsRequest({
+            chatId: chatId,
+            xcoordLeftTop: 0,
+            ycoordLeftTop: 0,
+            xcoordRightBottom: store.width - 1,
+            ycoordRightBottom: store.height - 1,
+        }),
+        (code, errorText) => {
+            if(code === 400){
+                console.log(code + ", " + errorText)
+            }
+            if(code === 404){
+                alert("code: " + code + ", error: " + errorText);
+                console.log("code: " + code + ", error: " + errorText);
+            } else if(code === 403 && errorText === "access.chat.read_messages"){
+                alert("You don't have enough rights to access this chat")
+            }else if(
+                code === 422 && (errorText === "out_of_bounds" ||
+                    errorText === "time.negative-or-future"
+                )){ // should not happen
+                console.log(`height: ${store.height - 1}, width: ${store.width - 1}`)
+                alert("Should not happen, see console")
+            }
+        }
+    ).then((messages) => {
+        store.cellsUnions = messages
     });
 }
 
