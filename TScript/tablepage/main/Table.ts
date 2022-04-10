@@ -13,7 +13,7 @@ import {CellUnionTopic, UnionOut} from "../../util/websocket/CellUnionTopic";
 
 export class Table {
     private readonly tableTopic: TableTopic;
-    private userTopic: UserTopic;
+    private readonly userTopic: UserTopic;
     //private cellUnionTopic: CellUnionTopic;
     private $tableContainer = $('main');
     public readonly cells: Cell[][] = [];
@@ -29,22 +29,7 @@ export class Table {
     private readonly http: HttpClient = new HttpClient("https://comgrid.ru:8443");
 
     constructor(private _store) {
-        this.tableTopic = new TableTopic(parseInt(getParam('id')));
-        //this.cellUnionTopic = new CellUnionTopic(_store.id);
-        this.websocket.subscribe(this.tableTopic, message => {
-            if (message.senderId !== localStorage.getItem("userId"))
-                this.cells[message.x][message.y].addMessage(message.text, message.senderId);
-        })
-        // this.websocket.subscribe(this.cellUnionTopic, message => {
-        //     this.createUnion(message);
-        // })
-        this.http.proceedRequest(
-          new UserInfoRequest({}),
-        ).then(user => {
-            this.userTopic = new UserTopic(user.id)
-            this.websocket.subscribe(this.userTopic, message => {
-            })
-        })
+        [this.tableTopic, this.userTopic] = this.setWebsocketSubscriptions();
 
         this.width = _store.width;
         this.height = _store.height;
@@ -61,6 +46,21 @@ export class Table {
             event.stopPropagation();
             return false;
         });
+    }
+
+    private setWebsocketSubscriptions(): [TableTopic, UserTopic] {
+        const tableTopic = new TableTopic(parseInt(getParam('id')));
+        //this.cellUnionTopic = new CellUnionTopic(_store.id);
+        this.websocket.subscribe(this.tableTopic, message => {
+            if (message.senderId !== localStorage.getItem("userId"))
+                this.cells[message.x][message.y].addMessage(message.text, message.senderId);
+        })
+        // this.websocket.subscribe(this.cellUnionTopic, message => {
+        //     this.createUnion(message);
+        // })
+        const userTopic = new UserTopic(localStorage.getItem("userId"))
+        this.websocket.subscribe(this.userTopic, message => console.log(message))
+        return [tableTopic, userTopic]
     }
 
     private addParticipant(): boolean {

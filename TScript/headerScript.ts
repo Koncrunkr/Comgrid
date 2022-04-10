@@ -1,6 +1,7 @@
 import {IsLoggedInRequest} from "./util/request/IsLoggedInRequest";
 import {HttpClient} from "./util/HttpClient";
 import {UserInfoRequest} from "./util/request/UserInfoRequest";
+import { onLoad } from "./index";
 
 let info = {
     userId: ''
@@ -21,6 +22,7 @@ window.onload = () => {
         ).then(response => {
             $('#id-keeper').text(`id: ${response.id}`);
             localStorage.setItem("userId", response.id);
+            onLoad()
         })
     })
 }

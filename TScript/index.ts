@@ -66,12 +66,11 @@ let link = "https://comgrid.ru:8443";
 const httpClient = new HttpClient(link)
 let leftButtonClicked = false;
 
-$(window).on('load', () => {
-    checkAuthorization()
-    .then(loadStore)
-    .then(() => {
-        drawDialogs()
-    });
+export function onLoad(){
+    loadStore()
+      .then(() => {
+          drawDialogs()
+      });
 
     $('.clickable').on('click', () => {
         $('.clickable').toggleClass('d-none')
@@ -82,7 +81,7 @@ $(window).on('load', () => {
     $("#shower-cut").on("dragstart", () => false);
     $("#save-canvas").on("click", saveCanvas);
     $('#create-table-form').on('submit', submit);
-})
+}
 
 function drawDialogs() {
     let $container = $('.chat-container');
