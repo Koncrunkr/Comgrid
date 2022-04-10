@@ -126,9 +126,8 @@ export class CellDrawer {
         this.$cell.setAttribute("style", cssString);
     }
 
-    public addMessage(text, color): void {
+    public addMessage(text): void {
         this.$span.textContent = text;
-        this.addDecor("background-color: " + color);
     }
 
     public getCssStyle(): string {

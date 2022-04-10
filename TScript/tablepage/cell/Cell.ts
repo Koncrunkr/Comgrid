@@ -70,7 +70,7 @@ export class Cell {
                     this.table.pushAction([ActionType.write, this.x, this.y]);
                 }
                 if (this.text.length === 1) {
-                    this.drawer.addMessage(this.text, this.table.getColor(localStorage.getItem("userId")));
+                    this.addMessage(this.text, localStorage.getItem("userId"), false);
                 }
             } else if(event.inputType[0] === 'd') {
                 this.table.pushAction([ActionType.delete, this.x, this.y]);
@@ -154,10 +154,11 @@ export class Cell {
             this._friends.forEach((friend) => friend.addDecor(cssString));
     }
 
-    public addMessage(text, authorId): void {
+    public addMessage(text, authorId, block = true): void {
         let color = this.table.getColor(authorId);
-        this.drawer.addMessage(text, color);
-        this.block();
+        this.drawer.addMessage(text);
+        this.addDecorWithFriends(`background-color: ${color};`);
+        if (block) this.block();
     }
 
     public getCssStyle(): string {
@@ -190,11 +191,19 @@ export class Cell {
         clone.forEach((elem) => elem.separate());
     }
 
-    public get text(): string{
+    public get text(): string {
         return this.drawer.text;
     }
 
-    public set text(text: string){
+    public set text(text: string) {
         this.drawer.text = text;
+    }
+
+    public clearWithFriends() {
+        let id = localStorage.getItem("userId");
+        this._friends.forEach(friend => {
+            friend.addMessage("", id);
+            this.table.pushAction([ActionType.delete, friend.x, friend.y]);
+        });
     }
 }

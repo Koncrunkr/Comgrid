@@ -101,10 +101,10 @@ export class Table {
     }
 
     private createUnion(cellsUnion): void {
-        for (let i = cellsUnion.leftUpX; i <= cellsUnion.rightDownX; i++)
-            for (let j = cellsUnion.leftUpY; j <= cellsUnion.rightDownY; j++)
+        for (let i = cellsUnion.xcoordLeftTop; i <= cellsUnion.xcoordRightBottom; i++)
+            for (let j = cellsUnion.ycoordLeftTop; j <= cellsUnion.ycoordRightBottom; j++)
                 this.getCell(i, j).selectWithFriends(true);
-        this.selectDown();
+        this.selectDown(true);
     }
 
     private decorate(decorations): void {
@@ -142,7 +142,7 @@ export class Table {
         this.hidePopover();
     }
 
-    private selectDown(): void {
+    private selectDown(loading = false): void {
         let clone = this.selectedCells.map(elem => elem);
         if (clone.length === 0)
             return;
@@ -153,8 +153,10 @@ export class Table {
             cell.selectNone();
             cell.addDecor(style);
         }
-        let union = this.getUnionByArr(clone)
-        this.websocket.sendMessage(this.cellUnionTopic, union);
+        if (!loading) {
+            let union = this.getUnionByArr(clone)
+            this.websocket.sendMessage(this.cellUnionTopic, union);
+        }
     }
 
     private getUnionByArr(array: Cell[]): UnionOut {
@@ -195,9 +197,9 @@ export class Table {
         this.actions.push(action);
 
         if(
-            (action[0] === ActionType.write ||
-            action[0] === ActionType.writeWithSpace ||
-            action[0] === ActionType.delete) && this.cells[action[1]][action[2]].text !== ''
+            ((action[0] === ActionType.write ||
+            action[0] === ActionType.writeWithSpace ) && this.cells[action[1]][action[2]].text !== '') ||
+            action[0] === ActionType.delete
         ){
             this.websocket.sendMessage(this.messageTopic, {
                 x: action[1],
@@ -255,6 +257,13 @@ export class Table {
             cell.focus();
             this.hidePopover();
         });
+
+        let $button3 = this._$popover.find('#clearButton');
+        $button3.off('click');
+        $button3.on('click', () => {
+            cell.clearWithFriends();
+            this.hidePopover();
+        })
     }
 
     public hidePopover(){

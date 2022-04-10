@@ -12,21 +12,28 @@ export class UnionResponse{
 }
 
 export class CellUnionsRequest implements RequestWrapper<UnionResponse[]>{
-    readonly body: any
-    constructor(body: {
+    readonly parameters: Record<string, string>;
+
+    constructor(parameters: {
         chatId: number,
         xcoordLeftTop: number,
         ycoordLeftTop: number,
         xcoordRightBottom: number,
         ycoordRightBottom: number
     }) {
-        this.body = JSON.stringify(body)
+        this.parameters = {
+            chatId: parameters.chatId.toString(),
+            xcoordLeftTop: parameters.xcoordLeftTop.toString(),
+            ycoordLeftTop: parameters.ycoordLeftTop.toString(),
+            xcoordRightBottom: parameters.xcoordRightBottom.toString(),
+            ycoordRightBottom: parameters.ycoordRightBottom.toString()
+        }
     }
-    readonly endpoint: string = '/message/list';
+    readonly endpoint: string = '/message/unions';
     readonly headers: HeadersInit = {
         "Content-Type": "application/json"
     };
-    readonly methodType: MethodType = MethodType.POST;
+    readonly methodType: MethodType = MethodType.GET;
 
     async proceedRequest(response: Response): Promise<UnionResponse[]> {
         const text = await response.text();
