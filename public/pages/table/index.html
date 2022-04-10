@@ -26,6 +26,18 @@
                     </button>
                 </div>
                 <div class="modal-body container">
+                    <div class="row">
+                        <div class="col-2">
+                            <b>Invitation link:</b>
+                        </div>
+                        <div class="col-6">
+                            <span id="invitation-link-keeper"></span>
+                        </div>
+                        <div class="col-4 text-right">
+                            <button type="button" id="invitation-create-button" class="btn btn-dark">create link</button>
+                            <button type="button" id="invitation-disable-button" class="btn btn-dark">disable link</button>
+                        </div>
+                    </div>
                     <div class="user-container">
                         <div class="no-deletable card container bg-dark text-light mt-2">
                             <div class="card-body row p-2 align-items-center">
@@ -34,7 +46,7 @@
                         </div>
 
                     </div>
-                    <div class="form-row row">
+                    <div class="form-row row mt-2">
                         <div class="form-group col-md-6 col-12">
                             <label for="id-input">ID пользователя</label>
                             <input id="id-input" type="text" class="form-control" placeholder="100000000000000000000"
@@ -50,8 +62,8 @@
     </div>
 </form>
 
-<div class="user-card card container bg-light d-none mt-lg-1 mt-2">
-    <div class="card-body row p-2 media align-items-center">
+<div class="user-card card container bg-light d-none">
+    <div class="card-body p-1 row media align-items-center">
         <div class="col-lg-1 p-1 m-n1">
             <img class="img-fluid rounded-circle" />
         </div>

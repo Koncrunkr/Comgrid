@@ -5,11 +5,12 @@ import { WebSocketClient } from "../../util/WebSocketClient";
 import { getParam } from "../../util/Util";
 import { UserTopic } from "../../util/websocket/UserTopic";
 import { HttpClient } from "../../util/HttpClient";
-import { UserInfoRequest } from "../../util/request/UserInfoRequest";
 import {AddParticipantRequest} from "../../util/request/AddParticipantRequest";
-import {settings} from "./TablePage";
+import {drawParticipants, settings} from "./TablePage";
 import { CellUnionTopic, UnionOut } from "../../util/websocket/CellUnionTopic";
 import { MessageTopic } from "../../util/websocket/MessageTopic";
+import {GetLinkRequest} from "../../util/request/GetLinkRequest";
+import {DeleteLinkRequest} from "../../util/request/DeleteLinkRequest";
 
 export class Table {
     private readonly userTopic: UserTopic;
@@ -41,6 +42,9 @@ export class Table {
         $('#page-name').text(_store.name);
         $(document).prop("title", _store.name);
         $('#add-to-table-form').on('submit', () => this.addParticipant());
+        $('#invitation-create-button').on('click', () => this.createInvitation());
+        $('#invitation-disable-button').on('click', () => this.deleteInvitation());
+
 
         this._$popover.on('mouseup', (event) => {
             event.preventDefault();
@@ -72,8 +76,28 @@ export class Table {
         this.http.proceedRequest(
             new AddParticipantRequest({chatId: this._store.id, userId: $('#id-input').val().toString()}),
             (code, errorText) => alert(errorText)
-        ).then(() => alert("succeed"));
+        ).then(drawParticipants);
         return false;
+    }
+
+    private createInvitation(): void {
+        this.http.proceedRequest(
+            new GetLinkRequest({chatId: this._store.id}),
+            (code, errorText) => alert(errorText)
+        ).then(response => {
+            $('#invitation-link-keeper').text(
+                `https://comgrid.ru/pages/invite?code=${response.code}&chatId=${this._store.id}`
+            );
+        })
+    }
+
+    private deleteInvitation(): void {
+        this.http.proceedRequest(
+            new DeleteLinkRequest({chatId: this._store.id}),
+            (code, errorText) => alert(errorText)
+        ).then(() => {
+            $('#invitation-link-keeper').text("");
+        })
     }
 
     private fillTable(cellsUnions, decorations, messages): void {

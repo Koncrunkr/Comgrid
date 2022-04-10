@@ -134,7 +134,7 @@ function loadTableUnions(){
     });
 }
 
-function drawParticipants() {
+export function drawParticipants() {
     let $container = $('.user-container');
     let $noDel = $container.find('.no-deletable');
     $container.html('');
