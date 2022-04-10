@@ -39,7 +39,7 @@ export class WebSocketClient{
     }
 
     sendMessage<MessageIn, MessageOut>(topic: Topic<MessageIn, MessageOut>, message: MessageOut){
-        this.stompClient.send(topic.receiveDestination(), {}, JSON.stringify(message))
+        this.stompClient.send(topic.sendDestination(), {}, JSON.stringify(message))
     }
 }
 
