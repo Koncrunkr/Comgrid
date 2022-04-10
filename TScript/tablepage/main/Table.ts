@@ -158,10 +158,10 @@ export class Table {
     private getUnionByArr(array): UnionOut {
         return {
             chatId: this._store.chatId,
-            xcoordLeftTop: array.reduce((current, result) => result[0] < current ? result[0] : current, array[0][0]),
-            ycoordLeftTop: array.reduce((current, result) => result[1] < current ? result[1] : current, array[0][1]),
-            xcoordRightBottom: array.reduce((current, result) => result[0] > current ? result[0] : current, array[0][0]),
-            ycoordRightBottom: array.reduce((current, result) => result[1] > current ? result[1] : current, array[0][1])
+            xcoordLeftTop: array.reduce((result, current) => current[0] < result ? current[0] : result, array[0][0]),
+            ycoordLeftTop: array.reduce((result, current) => current[1] < result ? current[1] : result, array[0][1]),
+            xcoordRightBottom: array.reduce((result, current) => current[0] > result ? current[0] : result, array[0][0]),
+            ycoordRightBottom: array.reduce((result, current) => current[1] > result ? current[1] : result, array[0][1])
         }
     }
 
