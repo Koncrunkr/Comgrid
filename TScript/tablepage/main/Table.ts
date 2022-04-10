@@ -144,6 +144,8 @@ export class Table {
 
     private selectDown(): void {
         let clone = this.selectedCells.map(elem => elem);
+        if (clone.length === 0)
+            return;
         let style = clone[0].getCssStyle();
         while (this.selectedCells.length > 0) {
             let cell = this.selectedCells.pop();
@@ -155,13 +157,13 @@ export class Table {
         this.websocket.sendMessage(this.cellUnionTopic, union);
     }
 
-    private getUnionByArr(array): UnionOut {
+    private getUnionByArr(array: Cell[]): UnionOut {
         return {
             chatId: this._store.chatId,
-            xcoordLeftTop: array.reduce((result, current) => current[0] < result ? current[0] : result, array[0][0]),
-            ycoordLeftTop: array.reduce((result, current) => current[1] < result ? current[1] : result, array[0][1]),
-            xcoordRightBottom: array.reduce((result, current) => current[0] > result ? current[0] : result, array[0][0]),
-            ycoordRightBottom: array.reduce((result, current) => current[1] > result ? current[1] : result, array[0][1])
+            xcoordLeftTop: array.reduce((result, current) => current.x < result ? current.x : result, array[0].x),
+            ycoordLeftTop: array.reduce((result, current) => current.y < result ? current.y : result, array[0].y),
+            xcoordRightBottom: array.reduce((result, current) => current.x > result ? current.x : result, array[0].x),
+            ycoordRightBottom: array.reduce((result, current) => current.y > result ? current.y : result, array[0].y)
         }
     }
 
