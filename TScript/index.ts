@@ -133,8 +133,12 @@ function submit() {
     }
     let height = $('#table-height-input').val();
     let width = $('#table-width-input').val();
-    if((+height) * (+width) > 2500) {
-        alert("Размер таблицы не может превышать 2500 ячеек");
+    if((+height) * (+width) > 10000) {
+        alert("Размер таблицы не может превышать 10000 ячеек");
+        return false;
+    }
+    if(+height <= 0 || +width <= 0) {
+        alert("Неположительные размеры? Чтобы отправлять несуществующие сообщения? Круто, ничего не скажешь, но нельзя");
         return false;
     }
     let image = document.getElementById("shower") as HTMLImageElement;
