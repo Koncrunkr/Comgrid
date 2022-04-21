@@ -65,7 +65,6 @@ function loadTable(){
             }
         }
     ).then((table) => {
-        console.log(table)
         store = table
     });
 }

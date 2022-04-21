@@ -10,7 +10,7 @@ gulp.task("hello", function () {
 gulp.task("table-page", function () {
     let gulp2 = browserify({
         basedir: '.',
-        debug: true,
+        debug: false,
         entries: ['TScript/tablepage/main/TablePage.ts'],
         cache: {},
         packageCache: {}
@@ -21,7 +21,7 @@ gulp.task("table-page", function () {
         .pipe(gulp.dest("public/scripts/"));
     let gulp1 = browserify({
         basedir: '.',
-        debug: true,
+        debug: false,
         entries: ['TScript/index.ts'],
         cache: {},
         packageCache: {}
@@ -32,7 +32,7 @@ gulp.task("table-page", function () {
         .pipe(gulp.dest("public/scripts/"));
     let gulp0 = browserify({
         basedir: '.',
-        debug: true,
+        debug: false,
         entries: ['TScript/headerScript.ts'],
         cache: {},
         packageCache: {}
