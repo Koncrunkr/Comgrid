@@ -1,7 +1,9 @@
-import {HttpClient} from "./util/HttpClient";
+import { getHttpClient, HttpClient } from "./util/HttpClient";
 import {CreateTableRequest} from "./util/request/CreateTableRequest";
 import {UserInfoRequest} from "./util/request/UserInfoRequest";
 import {IsLoggedInRequest} from "./util/request/IsLoggedInRequest";
+import { apiLink } from "./util/Constants";
+import { getState, State } from "./authorization/State";
 
 let store: any = {
     dialogs2: [
@@ -62,8 +64,7 @@ let store: any = {
         }
     ]
 }
-let link = "https://comgrid.ru:8443";
-const httpClient = new HttpClient(link)
+const httpClient = getHttpClient()
 let leftButtonClicked = false;
 
 export function onLoad(){
@@ -98,7 +99,7 @@ function drawDialogs() {
         $chat.find('.chat-text').text(dialog2.lastMessage);
         $chat.find('.chat-time').text(dialog2.time);
         if(dialog.avatar.startsWith("/"))
-            dialog.avatar = link + dialog.avatar
+            dialog.avatar = apiLink + dialog.avatar
         let $img = $chat.find('img');
         $img.attr('src', dialog.avatar);
         $img[0].onload = () => {

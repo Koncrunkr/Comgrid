@@ -5,7 +5,7 @@ import {MethodType} from "../HttpClient";
 export class UserResponse{
     readonly id!: string
     readonly name!: string
-    readonly email!: string
+    readonly email?: string
     readonly avatar!: string
     readonly created!: Date
     readonly chats?: TableResponse[]

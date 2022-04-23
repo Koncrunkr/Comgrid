@@ -1,14 +1,21 @@
 import {IsLoggedInRequest} from "./util/request/IsLoggedInRequest";
-import {HttpClient} from "./util/HttpClient";
+import { getHttpClient, HttpClient } from "./util/HttpClient";
 import {UserInfoRequest} from "./util/request/UserInfoRequest";
 import { onLoad } from "./index";
+import { getState } from "./authorization/State";
 
 let info = {
     userId: ''
 }
 
 window.onload = () => {
-    let httpClient = new HttpClient("https://comgrid.ru:8443");
+    const link = document.getElementById('sign-in');
+    link.onclick = () => {
+        getState().whenReady().then(state => state.authorize())
+        return false;
+    }
+
+    let httpClient = getHttpClient();
     httpClient.proceedRequest(
         new IsLoggedInRequest(),
         () => {

@@ -1,5 +1,5 @@
 import {Table} from "./Table";
-import {HttpClient} from "../../util/HttpClient";
+import { getHttpClient, HttpClient } from "../../util/HttpClient";
 import {TableInfoRequest} from "../../util/request/TableInfoRequest";
 import {IsLoggedInRequest} from "../../util/request/IsLoggedInRequest";
 import {TableMessagesRequest} from "../../util/request/TableMessagesRequest";
@@ -31,7 +31,7 @@ export let store: any = {
     ]
 }
 
-const httpClient = new HttpClient(link);
+const httpClient = getHttpClient();
 $(window).on('load', () => {
     httpClient.proceedRequest(
         new IsLoggedInRequest(),

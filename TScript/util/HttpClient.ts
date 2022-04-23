@@ -1,4 +1,6 @@
 import {RequestWrapper} from "./request/Request";
+import { getState, State } from "../authorization/State";
+import { apiLink } from "./Constants";
 
 
 export class HttpClient {
@@ -15,13 +17,16 @@ export class HttpClient {
         if(request.parameters != undefined)
             finalLink.search = new URLSearchParams(request.parameters).toString()
 
+        const headers = {
+            ...request.headers,
+            ...(request.requiresAuthentication && (await getState().whenReady()).getAuthorizationHeader())
+        }
         console.log(request)
         return fetch(
             finalLink.toString(),
             {
-                credentials: "include",
                 method: request.methodType,
-                headers: request.headers,
+                headers: headers,
                 body: request.body
             }
         ).then(async (response) => {
@@ -34,6 +39,13 @@ export class HttpClient {
             }
         })
     }
+}
+
+let httpClient: HttpClient;
+export function getHttpClient(): HttpClient{
+    if(!httpClient)
+        httpClient = new HttpClient(apiLink)
+    return httpClient
 }
 
 export enum MethodType{

@@ -1,10 +1,10 @@
-import {HttpClient} from "./util/HttpClient";
+import { getHttpClient, HttpClient } from "./util/HttpClient";
 import {IsLoggedInRequest} from "./util/request/IsLoggedInRequest";
 import {PostLinkRequest} from "./util/request/PostLinkRequest";
 import {getParam} from "./util/Util";
 
 window.onload = () => {
-    const http = new HttpClient("https://comgrid.ru:8443");
+    const http = getHttpClient();
     http.proceedRequest(
         new IsLoggedInRequest(),
         (code, err) => {
@@ -39,4 +39,5 @@ window.onload = () => {
             });
         }
     })
+
 }

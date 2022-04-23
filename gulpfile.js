@@ -52,7 +52,18 @@ gulp.task("table-page", function () {
         .bundle()
         .pipe(source('invite.js'))
         .pipe(gulp.dest("public/scripts/"));
-    return Promise.all([gulp0, gulp1, gulp2, gulp3]);
+    let gulp4 = browserify({
+        basedir: '.',
+        debug: true,
+        entries: ['TScript/authorization/LoginPage.ts'],
+        cache: {},
+        packageCache: {}
+    })
+        .plugin(tsify)
+        .bundle()
+        .pipe(source('login.js'))
+        .pipe(gulp.dest("public/scripts/"));
+    return Promise.all([gulp0, gulp1, gulp2, gulp3, gulp4]);
 });
 
 gulp.task("test-page", function () {

@@ -4,7 +4,7 @@ import { Action, ActionType } from "../utilities/Action";
 import { WebSocketClient } from "../../util/WebSocketClient";
 import { getParam } from "../../util/Util";
 import { UserTopic } from "../../util/websocket/UserTopic";
-import { HttpClient } from "../../util/HttpClient";
+import { getHttpClient, HttpClient } from "../../util/HttpClient";
 import {AddParticipantRequest} from "../../util/request/AddParticipantRequest";
 import {drawParticipants, settings} from "./TablePage";
 import { CellUnionTopic, UnionOut } from "../../util/websocket/CellUnionTopic";
@@ -28,7 +28,7 @@ export class Table {
     private readonly _colorParticipants = [];
 
     public readonly websocket: WebSocketClient = new WebSocketClient("https://comgrid.ru:8443/websocket");
-    private readonly http: HttpClient = new HttpClient("https://comgrid.ru:8443");
+    private readonly http: HttpClient = getHttpClient();
 
     constructor(private _store) {
         [this.messageTopic, this.userTopic, this.cellUnionTopic] = this.setWebsocketSubscriptions();
