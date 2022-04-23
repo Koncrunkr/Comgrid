@@ -64,6 +64,7 @@ var State = /** @class */ (function () {
     };
     State.prototype.authorize = function (redirectUri, provider) {
         return __awaiter(this, void 0, void 0, function () {
+            var authorizeLink;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -81,8 +82,10 @@ var State = /** @class */ (function () {
                         if (!provider)
                             provider = "google";
                         this.isLoading = true;
-                        window.location.href = exports.AuthorizationProvider[provider] + "?" +
-                            new URLSearchParams({ "redirectUri": encodeURIComponent(Constants_1.authorizationRedirectUri) }).toString();
+                        authorizeLink = exports.AuthorizationProvider[provider] + "?" +
+                            new URLSearchParams({ "redirect_uri": Constants_1.authorizationRedirectUri }).toString();
+                        console.log(authorizeLink);
+                        window.location.href = authorizeLink;
                         return [2 /*return*/];
                 }
             });
@@ -97,6 +100,7 @@ var State = /** @class */ (function () {
                     case 0:
                         if (!this.isLoading)
                             this.isLoading = true;
+                        this.token = token;
                         httpClient = (0, HttpClient_1.getHttpClient)();
                         return [4 /*yield*/, httpClient.proceedRequest(new UserInfoRequest_1.UserInfoRequest({}), function (code) {
                                 if (code === 401) {
@@ -113,6 +117,8 @@ var State = /** @class */ (function () {
                                 localStorage.setItem("token", token);
                                 var redirect = localStorage.getItem("redirectAfterAuthorizationUri");
                                 localStorage.removeItem("redirectAfterAuthorizationUri");
+                                console.log("Authed user: ");
+                                console.log(user);
                                 window.location.replace(redirect);
                             })];
                     case 1:
@@ -164,8 +170,6 @@ var State = /** @class */ (function () {
         });
     };
     State.prototype.getAuthorizationHeader = function () {
-        if (!this.authorized)
-            return {};
         return {
             "Authorization": "Bearer " + this.token
         };
@@ -479,7 +483,7 @@ exports.authorizationRedirectUri = exports.googleLoginUri = exports.vkLoginUri =
 exports.apiLink = "https://comgrid.ru:8443";
 exports.vkLoginUri = exports.apiLink + "/oauth2/authorize/vk";
 exports.googleLoginUri = exports.apiLink + "/oauth2/authorize/google";
-exports.authorizationRedirectUri = "https://comgrid.ru/login";
+exports.authorizationRedirectUri = "https://comgrid.ru/pages/login.html";
 
 },{}],4:[function(require,module,exports){
 "use strict";
@@ -542,24 +546,19 @@ var HttpClient = /** @class */ (function () {
         if (onFailure === void 0) { onFailure = function (code, errorText) { return alert("code: ".concat(code, ", error: ").concat(errorText)); }; }
         if (onNetworkFailure === void 0) { onNetworkFailure = function (reason) { return alert("network error: ".concat(reason)); }; }
         return __awaiter(this, void 0, void 0, function () {
-            var finalLink, headers, _a, _b;
+            var finalLink, headers, _a;
             var _this = this;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         finalLink = new URL(this.apiLink + request.endpoint);
                         if (request.parameters != undefined)
                             finalLink.search = new URLSearchParams(request.parameters).toString();
                         _a = [__assign({}, request.headers)];
-                        _b = request.requiresAuthentication;
-                        if (!_b) return [3 /*break*/, 2];
                         return [4 /*yield*/, (0, State_1.getState)().whenReady()];
                     case 1:
-                        _b = (_c.sent()).getAuthorizationHeader();
-                        _c.label = 2;
-                    case 2:
-                        headers = __assign.apply(void 0, _a.concat([(_b)]));
-                        console.log(request);
+                        headers = __assign.apply(void 0, _a.concat([(_b.sent()).getAuthorizationHeader()]));
+                        console.log(__assign(__assign({}, request), { headers: headers }));
                         return [2 /*return*/, fetch(finalLink.toString(), {
                                 method: request.methodType,
                                 headers: headers,

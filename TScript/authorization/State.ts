@@ -52,13 +52,16 @@ export class State {
       provider = "google"
 
     this.isLoading = true
-    window.location.href = AuthorizationProvider[provider] + "?" +
-      new URLSearchParams({"redirectUri": encodeURIComponent(authorizationRedirectUri)}).toString()
+    const authorizeLink = AuthorizationProvider[provider] + "?" +
+      new URLSearchParams({"redirect_uri": authorizationRedirectUri}).toString();
+    console.log(authorizeLink)
+    window.location.href = authorizeLink
   }
 
   async afterAuthorize(token: string) {
     if(!this.isLoading)
       this.isLoading = true
+    this.token = token
     const httpClient = getHttpClient();
     await httpClient.proceedRequest(
       new UserInfoRequest({}),
@@ -78,6 +81,8 @@ export class State {
       localStorage.setItem("token", token)
       const redirect = localStorage.getItem("redirectAfterAuthorizationUri");
       localStorage.removeItem("redirectAfterAuthorizationUri")
+      console.log("Authed user: ")
+      console.log(user)
       window.location.replace(redirect)
     })
   }
@@ -112,8 +117,6 @@ export class State {
   }
 
   getAuthorizationHeader(): Record<string, string>{
-    if(!this.authorized)
-      return {}
     return {
       "Authorization": "Bearer " + this.token
     }

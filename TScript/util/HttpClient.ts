@@ -17,11 +17,11 @@ export class HttpClient {
         if(request.parameters != undefined)
             finalLink.search = new URLSearchParams(request.parameters).toString()
 
-        const headers = {
+        let headers = {
             ...request.headers,
-            ...(request.requiresAuthentication && (await getState().whenReady()).getAuthorizationHeader())
+            ...(await getState().whenReady()).getAuthorizationHeader()
         }
-        console.log(request)
+        console.log({...request, headers: headers})
         return fetch(
             finalLink.toString(),
             {

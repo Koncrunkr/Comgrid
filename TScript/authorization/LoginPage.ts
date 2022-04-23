@@ -12,6 +12,7 @@ window.onload = () => {
     // window.location.href = AuthorizationProvider[provider] +
     //   encodeURIComponent(new URLSearchParams({"redirectUri": authorizationRedirectUri}).toString())
   }
+  console.log("Token got from auth: " + token)
 
   getState().whenReady().then((state) => state.afterAuthorize(token))
 }
