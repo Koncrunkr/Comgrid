@@ -1,6 +1,7 @@
 import SockJS from "sockjs-client";
 import {CompatClient, Stomp} from "@stomp/stompjs";
 import {Topic} from "./websocket/Topic";
+import { getState, State } from "../authorization/State";
 
 
 export class WebSocketClient{
@@ -11,11 +12,13 @@ export class WebSocketClient{
     constructor(apiLink: string) {
         this.socket = new SockJS(apiLink);
         this.stompClient = Stomp.over(this.socket)
-        this.stompClient.connect({}, () => {
-            for (let subscriber of this.subscribers) {
-                subscriber()
-            }}
-        )
+        getState().whenReady().then((state) => {
+            this.stompClient.connect(state.getAuthorizationHeader(), () => {
+                for (let subscriber of this.subscribers) {
+                    subscriber()
+                }}
+            )
+        })
     }
 
     private disconnect(){
