@@ -9,8 +9,8 @@ import {AddParticipantRequest} from "../../util/request/AddParticipantRequest";
 import {drawParticipants, settings} from "./TablePage";
 import { CellUnionTopic, UnionOut } from "../../util/websocket/CellUnionTopic";
 import { MessageTopic } from "../../util/websocket/MessageTopic";
-import {GetLinkRequest} from "../../util/request/GetLinkRequest";
-import {DeleteLinkRequest} from "../../util/request/DeleteLinkRequest";
+import { GetLinkRequest } from "../../util/request/GetLinkRequest";
+import { DeleteLinkRequest } from "../../util/request/DeleteLinkRequest";
 
 export class Table {
     private readonly userTopic: UserTopic;

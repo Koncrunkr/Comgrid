@@ -27,22 +27,30 @@ export class WebSocketClient{
 
     subscribe<MessageIn, MessageOut>(topic: Topic<MessageIn, MessageOut>, onMessage: (MessageIn) => unknown){
         if(this.stompClient.connected) {
-            this.stompClient.subscribe(topic.receiveDestination(), message => {
+            this.stompClient.subscribe(
+              topic.receiveDestination(),
+              message => {
                 const str = new TextDecoder().decode(message.binaryBody)
                 onMessage(topic.proceedMessage(str))
-            })
+              },
+              getState().getAuthorizationHeader()
+            )
         }else{
             this.subscribers.push(() => {
-                this.stompClient.subscribe(topic.receiveDestination(), message => {
-                    const str = new TextDecoder().decode(message.binaryBody)
-                    onMessage(topic.proceedMessage(str))
-                })
+                this.stompClient.subscribe(
+                  topic.receiveDestination(),
+                  message => {
+                      const str = new TextDecoder().decode(message.binaryBody)
+                      onMessage(topic.proceedMessage(str))
+                  },
+                  getState().getAuthorizationHeader()
+                )
             })
         }
     }
 
     sendMessage<MessageIn, MessageOut>(topic: Topic<MessageIn, MessageOut>, message: MessageOut){
-        this.stompClient.send(topic.sendDestination(), {}, JSON.stringify(message))
+        this.stompClient.send(topic.sendDestination(), getState().getAuthorizationHeader(), JSON.stringify(message))
     }
 }
 
