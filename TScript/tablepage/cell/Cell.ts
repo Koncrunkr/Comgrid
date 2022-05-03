@@ -63,7 +63,7 @@ export class Cell {
     public get onInput(): onTrigger {
         return (event: any) => {
             console.log(event.inputType);
-            if(event.inputType[0] === 'i') {
+            if(event.inputType[0] === 'i') { // first letter of insert, input, ...
                 if (event.data === ' ') {
                     this.table.pushAction([ActionType.writeWithSpace, this.x, this.y]);
                 }else {
@@ -72,7 +72,7 @@ export class Cell {
                 if (this.text.length === 1) {
                     this.addMessage(this.text, localStorage.getItem("userId"), false);
                 }
-            } else if(event.inputType[0] === 'd') {
+            } else if(event.inputType[0] === 'd') { // first letter of delete, deleteAction, ...
                 this.table.pushAction([ActionType.delete, this.x, this.y]);
             }
         }

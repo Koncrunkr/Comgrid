@@ -7,7 +7,7 @@ import { UserTopic } from "../../util/websocket/UserTopic";
 import { getHttpClient, HttpClient } from "../../util/HttpClient";
 import {AddParticipantRequest} from "../../util/request/AddParticipantRequest";
 import {drawParticipants, settings} from "./TablePage";
-import { CellUnionTopic, UnionOut } from "../../util/websocket/CellUnionTopic";
+import { CellUnionTopic, size, UnionOut } from "../../util/websocket/CellUnionTopic";
 import { MessageTopic } from "../../util/websocket/MessageTopic";
 import { GetLinkRequest } from "../../util/request/GetLinkRequest";
 import { DeleteLinkRequest } from "../../util/request/DeleteLinkRequest";
@@ -108,14 +108,14 @@ export class Table {
     }
 
     private fillStartTable(): void {
-        this.cells.length = 0;
-        for (let i = 0; i < this.height; i++) {
-            this.cells.push([]);
+        this.cells.length = this.width;
+        for (let x = 0; x < this.width; x++) {
+            this.cells[x] = new Array<Cell>(this.height);
             let $row = document.createElement('row');
             $row.className = 'comgrid-row';
             this.$tableContainer.append($row);
-            for (let j = 0; j < this.width; j++) {
-                this.cells[i].push(new Cell(i, j, $row, this));
+            for (let y = 0; y < this.height; y++) {
+                this.cells[x][y] = new Cell(x, y, $row, this);
             }
         }
     }
@@ -125,9 +125,11 @@ export class Table {
     }
 
     private createUnion(cellsUnion): void {
-        for (let i = cellsUnion.xcoordLeftTop; i <= cellsUnion.xcoordRightBottom; i++)
-            for (let j = cellsUnion.ycoordLeftTop; j <= cellsUnion.ycoordRightBottom; j++)
-                this.getCell(i, j).selectWithFriends(true);
+        for (let x = cellsUnion.xcoordLeftTop; x <= cellsUnion.xcoordRightBottom; x++) {
+            for (let y = cellsUnion.ycoordLeftTop; y <= cellsUnion.ycoordRightBottom; y++) {
+                this.getCell(x, y).selectWithFriends(true);
+            }
+        }
         this.selectDown(true);
     }
 
@@ -179,6 +181,8 @@ export class Table {
         }
         if (!loading) {
             let union = this.getUnionByArr(clone)
+            if(size(union) === 1)
+                return;
             this.websocket.sendMessage(this.cellUnionTopic, union);
         }
     }
@@ -201,7 +205,7 @@ export class Table {
     }
 
     public getCell(x: number, y: number): Cell {
-        if (x >= 0 && x < this.height && y >= 0 && y < this.width)
+        if (x >= 0 && x < this.width && y >= 0 && y < this.height)
             return this.cells[x][y];
         return null;
     }

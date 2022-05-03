@@ -5,7 +5,7 @@ import {UserResponse} from "./UserInfoRequest";
 export class TableResponse {
     readonly id!: number
     readonly name!: string
-    readonly creator!: number
+    readonly creator!: string
     readonly width!: number
     readonly height!: number
     readonly avatar!: number
