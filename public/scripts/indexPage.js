@@ -53,11 +53,18 @@ exports.AuthorizationProvider = {
 };
 var State = /** @class */ (function () {
     function State() {
-        this.authorized = false;
+        this._authorized = false;
         this.isLoading = false;
         this.token = localStorage.getItem("token");
         this.checker = this.checkToken();
     }
+    Object.defineProperty(State.prototype, "authorized", {
+        get: function () {
+            return this._authorized;
+        },
+        enumerable: false,
+        configurable: true
+    });
     State.prototype.whenReady = function () {
         var _this = this;
         return this.checker.then(function () { return _this; });
@@ -68,7 +75,7 @@ var State = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (this.authorized) {
+                        if (this._authorized) {
                             return [2 /*return*/];
                         }
                         return [4 /*yield*/, this.checkToken()];
@@ -111,7 +118,7 @@ var State = /** @class */ (function () {
                             }).then(function (user) {
                                 _this.currentUser = user;
                                 _this.token = token;
-                                _this.authorized = true;
+                                _this._authorized = true;
                                 _this.isLoading = false;
                                 localStorage.setItem("userId", user.id);
                                 localStorage.setItem("token", token);
@@ -153,7 +160,7 @@ var State = /** @class */ (function () {
                                 return [4 /*yield*/, response.text()];
                             case 1:
                                 _a.currentUser = _c.apply(_b, [_d.sent()]);
-                                this.authorized = true;
+                                this._authorized = true;
                                 this.isLoading = false;
                                 localStorage.setItem("userId", this.currentUser.id);
                                 return [2 /*return*/, true];
@@ -175,7 +182,7 @@ var State = /** @class */ (function () {
         };
     };
     State.prototype.revokeAuthorization = function () {
-        this.authorized = false;
+        this._authorized = false;
         this.currentUser = null;
         this.token = null;
         localStorage.removeItem("userId");
@@ -195,7 +202,6 @@ exports.getState = getState;
 },{"../util/Constants":3,"../util/HttpClient":4,"../util/request/UserInfoRequest":6}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onLoad = void 0;
 var HttpClient_1 = require("./util/HttpClient");
 var CreateTableRequest_1 = require("./util/request/CreateTableRequest");
 var UserInfoRequest_1 = require("./util/request/UserInfoRequest");
@@ -261,7 +267,7 @@ var store = {
 };
 var httpClient = (0, HttpClient_1.getHttpClient)();
 var leftButtonClicked = false;
-function onLoad() {
+window.onload = function () {
     loadStore()
         .then(function () {
         drawDialogs();
@@ -275,8 +281,7 @@ function onLoad() {
     $("#shower-cut").on("dragstart", function () { return false; });
     $("#save-canvas").on("click", saveCanvas);
     $('#create-table-form').on('submit', submit);
-}
-exports.onLoad = onLoad;
+};
 function drawDialogs() {
     var $container = $('.chat-container');
     var $noDel = $container.find('.no-deletable');

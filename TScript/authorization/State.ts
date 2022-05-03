@@ -19,6 +19,9 @@ export const AuthorizationProvider = {
 }
 
 export class State {
+  get authorized(): boolean {
+    return this._authorized;
+  }
   private readonly checker: Promise<boolean>
   constructor() {
     this.token = localStorage.getItem("token")
@@ -31,11 +34,11 @@ export class State {
 
   private currentUser?: User
   private token?: string
-  private authorized: boolean = false
+  private _authorized: boolean = false
   private isLoading: boolean = false
 
   async authorize(redirectUri?: string, provider?: keyof typeof AuthorizationProvider) {
-    if(this.authorized){
+    if(this._authorized){
       return
     }
 
@@ -75,7 +78,7 @@ export class State {
     ).then(user => {
       this.currentUser = user
       this.token = token
-      this.authorized = true
+      this._authorized = true
       this.isLoading = false
       localStorage.setItem("userId", user.id)
       localStorage.setItem("token", token)
@@ -91,7 +94,7 @@ export class State {
     const httpClient = getHttpClient();
     if(!this.token)
       return false;
-    fetch(
+    return await fetch(
       apiLink + "/user/info",
       {
         method: "GET",
@@ -103,7 +106,7 @@ export class State {
     ).then(async (response) => {
       if(response.status === 200){
         this.currentUser = JSON.parse(await response.text())
-        this.authorized = true
+        this._authorized = true
         this.isLoading = false
         localStorage.setItem("userId", this.currentUser.id)
         return true
@@ -123,7 +126,7 @@ export class State {
   }
 
   revokeAuthorization(){
-    this.authorized = false
+    this._authorized = false
     this.currentUser = null
     this.token = null
     localStorage.removeItem("userId")

@@ -67,6 +67,7 @@ let store: any = {
 const httpClient = getHttpClient()
 let leftButtonClicked = false;
 
+window.onload = onLoad;
 export function onLoad(){
     loadStore()
       .then(() => {
