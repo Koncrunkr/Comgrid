@@ -49,10 +49,11 @@ export class State {
       redirectUri = window.location.href
 
     localStorage.setItem("redirectAfterAuthorizationUri", redirectUri)
-    localStorage.setItem("provider", provider)
 
     if(!provider)
       provider = "google"
+
+    localStorage.setItem("provider", provider)
 
     this.isLoading = true
     const authorizeLink = AuthorizationProvider[provider] + "?" +
