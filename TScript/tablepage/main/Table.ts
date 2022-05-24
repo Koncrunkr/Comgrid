@@ -11,6 +11,7 @@ import { CellUnionTopic, size, UnionOut } from "../../util/websocket/CellUnionTo
 import { MessageTopic } from "../../util/websocket/MessageTopic";
 import { GetLinkRequest } from "../../util/request/GetLinkRequest";
 import { DeleteLinkRequest } from "../../util/request/DeleteLinkRequest";
+import { SearchMessagesRequest } from "../../util/request/SearchMessagesRequest";
 
 export class Table {
     private readonly userTopic: UserTopic;
@@ -44,6 +45,12 @@ export class Table {
         $('#add-to-table-form').on('submit', () => this.addParticipant());
         $('#invitation-create-button').on('click', () => this.createInvitation());
         $('#invitation-disable-button').on('click', () => this.deleteInvitation());
+        document.getElementById('search-messages-button')
+          .addEventListener('click', () => this.searchMessages())
+        document.getElementById('open-search-messages')
+          .addEventListener('click', () => this.changeMessagesSearchState());
+        document.getElementById('close-search-button')
+          .addEventListener('click', () => this.closeSearchMessages());
 
 
         this._$popover.on('mouseup', (event) => {
@@ -296,5 +303,43 @@ export class Table {
 
     public hidePopover(){
         this._$popover.addClass('d-none');
+    }
+
+    private searchMessages() {
+        const text = $('#message-text-input').val() as string;
+        // @ts-ignore
+        const checkbox = document.querySelector('#exact-match-input').checked;
+
+        if(!text) {
+            alert("Enter any text!");
+            return
+        }
+        const request = new SearchMessagesRequest({
+            text: text,
+            chatId: parseInt(getParam('id')),
+            exactMatch: checkbox,
+            chunkNumber: 0,
+        });
+        this.http.proceedRequest(request, (code, errorText) => {
+            alert(`Error happened while creating table: ${code}, ${errorText}`)
+        }).then(messages => console.log(messages));
+    }
+
+    private openSearchMessages() {
+        document.getElementById('search-messages-sidenav').style.width = "250px";
+        document.getElementById('main-div').style.marginLeft = "250px";
+    }
+    private closeSearchMessages() {
+        document.getElementById('search-messages-sidenav').style.width = "0";
+        document.getElementById('main-div').style.marginLeft = "0";
+    }
+
+    private changeMessagesSearchState() {
+        const sidenav = document.getElementById('search-messages-sidenav');
+        if(sidenav.style.width == '250px'){
+            this.closeSearchMessages()
+        }else if(sidenav.style.width == '0px' || sidenav.style.width.length === 0){
+            this.openSearchMessages()
+        }
     }
 }
