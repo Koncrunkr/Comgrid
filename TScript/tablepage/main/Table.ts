@@ -330,7 +330,7 @@ export class Table {
             const sender = await resolveUser(message.senderId);
             let $message = $('.search-item').clone();
             $message.removeClass('search-item d-none');
-            $message.find('a').attr('href', '#' + message.x + "," + message.y);
+            $message.find('a').attr('href', '#' + message.x + "-" + message.y);
             $message.find('.message-sender').text(sender.name);
             $message.find('.message-text').text(message.text);
             $message.find('.message-time').text(formatDateTime(message.created));
