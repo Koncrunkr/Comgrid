@@ -25,12 +25,12 @@ export class SearchMessagesRequest extends RequestWrapper<MessageIn[]>{
   ){
     super();
     this.parameters = {
-      "text": encodeURIComponent(parameters.text),
+      "text": parameters.text.trim(),
       "chatId": (parameters.chatId ?? 0) + "",
       "sinceTimeMillis": (parameters.sinceTimeMillis ?? 0) + "",
       "untilTimeMillis": (parameters.untilTimeMillis ?? 0) + "",
       "chunkNumber": (parameters.chunkNumber ?? 0) + "",
-      "exactMatch": (parameters.exactMatch !== undefined) + "",
+      "exactMatch": (parameters.exactMatch !== undefined ? parameters.exactMatch : false) + "",
     }
   }
 
