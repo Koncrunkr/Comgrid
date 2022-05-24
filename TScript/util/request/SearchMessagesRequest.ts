@@ -25,7 +25,7 @@ export class SearchMessagesRequest extends RequestWrapper<MessageIn[]>{
   ){
     super();
     this.parameters = {
-      "text": parameters.text,
+      "text": encodeURIComponent(parameters.text),
       "chatId": (parameters.chatId ?? 0) + "",
       "sinceTimeMillis": (parameters.sinceTimeMillis ?? 0) + "",
       "untilTimeMillis": (parameters.untilTimeMillis ?? 0) + "",
