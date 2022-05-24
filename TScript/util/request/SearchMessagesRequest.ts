@@ -36,6 +36,11 @@ export class SearchMessagesRequest extends RequestWrapper<MessageIn[]>{
 
   async proceedRequest(response: Response): Promise<MessageIn[]> {
     const text = await response.text()
-    return JSON.parse(text) as MessageIn[]
+    const messages = JSON.parse(text) as MessageIn[]
+    messages.forEach(m => {
+      m.created = new Date(m.created);
+      m.edited = new Date(m.edited);
+    });
+    return messages;
   }
 }

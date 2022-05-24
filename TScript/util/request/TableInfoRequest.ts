@@ -24,7 +24,10 @@ export class TableInfoRequest implements RequestWrapper<TableResponse> {
 
     async proceedRequest(response: Response): Promise<TableResponse> {
         const text = await response.text()
-        return JSON.parse(text) as TableResponse
+        const table = JSON.parse(text) as TableResponse
+        // @ts-ignore
+        table.created = new Date(table.created);
+        return table;
     }
 
 }

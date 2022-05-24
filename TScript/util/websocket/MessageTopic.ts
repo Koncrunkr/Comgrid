@@ -5,7 +5,8 @@ export class MessageIn {
     x!: number
     y!: number
     chatId!: number
-    time!: Date
+    created!: Date
+    edited!: Date
     senderId!: string
     text!: string
 }

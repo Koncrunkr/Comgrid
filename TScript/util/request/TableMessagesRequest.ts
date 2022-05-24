@@ -1,17 +1,8 @@
 import {RequestWrapper} from "./Request";
 import {MethodType} from "../HttpClient";
+import { MessageIn } from "../websocket/MessageTopic";
 
-export class MessageResponse{
-    readonly id!: number
-    readonly x!: number
-    readonly y!: number
-    readonly chatId!: number
-    readonly time!: Date
-    readonly senderId!: string
-    readonly text!: string
-}
-
-export class TableMessagesRequest implements RequestWrapper<MessageResponse[]>{
+export class TableMessagesRequest implements RequestWrapper<MessageIn[]>{
     readonly body: any
     constructor(body: {
         chatId: number,
@@ -30,9 +21,14 @@ export class TableMessagesRequest implements RequestWrapper<MessageResponse[]>{
     };
     readonly methodType: MethodType = MethodType.POST;
 
-    async proceedRequest(response: Response): Promise<MessageResponse[]> {
+    async proceedRequest(response: Response): Promise<MessageIn[]> {
         const text = await response.text();
-        return JSON.parse(text) as MessageResponse[];
+        const messages = JSON.parse(text) as MessageIn[]
+        messages.forEach(m => {
+            m.created = new Date(m.created);
+            m.edited = new Date(m.edited);
+        });
+        return messages;
     }
 
 }

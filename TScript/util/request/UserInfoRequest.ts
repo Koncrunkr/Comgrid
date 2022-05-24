@@ -14,10 +14,12 @@ export class UserResponse{
 export class UserInfoRequest implements RequestWrapper<UserResponse>{
     readonly parameters: Record<string, string>
 
-    constructor(parameters: { includeChats?: boolean }) {
+    constructor(parameters: { includeChats?: boolean, userId?: string }) {
         let params: any = {}
         if(parameters.includeChats)
             params.includeChats = parameters.includeChats?.toString()
+        if(parameters.userId)
+            params.userId = parameters.userId;
 
         this.parameters = params
     }
@@ -27,6 +29,9 @@ export class UserInfoRequest implements RequestWrapper<UserResponse>{
 
     async proceedRequest(response: Response): Promise<UserResponse> {
         const text = await response.text();
-        return JSON.parse(text) as UserResponse;
+        const user = JSON.parse(text) as UserResponse;
+        // @ts-ignore
+        user.created = new Date(user.created);
+        return user;
     }
 }

@@ -16,118 +16,6 @@
 
 </head>
 <body>
-<!--Will be used for cloning-->
-<div class="chat card container bg-light d-none mt-lg-1 mt-2" role="button">
-    <a href="pages/table/index.html" class="text-dark text-decoration-none">
-        <div class="card-body row p-2 media align-items-center">
-            <div class="col-lg-1 p-1 m-n1">
-                <img class="img-fluid rounded-circle" />
-            </div>
-            <div class="col-lg-7">
-                <h5 class="card-title chat-name text-truncate w-100"></h5>
-                <div class="text-truncate">
-                    <span class="text-secondary chat-sender"></span>
-                    <span class="chat-text"></span>
-                </div>
-            </div>
-            <div class="col-lg align-self-end text-truncate">
-                <small>size: <span class="chat-size"></span></small>
-            </div>
-            <div class="col-lg-2 text-right align-self-start ">
-                <div><small class="chat-time"></small></div>
-                <div class="badge badge-dark mt-2 chat-unread"></div>
-            </div>
-        </div>
-    </a>
-</div>
-
-<form id="create-table-form">
-    <div id="create-table-menu" class="modal" role="dialog" tabindex="-1" data-keyboard="false">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content bg-light border-0">
-                <div class="modal-header bg-dark text-light">
-                    <h5 class="modal-title">Создаём таблицу, ура</h5>
-                    <button id="close-button" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" class="text-light">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body container">
-                    <div class="form-row row">
-                        <div class="form-group col-md-6 col-12">
-                            <label for="table-name-input">Название</label>
-                            <input id="table-name-input" type="text" class="form-control" placeholder="Название"
-                                   required/>
-                        </div>
-                        <div class="form-group col-md-3 col-6">
-                            <label for="table-width-input">Ширина</label>
-                            <input id="table-width-input" type="number" class="form-control" placeholder="100" value="50"
-                                   required/>
-                        </div>
-                        <div class="form-group col-md-3 col-6">
-                            <label for="table-height-input">Высота</label>
-                            <input id="table-height-input" type="number" class="form-control" placeholder="100" value="50"
-                                   required/>
-                        </div>
-                        <div class="form-group col-md-6 col-6">
-                            <label for="table-image-link-input">Ссылка на картинку</label>
-                            <input id="table-image-link-input" type="text" class="form-control"
-                                   placeholder="https://image.png"/>
-                        </div>
-                        <div class="form-group col-md-6 col-6">
-                            <label for="table-image-file-input">Или картинка</label><br>
-                            <label for="table-image-file-input" class="">
-                                <a type="button" class="btn btn-dark">Тыкалка</a>
-                            </label>
-                            <input id="table-image-file-input" type="file" class="d-none"/>
-                        </div>
-                        <div class="form-group col-12 img-keeper user-select-none">
-                            <img id="shower" class="d-none" />
-                            <span class="dark-background d-none"></span>
-                            <canvas id="shower-cut" class="d-none" width="256px" height="256px" ></canvas>
-                            <button type="button" id="save-canvas" class="btn btn-dark d-none">Обрезать</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer text-right p-1">
-                    <button type="submit" class="btn btn-dark mr-1">Создать</button>
-                    <button type="clear" class="btn btn-dark mr-1 d-none"></button>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
-
-
-<form id="sign-in-form">
-    <div id="sign-in-menu" class="modal" role="dialog" tabindex="-1" data-keyboard="false">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content bg-light border-0">
-                <div class="modal-header bg-dark text-light">
-                    <h5 class="modal-title">Логинимся?</h5>
-                    <button id="close-button-sign-in" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" class="text-light">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body container">
-                    <div class="form-row row d-flex justify-content-center">
-                        <div class="form-group col-md-4 col-12">
-                            <button type="button" class="btn btn-light mr-1" id="sign-in-google">
-                                <img width="32" height="32" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg">
-                                Sign in with Google
-                            </button>
-                        </div>
-                        <div class="form-group col-md-4 col-12">
-                            <button type="button" class="btn btn-light mr-1" id="sign-in-vk">
-                                <img width="32" height="32" src="https://upload.wikimedia.org/wikipedia/commons/2/21/VK.com-logo.svg">
-                                Sign in with VK
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
 
 <header>
     <nav class="navbar navbar-expand navbar-light bg-light justify-content-between">
@@ -142,6 +30,11 @@
             <div class="navbar-elem ml-3">
                 <div id="id-keeper" class="nav-link active"></div>
             </div>
+        </div>
+        <div class="navbar-nav">
+            <button type="button" class="btn btn-primary" id="open-search-messages">
+                🔎 Поиск
+            </button>
         </div>
 
         <div class="navbar-nav">
@@ -161,22 +54,195 @@
 
 
 </header>
-<main>
-<!--    Container with chats-->
-    <div class="container w-75 h-100 my-w-lg-50">
-        <div class="no-deletable card container bg-dark text-light mt-2">
-            <div class="card-body row p-2 align-items-center">
-                <div class="ml-1 pl-0 col">Мои чаты</div>
-                <div class="col text-right">
-                    <button class="btn btn-sm btn-light" data-toggle="modal" data-target="#create-table-menu">
-                        <i class="fas fa-plus"></i>
-                    </button>
+
+<form id="search-messages-form">
+    <div id="search-messages-sidenav" class="sidenav">
+        <div class="modal-header bg-dark text-light">
+            <h5 class="modal-title">Ищем сообщения</h5>
+            <button id="close-search-button" type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                <span aria-hidden="true" class="text-light">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body container">
+            <div class="form-row row">
+                <div class="form-group col-md-12 col-12">
+                    <label for="message-text-input">Текст</label>
+                    <input id="message-text-input" type="text" class="form-control"
+                           placeholder="Тут сообщение..."
+                           required/>
+                </div>
+            </div>
+            <div class="form-group form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="exact-match-input" value="option1">
+                <label class="form-check-label" for="exact-match-input" id="">Точное совпадение</label>
+            </div>
+        </div>
+        <div class="modal-footer text-right p-1">
+            <button type="button" class="btn btn-dark mr-1" id="search-messages-button">Искать</button>
+            <button type="reset" class="btn btn-dark mr-1">Стереть</button>
+        </div>
+        <div class="search-message-container scrolling-element overflow-auto"></div>
+    </div>
+</form>
+<div>
+    <!--Will be used for cloning-->
+    <div class="search-item card container bg-light d-none mt-lg-1 mt-2" role="button">
+        <a href="#" class="text-dark text-decoration-none">
+            <div class="card-body p-2 align-items-center">
+                <div class="row">
+                    <div class="col-lg-3 col-3 p-1 m-n1">
+                        <img class="img-fluid rounded-circle"/>
+                    </div>
+                    <div class="col-lg-9 col-9 align-middle">
+                        <h5 class="card-title message-sender text-truncate w-100"></h5>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-12">
+                    <div class="text-truncate">
+                        <small class="message-text"></small>
+                    </div>
+                </div>
+                <div class="col-lg-12 text-right align-self-start ">
+                    <div><small class="message-time" style="font-size: 60%"></small></div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <!--Will be used for cloning-->
+    <div class="chat card container bg-light d-none mt-lg-1 mt-2" role="button">
+        <a href="pages/table/index.html" class="text-dark text-decoration-none">
+            <div class="card-body row p-2 media align-items-center">
+                <div class="col-lg-1 p-1 m-n1">
+                    <img class="img-fluid rounded-circle"/>
+                </div>
+                <div class="col-lg-7">
+                    <h5 class="card-title chat-name text-truncate w-100"></h5>
+                    <div class="text-truncate">
+                        <span class="text-secondary chat-sender"></span>
+                        <span class="chat-text"></span>
+                    </div>
+                </div>
+                <div class="col-lg align-self-end text-truncate">
+                    <small>size: <span class="chat-size"></span></small>
+                </div>
+                <div class="col-lg-2 text-right align-self-start ">
+                    <div><small class="chat-time"></small></div>
+                    <div class="badge badge-dark mt-2 chat-unread"></div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <form id="create-table-form">
+        <div id="create-table-menu" class="modal" role="dialog" tabindex="-1" data-keyboard="false">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content bg-light border-0">
+                    <div class="modal-header bg-dark text-light">
+                        <h5 class="modal-title">Создаём таблицу, ура</h5>
+                        <button id="close-button" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="text-light">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body container">
+                        <div class="form-row row">
+                            <div class="form-group col-md-6 col-12">
+                                <label for="table-name-input">Название</label>
+                                <input id="table-name-input" type="text" class="form-control" placeholder="Название"
+                                       required/>
+                            </div>
+                            <div class="form-group col-md-3 col-6">
+                                <label for="table-width-input">Ширина</label>
+                                <input id="table-width-input" type="number" class="form-control" placeholder="100"
+                                       value="50"
+                                       required/>
+                            </div>
+                            <div class="form-group col-md-3 col-6">
+                                <label for="table-height-input">Высота</label>
+                                <input id="table-height-input" type="number" class="form-control" placeholder="100"
+                                       value="50"
+                                       required/>
+                            </div>
+                            <div class="form-group col-md-6 col-6">
+                                <label for="table-image-link-input">Ссылка на картинку</label>
+                                <input id="table-image-link-input" type="text" class="form-control"
+                                       placeholder="https://image.png"/>
+                            </div>
+                            <div class="form-group col-md-6 col-6">
+                                <label for="table-image-file-input">Или картинка</label><br>
+                                <label for="table-image-file-input" class="">
+                                    <a type="button" class="btn btn-dark">Тыкалка</a>
+                                </label>
+                                <input id="table-image-file-input" type="file" class="d-none"/>
+                            </div>
+                            <div class="form-group col-12 img-keeper user-select-none">
+                                <img id="shower" class="d-none"/>
+                                <span class="dark-background d-none"></span>
+                                <canvas id="shower-cut" class="d-none" width="256px" height="256px"></canvas>
+                                <button type="button" id="save-canvas" class="btn btn-dark d-none">Обрезать</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-right p-1">
+                        <button type="submit" class="btn btn-dark mr-1">Создать</button>
+                        <button type="clear" class="btn btn-dark mr-1 d-none"></button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="chat-container scrolling-element overflow-auto"></div>
-    </div>
-</main>
+    </form>
+
+
+    <form id="sign-in-form">
+        <div id="sign-in-menu" class="modal" role="dialog" tabindex="-1" data-keyboard="false">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content bg-light border-0">
+                    <div class="modal-header bg-dark text-light">
+                        <h5 class="modal-title">Логинимся?</h5>
+                        <button id="close-button-sign-in" type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true" class="text-light">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body container">
+                        <div class="form-row row d-flex justify-content-center">
+                            <div class="form-group col-md-4 col-12">
+                                <button type="button" class="btn btn-light mr-1" id="sign-in-google">
+                                    <img width="32" height="32"
+                                         src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg">
+                                    Sign in with Google
+                                </button>
+                            </div>
+                            <div class="form-group col-md-4 col-12">
+                                <button type="button" class="btn btn-light mr-1" id="sign-in-vk">
+                                    <img width="32" height="32"
+                                         src="https://upload.wikimedia.org/wikipedia/commons/2/21/VK.com-logo.svg">
+                                    Sign in with VK
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <main>
+        <!--    Container with chats-->
+        <div class="container w-75 h-100 my-w-lg-50">
+            <div class="no-deletable card container bg-dark text-light mt-2">
+                <div class="card-body row p-2 align-items-center">
+                    <div class="ml-1 pl-0 col">Мои чаты</div>
+                    <div class="col text-right">
+                        <button class="btn btn-sm btn-light" data-toggle="modal" data-target="#create-table-menu">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-container scrolling-element overflow-auto"></div>
+        </div>
+    </main>
+</div>
 <footer class="bg-light text-center">
     <small><i class="far fa-copyright"></i> Koncrunkr</small>
 </footer>

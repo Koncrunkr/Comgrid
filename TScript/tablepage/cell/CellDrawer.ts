@@ -36,6 +36,7 @@ export class CellDrawer {
         $cell.onmousedown = () => this.keeper.onMousedown();
         $cell.ondragstart = () => false;
         $cell.oncontextmenu = () => this.keeper.onContextmenu();
+        $cell.id = `${this.keeper.x}-${this.keeper.y}`
         $cell.append($span);
         return $cell;
     }

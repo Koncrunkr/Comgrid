@@ -2,16 +2,17 @@ import { Cell } from "../cell/Cell";
 import { TableMod } from "./TableMod";
 import { Action, ActionType } from "../utilities/Action";
 import { WebSocketClient } from "../../util/WebSocketClient";
-import { getParam } from "../../util/Util";
+import { formatDateTime, getParam, resolveUser } from "../../util/Util";
 import { UserTopic } from "../../util/websocket/UserTopic";
 import { getHttpClient, HttpClient } from "../../util/HttpClient";
 import {AddParticipantRequest} from "../../util/request/AddParticipantRequest";
 import {drawParticipants, settings} from "./TablePage";
 import { CellUnionTopic, size, UnionOut } from "../../util/websocket/CellUnionTopic";
-import { MessageTopic } from "../../util/websocket/MessageTopic";
+import { MessageIn, MessageTopic } from "../../util/websocket/MessageTopic";
 import { GetLinkRequest } from "../../util/request/GetLinkRequest";
 import { DeleteLinkRequest } from "../../util/request/DeleteLinkRequest";
 import { SearchMessagesRequest } from "../../util/request/SearchMessagesRequest";
+import { apiLink } from "../../util/Constants";
 
 export class Table {
     private readonly userTopic: UserTopic;
@@ -48,9 +49,9 @@ export class Table {
         document.getElementById('search-messages-button')
           .addEventListener('click', () => this.searchMessages())
         document.getElementById('open-search-messages')
-          .addEventListener('click', () => this.changeMessagesSearchState());
+          .addEventListener('click', () => Table.changeMessagesSearchState());
         document.getElementById('close-search-button')
-          .addEventListener('click', () => this.closeSearchMessages());
+          .addEventListener('click', () => Table.closeSearchMessages());
 
 
         this._$popover.on('mouseup', (event) => {
@@ -305,7 +306,7 @@ export class Table {
         this._$popover.addClass('d-none');
     }
 
-    private searchMessages() {
+    private async searchMessages() {
         const text = $('#message-text-input').val() as string;
         // @ts-ignore
         const checkbox = document.querySelector('#exact-match-input').checked;
@@ -320,26 +321,61 @@ export class Table {
             exactMatch: checkbox,
             chunkNumber: 0,
         });
-        this.http.proceedRequest(request, (code, errorText) => {
+        const messages: MessageIn[] = await this.http.proceedRequest(request, (code, errorText) => {
             alert(`Error happened while creating table: ${code}, ${errorText}`)
-        }).then(messages => console.log(messages));
+        });
+        let $container = $('.search-message-container');
+        $container.html('');
+        for (let message of messages) {
+            const sender = await resolveUser(message.senderId);
+            let $message = $('.search-item').clone();
+            $message.removeClass('search-item d-none');
+            $message.find('a').attr('href', '#' + message.x + "," + message.y);
+            $message.find('.message-sender').text(sender.name);
+            $message.find('.message-text').text(message.text);
+            $message.find('.message-time').text(formatDateTime(message.created));
+            let $img = $message.find('img');
+            if(sender.avatar.startsWith("/")) {
+                $img.attr('src', apiLink + sender.avatar);
+            }else{
+                $img.attr('src', sender.avatar);
+            }
+            $container.append($message);
+            $img[0].onload = () => {
+                let width = $img[0].getBoundingClientRect().width;
+                $img.height(width);
+                $img.width(width);
+            }
+            window.addEventListener('resize', () => {
+                let width = $img[0].getBoundingClientRect().width;
+                $img.height(width);
+                $img.width(width);
+            })
+            $container.append($message);
+            $message.on('mouseenter', () => {
+                $message.removeClass('bg-light')
+            });
+            $message.on('mouseleave', () => {
+                $message.addClass('bg-light')
+            });
+        }
     }
 
-    private openSearchMessages() {
+    static openSearchMessages() {
         document.getElementById('search-messages-sidenav').style.width = "250px";
         document.getElementById('main-div').style.marginLeft = "250px";
     }
-    private closeSearchMessages() {
+    static closeSearchMessages() {
         document.getElementById('search-messages-sidenav').style.width = "0";
         document.getElementById('main-div').style.marginLeft = "0";
     }
 
-    private changeMessagesSearchState() {
+    static changeMessagesSearchState() {
         const sidenav = document.getElementById('search-messages-sidenav');
         if(sidenav.style.width == '250px'){
-            this.closeSearchMessages()
+            Table.closeSearchMessages()
         }else if(sidenav.style.width == '0px' || sidenav.style.width.length === 0){
-            this.openSearchMessages()
+            Table.openSearchMessages()
         }
     }
 }

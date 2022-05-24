@@ -1,9 +1,9 @@
 import { getHttpClient, HttpClient } from "./util/HttpClient";
 import {CreateTableRequest} from "./util/request/CreateTableRequest";
 import {UserInfoRequest} from "./util/request/UserInfoRequest";
-import {IsLoggedInRequest} from "./util/request/IsLoggedInRequest";
 import { apiLink } from "./util/Constants";
-import { getState, State } from "./authorization/State";
+import { SearchMessagesRequest } from "./util/request/SearchMessagesRequest";
+import { Table } from "./tablepage/main/Table";
 
 let store: any = {
     dialogs2: [
@@ -65,9 +65,28 @@ let store: any = {
     ]
 }
 const httpClient = getHttpClient()
-let leftButtonClicked = false;
 
 window.onload = onLoad;
+
+function searchMessages() {
+    const text = $('#message-text-input').val() as string;
+    // @ts-ignore
+    const checkbox = document.querySelector('#exact-match-input').checked;
+
+    if(!text) {
+        alert("Enter any text!");
+        return
+    }
+    const request = new SearchMessagesRequest({
+        text: text,
+        exactMatch: checkbox,
+        chunkNumber: 0,
+    });
+    this.http.proceedRequest(request, (code, errorText) => {
+        alert(`Error happened while creating table: ${code}, ${errorText}`)
+    }).then(messages => console.log(messages));
+}
+
 export function onLoad(){
     loadStore()
       .then(() => {
@@ -83,6 +102,32 @@ export function onLoad(){
     $("#shower-cut").on("dragstart", () => false);
     $("#save-canvas").on("click", saveCanvas);
     $('#create-table-form').on('submit', submit);
+    document.getElementById('search-messages-button')
+      .addEventListener('click', () => searchMessages());
+    document.getElementById('open-search-messages')
+      .addEventListener('click', () => changeMessagesSearchState());
+    document.getElementById('close-search-button')
+      .addEventListener('click', () => closeSearchMessages());
+
+}
+
+function openSearchMessages() {
+    document.getElementById('search-messages-sidenav').style.width = "250px";
+    document.getElementById('main-div').style.marginLeft = "250px";
+}
+
+function closeSearchMessages() {
+    document.getElementById('search-messages-sidenav').style.width = "0";
+    document.getElementById('main-div').style.marginLeft = "0";
+}
+
+function changeMessagesSearchState() {
+    const sidenav = document.getElementById('search-messages-sidenav');
+    if(sidenav.style.width == '250px'){
+        closeSearchMessages()
+    }else if(sidenav.style.width == '0px' || sidenav.style.width.length === 0){
+        openSearchMessages()
+    }
 }
 
 function drawDialogs() {
@@ -108,6 +153,11 @@ function drawDialogs() {
             $img.height(width);
             $img.width(width);
         }
+        window.addEventListener('resize', () => {
+            let width = $img[0].getBoundingClientRect().width;
+            $img.height(width);
+            $img.width(width);
+        })
         $chat.find('.chat-size').text(dialog.width + '×' + dialog.height)
         dialog2.messagesCount === 0
             ? $chat.find('.chat-unread').remove()
