@@ -331,7 +331,7 @@ export class Table {
             let $message = $('.search-item').clone();
             $message.removeClass('search-item d-none');
             const link = $message.find('a');
-            link.attr('href', '#' + message.x + "-" + message.y);
+            // link.attr('href', '#' + message.x + "-" + message.y);
             link.on('click', () => {
                 const element = document.getElementById(message.x + "-" + message.y);
                 const y = element.getBoundingClientRect().top + window.scrollY;
