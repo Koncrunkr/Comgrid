@@ -339,6 +339,11 @@ export class Table {
                     top: y - window.screenY/2,
                     behavior: 'smooth'
                 });
+                const jQueryElement = $('#' + message.x + "-" + message.y);
+                jQueryElement.addClass('highlight');
+                setTimeout(() => {
+                    jQueryElement.removeClass('highlight');
+                }, 2000);
             })
             $message.find('.message-sender').text(sender.name);
             $message.find('.message-text').text(message.text);

@@ -82,3 +82,16 @@ main {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
 }
+
+@keyframes highlight {
+    0% {
+        background: #ff787c;
+    }
+    100% {
+        background: none;
+    }
+}
+
+.highlight {
+    animation: highlight 2s;
+}
