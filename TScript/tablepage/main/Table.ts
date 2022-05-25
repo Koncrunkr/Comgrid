@@ -333,8 +333,12 @@ export class Table {
             const link = $message.find('a');
             link.attr('href', '#' + message.x + "-" + message.y);
             link.on('click', () => {
-                document.getElementById('#' + message.x + "-" + message.y)
-                  .scrollIntoView();
+                const element = document.getElementById(message.x + "-" + message.y);
+                const y = element.getBoundingClientRect().top + window.scrollY;
+                window.scroll({
+                    top: y - window.screenY/2,
+                    behavior: 'smooth'
+                });
             })
             $message.find('.message-sender').text(sender.name);
             $message.find('.message-text').text(message.text);
