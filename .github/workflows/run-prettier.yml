@@ -1,0 +1,24 @@
+name: Run prettier
+
+on:
+  pull_request:
+  push:
+    branches:
+      - solid
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: solid
+
+      - name: Prettify code
+        uses: creyD/prettier_action@v4.2
+        with:
+          only_changed: true
+          dry: true
+          prettier_options: --write **/*.{ts,tsx}
