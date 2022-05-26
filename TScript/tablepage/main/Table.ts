@@ -352,10 +352,10 @@ export class Table {
             $message.find('.message-text').text(message.text);
             $message.find('.message-time').text(formatDateTime(message.created));
             let $img = $message.find('img');
-            if(sender.avatar.startsWith("/")) {
-                $img.attr('src', apiLink + sender.avatar);
+            if(sender.avatar.link.startsWith("/")) {
+                $img.attr('src', apiLink + sender.avatar.link);
             }else{
-                $img.attr('src', sender.avatar);
+                $img.attr('src', sender.avatar.link);
             }
             $container.append($message);
             $img[0].onload = () => {

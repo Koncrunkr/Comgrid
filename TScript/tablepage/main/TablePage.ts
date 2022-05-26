@@ -144,7 +144,7 @@ export function drawParticipants() {
         $user.find('.username').text(user.name);
         $user.find('.user-id').text(user.id);
         let $img = $user.find('img');
-        $img.attr('src', user.avatar);
+        $img.attr('src', user.avatar.link);
         $container.append($user);
     });
 }

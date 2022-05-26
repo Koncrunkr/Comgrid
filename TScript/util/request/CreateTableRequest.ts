@@ -8,7 +8,9 @@ export class TableResponse {
     readonly creator!: string
     readonly width!: number
     readonly height!: number
-    readonly avatar!: number
+    readonly avatar!: {
+        link: string
+    }
     readonly created!: Date
     readonly lastMessageId?: number
     readonly participants?: UserResponse[]

@@ -8,7 +8,9 @@ export class User {
   readonly id!: string
   readonly name!: string
   readonly email?: string
-  readonly avatar!: string
+  readonly avatar!: {
+    link: string
+  }
   readonly created!: Date
   readonly chats?: TableResponse[]
 }

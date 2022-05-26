@@ -14,7 +14,9 @@ let store: any = {
             lastMessage: 'Привет, приходи пить кровь',
             time: 'вчера',
             messagesCount: 51,
-            avatar: './pictures/1.png',
+            avatar: {
+                link: './pictures/1.png'
+            },
             width: 100,
             height: 120
         },
@@ -25,7 +27,9 @@ let store: any = {
             lastMessage: 'Сколько будет 2+2?',
             time: 'вчера',
             messagesCount: 17,
-            avatar: './pictures/2.png',
+            avatar: {
+                link: './pictures/2.png'
+            },
             width: 10,
             height: 112
         },
@@ -36,7 +40,9 @@ let store: any = {
             lastMessage: 'Ребята, я только что доказал гипотезу Римана! Короче, там всё просто!',
             time: '11:30',
             messagesCount: 0,
-            avatar: './pictures/3.png',
+            avatar: {
+                link: './pictures/3.png'
+            },
             width: 20,
             height: 40
         },
@@ -47,7 +53,9 @@ let store: any = {
             lastMessage: 'Привет, глянь лс',
             time: '14:15',
             messagesCount: 0,
-            avatar: './pictures/4.png',
+            avatar: {
+                link: './pictures/4.png'
+            },
             width: 1000,
             height: 1000
         },
@@ -58,7 +66,9 @@ let store: any = {
             lastMessage: 'Давно читал беседу?',
             time: '19:51',
             messagesCount: 4,
-            avatar: './pictures/5.png',
+            avatar: {
+                link: './pictures/5.png'
+            },
             width: 1000,
             height: 500
         }
@@ -144,10 +154,10 @@ function drawDialogs() {
         $chat.find('.chat-sender').text(dialog2.lastSender + (dialog2.lastSender === '' ? '' : ':'));
         $chat.find('.chat-text').text(dialog2.lastMessage);
         $chat.find('.chat-time').text(dialog2.time);
-        if(dialog.avatar.startsWith("/"))
-            dialog.avatar = apiLink + dialog.avatar
+        if(dialog.avatar.link.startsWith("/"))
+            dialog.avatar.link = apiLink + dialog.avatar.link
         let $img = $chat.find('img');
-        $img.attr('src', dialog.avatar);
+        $img.attr('src', dialog.avatar.link);
         $img[0].onload = () => {
             let width = $img[0].getBoundingClientRect().width;
             $img.height(width);
