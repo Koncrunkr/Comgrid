@@ -334,9 +334,12 @@ export class Table {
             link.attr('href', '#' + message.x + "-" + message.y);
             link.on('click', () => {
                 const element = document.getElementById(message.x + "-" + message.y);
-                const y = element.getBoundingClientRect().top + window.scrollY;
+                const rect = element.getBoundingClientRect();
+                const y = rect.top + window.scrollY;
+                const x = rect.x + window.scrollX;
                 window.scroll({
                     top: y - window.screenY/2,
+                    left: x - window.scrollX/2,
                     behavior: 'smooth'
                 });
                 const jQueryElement = $('#' + message.x + "-" + message.y);
