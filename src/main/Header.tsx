@@ -1,7 +1,10 @@
 import { useTheme } from '../theme/Theme';
 import { useStrings } from '../assets/localization/localization';
 import { createEffect } from 'solid-js';
+
 import { PageInfo, TablesPageInfo } from '../App';
+import { Link } from 'solid-app-router';
+import { SimpleButton } from '../common/SimpleButton';
 
 export const Header = (props: { currentPage: PageInfo; pages: PageInfo[] }) => {
   const [theme] = useTheme();
@@ -15,16 +18,16 @@ export const Header = (props: { currentPage: PageInfo; pages: PageInfo[] }) => {
       >
         <div class="navbar-nav mx-2">
           <LogoItem />
-          <HeaderPageItem
-            page={TablesPageInfo}
-            isCurrent={props.currentPage == TablesPageInfo}
-          />
+          <HeaderPageItem page={TablesPageInfo} />
           <div class="navbar-elem ml-3">
             <div id="id-keeper" class="nav-link active"></div>
           </div>
         </div>
-        <div class="navbar-nav">
+        <div class="navbar-nav" style={{ background: theme().colors.button }}>
           <SearchItem />
+        </div>
+        <div class="navbar-nav">
+          <ChangeThemeItem />
         </div>
         <AuthorizationItem />
       </nav>
@@ -35,7 +38,7 @@ export const Header = (props: { currentPage: PageInfo; pages: PageInfo[] }) => {
 export const LogoItem = () => {
   const [theme] = useTheme();
   return (
-    <a
+    <Link
       class="navbar-brand"
       href="#"
       style={{
@@ -49,24 +52,24 @@ export const LogoItem = () => {
         }}
       ></i>
       Comgrid
-    </a>
+    </Link>
   );
 };
 
-const HeaderPageItem = (props: { page: PageInfo; isCurrent: boolean }) => {
+const HeaderPageItem = (props: { page: PageInfo }) => {
   const [getString] = useStrings();
   createEffect(() => console.log(getString('pages')()));
   const [theme] = useTheme();
   return (
     <div class="navbar-elem ml-3">
-      <a
+      <Link
         id={'page-item-' + props.page.name}
         class="nav-link active"
-        href={props.isCurrent ? '' : props.page.path}
+        href={props.page.path}
         style={{ color: theme().colors.text }}
       >
         {getString(props.page.name)()}
-      </a>
+      </Link>
     </div>
   );
 };
@@ -74,11 +77,13 @@ const HeaderPageItem = (props: { page: PageInfo; isCurrent: boolean }) => {
 export const SearchItem = () => {
   const [getString] = useStrings();
 
-  return (
-    <button type="button" class="btn btn-primary" id="open-search-messages">
-      🔎 {getString('search')()}
-    </button>
-  );
+  return <SimpleButton onClick={() => null}>{getString('search')}</SimpleButton>;
+};
+
+export const ChangeThemeItem = () => {
+  const [_, __, changeTheme] = useTheme();
+  const [getString] = useStrings();
+  return <SimpleButton onClick={changeTheme}>{getString('change_theme')}</SimpleButton>;
 };
 
 export const AuthorizationItem = () => {

@@ -45,7 +45,7 @@ export const LightTheme: Theme = {
     secondaryText: '#000',
     button: {
       text: '#FFFFFF',
-      background: '#000000',
+      background: '#007BFF',
     },
     link: {
       text: 'teal',
@@ -60,18 +60,18 @@ export const DarkTheme: Theme = {
   id: 'T_007',
   type: ThemeType.DARK,
   colors: {
-    invertedBackground: '#FFEECC',
-    background: '#9be7ff',
-    secondaryBackground: '#9be7ff',
-    text: '#000d21',
-    invertedText: '#cce5ff',
-    secondaryText: '#0d47a1',
+    invertedBackground: '#C6A8DA',
+    background: '#07021B',
+    secondaryBackground: '#1A0F49',
+    text: '#B6ADDD',
+    invertedText: '#2F0B47',
+    secondaryText: '#6D60A4',
     button: {
-      text: '#ffffff',
-      background: '#0d47a1',
+      text: '#B6ADDD',
+      background: '#07021B',
     },
     link: {
-      text: '#0d47a1',
+      text: '#2D4675',
       opacity: 0.8,
     },
   },
@@ -89,9 +89,13 @@ let isInitialized = false;
 let currentTheme: () => Theme;
 let setTheme: (themeType: ThemeType) => unknown;
 
-export const useTheme: () => [() => Theme, (themeType: ThemeType) => unknown] = () => {
+export const useTheme: () => [
+  () => Theme,
+  (themeType: ThemeType) => unknown,
+  () => unknown,
+] = () => {
   if (isInitialized) {
-    return [currentTheme, setTheme];
+    return [currentTheme, setTheme, changeTheme];
   }
 
   let [theme, setTheme0] = createSignal(LightTheme);
@@ -100,5 +104,14 @@ export const useTheme: () => [() => Theme, (themeType: ThemeType) => unknown] = 
     setTheme0(themes[themeType]);
   };
   currentTheme = theme;
-  return [currentTheme, setTheme];
+  isInitialized = true;
+  return [currentTheme, setTheme, changeTheme];
+};
+
+const changeTheme = () => {
+  if (currentTheme().type === ThemeType.DARK) {
+    setTheme(ThemeType.LIGHT);
+  } else {
+    setTheme(ThemeType.DARK);
+  }
 };

@@ -1,7 +1,12 @@
-import { useTheme } from '../../theme/Theme';
+import { Theme, useTheme } from '../../theme/Theme';
+import { createEffect } from 'solid-js';
 
 export const IndexPage = () => {
   const [theme] = useTheme();
+  createEffect(
+    (theme: () => Theme) => console.log(theme().colors.invertedBackground),
+    theme,
+  );
   return (
     <main>
       <div class="container w-75 h-100 my-w-lg-50">
