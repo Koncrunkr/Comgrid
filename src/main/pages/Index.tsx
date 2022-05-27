@@ -1,12 +1,16 @@
-import { Theme, useTheme } from '../../theme/Theme';
-import { createEffect } from 'solid-js';
+import { useTheme } from '../../theme/Theme';
+import { SimpleButton } from '../../common/SimpleButton';
+import { useStrings } from '../../assets/localization/localization';
+import { createResource, For } from 'solid-js';
+import { TableResponse } from '../../util/request/CreateTableRequest';
+import { ChatItem } from '../ChatItem';
+import { getHttpClient } from '../../util/HttpClient';
+import { UserInfoRequest } from '../../util/request/UserInfoRequest';
 
 export const IndexPage = () => {
   const [theme] = useTheme();
-  createEffect(
-    (theme: () => Theme) => console.log(theme().colors.invertedBackground),
-    theme,
-  );
+  const [getString] = useStrings();
+
   return (
     <main>
       <div class="container w-75 h-100 my-w-lg-50">
@@ -18,20 +22,34 @@ export const IndexPage = () => {
           }}
         >
           <div class="card-body row p-2 align-items-center">
-            <div class="ml-1 pl-0 col">Мои чаты</div>
+            <div class="ml-1 pl-0 col">{getString('my_chats')}</div>
             <div class="col text-right">
-              <button
-                class="btn btn-sm btn-light"
-                data-toggle="modal"
-                data-target="#create-table-menu"
-              >
+              <SimpleButton onClick={() => null}>
                 <i class="fas fa-plus"></i>
-              </button>
+              </SimpleButton>
             </div>
           </div>
         </div>
-        <div class="chat-container scrolling-element overflow-auto"></div>
+        <ChatContainer />
       </div>
     </main>
+  );
+};
+
+const ChatContainer = () => {
+  const [chatList] = createResource<TableResponse[]>(() =>
+    getHttpClient()
+      .proceedRequest(new UserInfoRequest({ includeChats: true }))
+      .then(value => value.chats!)
+      .catch(() => []),
+  );
+  return (
+    <div class="chat-container scrolling-element overflow-auto">
+      <For each={chatList()}>
+        {item => {
+          return <ChatItem table={item} />;
+        }}
+      </For>
+    </div>
   );
 };

@@ -4,6 +4,7 @@ import { Route, Routes } from 'solid-app-router';
 import { IndexPage } from './main/pages';
 import { Header } from './main/Header';
 import { useTheme } from './theme/Theme';
+import { LoginPage } from './main/pages/LoginPage';
 
 export interface PageInfo {
   name: string;
@@ -17,7 +18,7 @@ export const IndexPageInfo: PageInfo = {
 
 export const TablesPageInfo: PageInfo = {
   name: 'pages',
-  path: '/pages',
+  path: '/',
 };
 
 const App: Component = () => {
@@ -31,6 +32,7 @@ const App: Component = () => {
       <Header currentPage={IndexPageInfo} pages={[IndexPageInfo]} />
       <Routes>
         <Route path={IndexPageInfo.path} element={<IndexPage />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </>
   );
