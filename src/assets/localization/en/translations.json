@@ -4,5 +4,8 @@
   "pages": "Tables",
   "change_theme": "Change theme",
   "my_chats": "My chats",
+  "sign_in": "Sign in",
+  "sign_in-form": "Sign in",
+  "sign_out": "Sign out",
   "size": "Size"
 }

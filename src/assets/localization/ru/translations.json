@@ -4,5 +4,8 @@
   "pages": "Таблицы",
   "change_theme": "Изменить тему",
   "size": "Размер",
+  "sign_in": "Войти",
+  "sign_in_form": "Войти",
+  "sign_out": "Выйти",
   "my_chats": "Мои чаты"
 }

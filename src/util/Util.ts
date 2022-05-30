@@ -1,5 +1,6 @@
 import { getHttpClient } from './HttpClient';
 import { UserInfoRequest, UserResponse } from './request/UserInfoRequest';
+import { createSignal } from 'solid-js';
 
 export function getParam(name: string): string | null {
   const urlParams = new URLSearchParams(window.location.search);
@@ -23,3 +24,24 @@ export function formatDateTime(date: Date): string {
   }
   return outDate;
 }
+
+let windowSize: () => [number, number];
+let setWindowSize: (size: [number, number]) => unknown;
+const updateSize = () => {
+  setWindowSize([window.innerWidth, window.innerHeight]);
+};
+let initialized: boolean = false;
+export const useWindowSize: () => [
+  () => [number, number],
+  (size: [number, number]) => unknown,
+] = () => {
+  if (initialized) {
+    return [windowSize, setWindowSize];
+  }
+  [windowSize, setWindowSize] = createSignal([0, 0]);
+  window.addEventListener('resize', updateSize);
+  updateSize();
+
+  initialized = true;
+  return [windowSize, setWindowSize];
+};

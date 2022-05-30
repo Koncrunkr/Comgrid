@@ -6,6 +6,7 @@ import { Link } from 'solid-app-router';
 import { SimpleButton } from '../common/SimpleButton';
 import { Portal } from 'solid-js/web';
 import { getState } from '../util/State';
+import { JSX } from 'solid-js';
 
 export const Header = (props: { currentPage: PageInfo; pages: PageInfo[] }) => {
   const [theme] = useTheme();
@@ -20,17 +21,16 @@ export const Header = (props: { currentPage: PageInfo; pages: PageInfo[] }) => {
         <div class="navbar-nav mx-2">
           <LogoItem />
           <HeaderPageItem page={TablesPageInfo} />
-          <div class="navbar-elem ml-3">
-            <div id="id-keeper" class="nav-link active"></div>
-          </div>
         </div>
-        <div class="navbar-nav" style={{ background: theme().colors.button }}>
+        <div class="navbar-nav">
           <SearchItem />
         </div>
         <div class="navbar-nav">
           <ChangeThemeItem />
         </div>
-        <AuthorizationItem />
+        <div class="navbar-nav">
+          <AuthorizationItem />
+        </div>
       </nav>
     </header>
   );
@@ -87,90 +87,134 @@ export const ChangeThemeItem = () => {
 };
 
 export const AuthorizationItem = () => {
+  const [getString] = useStrings();
+  const [theme] = useTheme();
   return (
     <>
-      <div class="navbar-nav">
-        <div class="clickable navbar-elem mx-3" id="sign-in-div">
-          <button class="btn btn-light" data-toggle="modal" data-target="#sign-in-menu">
-            Sign in
-          </button>
-        </div>
-        <div class="clickable navbar-elem mx-3 d-none" id="sign-out-div">
-          <a class="nav-link text-dark" id="sign-out" href="#">
-            Sign out
-          </a>
-        </div>
+      <div class="clickable navbar-elem mx-3" id="sign-in-div">
+        <button
+          class="btn"
+          data-toggle="modal"
+          data-target="#sign_in_menu"
+          style={{
+            'background-color': theme().colors.button.background,
+            color: theme().colors.button.text,
+          }}
+        >
+          {getString('sign_in')}
+        </button>
       </div>
-      <Portal>
-        <form id="sign-in-form">
-          <div
-            id="sign-in-menu"
-            class="modal"
-            role="dialog"
-            tabIndex="-1"
-            data-keyboard="false"
-          >
-            <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content bg-light border-0">
-                <div class="modal-header bg-dark text-light">
-                  <h5 class="modal-title">Логинимся?</h5>
-                  <button
-                    id="close-button-sign-in"
-                    type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-label="Close"
-                  >
-                    <span aria-hidden="true" class="text-light">
-                      &times;
-                    </span>
-                  </button>
-                </div>
-                <div class="modal-body container">
-                  <div class="form-row row d-flex justify-content-center">
-                    <div class="form-group col-md-4 col-12">
-                      <button
-                        type="button"
-                        class="btn btn-light mr-1"
-                        onclick={() =>
-                          getState()
-                            .whenReady()
-                            .then(state => state.authorize(undefined, 'google'))
-                        }
-                      >
-                        <img
-                          width="32"
-                          height="32"
-                          src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-                        />
-                        Sign in with Google
-                      </button>
-                    </div>
-                    <div class="form-group col-md-4 col-12">
-                      <button
-                        type="button"
-                        class="btn btn-light mr-1"
-                        onclick={() =>
-                          getState()
-                            .whenReady()
-                            .then(state => state.authorize(undefined, 'vk'))
-                        }
-                      >
-                        <img
-                          width="32"
-                          height="32"
-                          src="https://upload.wikimedia.org/wikipedia/commons/2/21/VK.com-logo.svg"
-                        />
-                        Sign in with VK
-                      </button>
-                    </div>
-                  </div>
-                </div>
+      <div
+        class="clickable navbar-elem mx-3 d-none"
+        onclick={() =>
+          getState()
+            .whenReady()
+            .then(state => {
+              state.revokeAuthorization();
+              window.location.reload();
+            })
+        }
+        style={{
+          'background-color': theme().colors.button.background,
+          color: theme().colors.button.text,
+        }}
+      >
+        <a class="nav-link" id="sign-out" href="#">
+          {getString('sign_out')}
+        </a>
+      </div>
+      <ModalItem formId="sign_in">
+        <div class="form-row row d-flex justify-content-center">
+          <div class="form-group col-md-4 col-12">
+            <button
+              type="button"
+              class="btn btn-light mr-1"
+              onClick={() =>
+                getState()
+                  .whenReady()
+                  .then(state => state.authorize(undefined, 'google'))
+              }
+            >
+              <img
+                width="32"
+                height="32"
+                style={{ 'margin-right': '5px' }}
+                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+              />
+              Sign in with Google
+            </button>
+          </div>
+          <div class="form-group col-md-4 col-12">
+            <button
+              type="button"
+              class="btn btn-light mr-1"
+              onClick={() =>
+                getState()
+                  .whenReady()
+                  .then(state => state.authorize(undefined, 'google'))
+              }
+            >
+              <img
+                width="32"
+                height="32"
+                style={{ 'margin-right': '5px' }}
+                src="https://upload.wikimedia.org/wikipedia/commons/2/21/VK.com-logo.svg"
+              />
+              Sign in with VK
+            </button>
+          </div>
+        </div>
+      </ModalItem>
+    </>
+  );
+};
+
+export const ModalItem = (props: { formId: string; children: JSX.Element }) => {
+  const [theme] = useTheme();
+  const [getString] = useStrings();
+  return (
+    <Portal>
+      <form id={props.formId}>
+        <div
+          id={props.formId + '_menu'}
+          class="modal"
+          role="dialog"
+          tabIndex="-1"
+          data-keyboard="false"
+        >
+          <div class="modal-dialog modal-lg" role="document">
+            <div
+              class="modal-content border-0"
+              style={{
+                'background-color': theme().colors.secondaryBackground,
+                color: theme().colors.secondaryText,
+              }}
+            >
+              <div
+                class="modal-header"
+                style={{
+                  'background-color': theme().colors.invertedBackground,
+                  color: theme().colors.invertedText,
+                }}
+              >
+                <h5 class="modal-title">{getString(props.formId + '_form')()}</h5>
+                <button
+                  id={'close-button-' + props.formId}
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true" class="text-light">
+                    &times;
+                  </span>
+                </button>
               </div>
+              <div class="modal-body container">{props.children}</div>
             </div>
           </div>
-        </form>
-      </Portal>
-    </>
+        </div>
+      </form>
+    </Portal>
   );
 };

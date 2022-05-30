@@ -10,11 +10,11 @@ export const SimpleButton = (props: {
     <button
       type="button"
       class="btn"
-      onclick={() => props.onClick()}
       style={{
         background: theme().colors.button.background,
         color: theme().colors.button.text,
       }}
+      onclick={() => props.onClick()}
     >
       {props.children}
     </button>

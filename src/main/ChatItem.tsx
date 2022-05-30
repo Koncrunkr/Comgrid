@@ -7,6 +7,12 @@ import { getHttpClient } from '../util/HttpClient';
 import { MessageRequest } from '../util/request/MessageRequest';
 import { apiLink } from '../util/Constants';
 
+export const imgOnLoad = (props: { currentTarget: EventTarget & HTMLImageElement }) => {
+  const width = props.currentTarget.getBoundingClientRect().width;
+  props.currentTarget.style.setProperty('height', `${width}px`);
+  props.currentTarget.style.setProperty('width', `${width}px`);
+};
+
 export const ChatItem = (props: { table: TableResponse }) => {
   const [theme] = useTheme();
   const [getString] = useStrings();
@@ -50,6 +56,7 @@ export const ChatItem = (props: { table: TableResponse }) => {
                     ? apiLink + props.table.avatar.link
                     : props.table.avatar.link
                 }
+                onload={imgOnLoad}
               />
             </div>
             <div class="col-lg-7">
