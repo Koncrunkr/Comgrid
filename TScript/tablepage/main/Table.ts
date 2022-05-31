@@ -91,7 +91,14 @@ export class Table {
     private createInvitation(): void {
         this.http.proceedRequest(
             new GetLinkRequest({chatId: this._store.id}),
-            (code, errorText) => alert(errorText)
+            (code, errorText) => {
+                const error = JSON.parse(errorText)
+                if(error.reason == "access.manage_users"){
+                    alert("У вас нет прав на данное действие")
+                    return;
+                }
+                alert(errorText)
+            }
         ).then(response => {
             $('#invitation-link-keeper').text(
                 `https://comgrid.ru/pages/invite?code=${response.code}&chatId=${this._store.id}`
