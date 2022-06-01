@@ -1,19 +1,20 @@
 import { RequestWrapper } from './Request';
-import { TableResponse } from './CreateTableRequest';
 import { MethodType } from '../HttpClient';
+import { User } from '../State';
 
-export class UserResponse {
-  readonly id!: string;
-  readonly name!: string;
-  readonly email?: string;
-  readonly avatar!: {
-    link: string;
-  };
-  readonly created!: Date;
-  readonly chats?: TableResponse[];
-}
+// export class UserResponse {
+//   readonly id!: string;
+//   readonly name!: string;
+//   readonly email?: string;
+//   readonly avatar!: {
+//     link: string;
+//   };
+//   readonly created!: Date;
+//   readonly chats?: TableResponse[];
+//   readonly color!: string;
+// }
 
-export class UserInfoRequest implements RequestWrapper<UserResponse> {
+export class UserInfoRequest implements RequestWrapper<User> {
   readonly parameters: Record<string, string>;
 
   constructor(parameters: { includeChats?: boolean; userId?: string }) {
@@ -28,9 +29,9 @@ export class UserInfoRequest implements RequestWrapper<UserResponse> {
   readonly endpoint: string = '/user/info';
   readonly methodType: MethodType = MethodType.GET;
 
-  async proceedRequest(response: Response): Promise<UserResponse> {
+  async proceedRequest(response: Response): Promise<User> {
     const text = await response.text();
-    const user = JSON.parse(text) as UserResponse;
+    const user = JSON.parse(text) as User;
     // @ts-ignore
     user.created = new Date(user.created);
     return user;

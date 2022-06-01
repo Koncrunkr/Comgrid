@@ -1,18 +1,25 @@
 import { getHttpClient } from './HttpClient';
-import { UserInfoRequest, UserResponse } from './request/UserInfoRequest';
+import { UserInfoRequest } from './request/UserInfoRequest';
 import { createSignal } from 'solid-js';
+import { User } from './State';
 
 export function getParam(name: string): string | null {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(name);
 }
 
-export async function resolveUser(userId: string): Promise<UserResponse> {
+export const getSavedUser = (userId: string) => {
+  const existingUser = localStorage.getItem('user_' + userId);
+  if (existingUser) return JSON.parse(existingUser) as User;
+  throw new TypeError('User with id ' + userId + ' not found');
+};
+
+export async function resolveUser(userId: string): Promise<User> {
   const http = getHttpClient();
-  const existingUser = localStorage.getItem(userId);
-  if (existingUser) return JSON.parse(existingUser) as UserResponse;
+  const existingUser = localStorage.getItem('user_' + userId);
+  if (existingUser) return JSON.parse(existingUser) as User;
   const user = await http.proceedRequest(new UserInfoRequest({ userId }));
-  localStorage.setItem(userId, JSON.stringify(user));
+  localStorage.setItem('user_' + userId, JSON.stringify(user));
   return user;
 }
 
@@ -23,6 +30,18 @@ export function formatDateTime(date: Date): string {
     return date.toLocaleTimeString();
   }
   return outDate;
+}
+
+export function slice2DArray<T>(
+  array: T[][],
+  fromXInclusive: number,
+  toXInclusive: number,
+  fromYInclusive: number,
+  toYInclusive: number,
+): T[][] {
+  return array
+    .slice(fromXInclusive, toXInclusive + 1)
+    .map(arr => arr.slice(fromYInclusive, toYInclusive + 1));
 }
 
 let windowSize: () => [number, number];

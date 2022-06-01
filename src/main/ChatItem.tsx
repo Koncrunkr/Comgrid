@@ -1,11 +1,12 @@
 import { useTheme } from '../theme/Theme';
 import { useStrings } from '../assets/localization/localization';
-import { formatDateTime } from '../util/Util';
+import { formatDateTime, resolveUser } from '../util/Util';
 import { createResource, Suspense } from 'solid-js';
 import { TableResponse } from '../util/request/CreateTableRequest';
 import { getHttpClient } from '../util/HttpClient';
 import { MessageRequest } from '../util/request/MessageRequest';
 import { apiLink } from '../util/Constants';
+import { Link } from 'solid-app-router';
 
 export const imgOnLoad = (props: { currentTarget: EventTarget & HTMLImageElement }) => {
   const width = props.currentTarget.getBoundingClientRect().width;
@@ -16,15 +17,19 @@ export const imgOnLoad = (props: { currentTarget: EventTarget & HTMLImageElement
 export const ChatItem = (props: { table: TableResponse }) => {
   const [theme] = useTheme();
   const [getString] = useStrings();
-  const [lastMessage] = createResource(() => {
+  const [lastMessage] = createResource(async () => {
     if (props.table.lastMessageX != null) {
-      return getHttpClient().proceedRequest(
+      const lastMessage = await getHttpClient().proceedRequest(
         new MessageRequest({
           chatId: props.table.id,
           x: props.table.lastMessageX!,
           y: props.table.lastMessageY!,
         }),
       );
+      return {
+        ...lastMessage,
+        sender: await resolveUser(lastMessage.senderId),
+      };
     } else {
       return Promise.resolve(undefined);
     }
@@ -39,8 +44,8 @@ export const ChatItem = (props: { table: TableResponse }) => {
       }}
     >
       <Suspense fallback={<div>Loading...</div>}>
-        <a
-          href="pages/table/index.html"
+        <Link
+          href={`/table?id=${props.table.id}`}
           class="text-decoration-none"
           style={{
             background: theme().colors.secondaryBackground,
@@ -62,7 +67,15 @@ export const ChatItem = (props: { table: TableResponse }) => {
             <div class="col-lg-7">
               <h5 class="card-title chat-name text-truncate w-100">{props.table.name}</h5>
               <div class="text-truncate">
-                <span class="text-secondary chat-sender">{lastMessage()?.senderId}</span>
+                <span
+                  class="text-secondary chat-sender"
+                  style={{
+                    'margin-right': '2px',
+                  }}
+                >
+                  {lastMessage()?.sender.name}
+                  {lastMessage() ? ':' : ''}
+                </span>
                 <span class="chat-text">{lastMessage()?.text}</span>
               </div>
             </div>
@@ -83,7 +96,7 @@ export const ChatItem = (props: { table: TableResponse }) => {
               <div class="badge badge-dark mt-2 chat-unread">54</div>
             </div>
           </div>
-        </a>
+        </Link>
       </Suspense>
     </div>
   );

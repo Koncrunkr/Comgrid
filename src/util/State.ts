@@ -17,6 +17,7 @@ export class User {
   };
   readonly created!: Date;
   readonly chats?: TableResponse[];
+  readonly color?: string;
 }
 
 export const AuthorizationProvider = {
@@ -70,7 +71,6 @@ export class State {
   async afterAuthorize(token: string) {
     if (!this.isLoading) this.isLoading = true;
     this.token = token;
-    debugger;
     const httpClient = getHttpClient();
     await httpClient
       .proceedRequest(new UserInfoRequest({}), code => {
@@ -91,7 +91,12 @@ export class State {
         localStorage.removeItem('redirectAfterAuthorizationUri');
         console.log('Authed user: ');
         console.log(user);
-        window.location.replace(redirect ?? window.location.host);
+        // let navigate = useNavigate();
+        // let url = redirect ?? window.location.host + '/';
+        // navigate(url, {
+        //   replace: true,
+        // });
+        window.location.replace(redirect ?? 'http://' + window.location.host);
       });
   }
 

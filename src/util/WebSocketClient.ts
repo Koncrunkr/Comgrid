@@ -1,7 +1,7 @@
-import SockJS from 'sockjs-client';
 import { CompatClient, Stomp } from '@stomp/stompjs';
 import { Topic } from './websocket/Topic';
-import { getState } from '../authorization/State';
+import { getState } from './State';
+import SockJS from 'sockjs-client';
 
 export class WebSocketClient {
   private readonly socket: WebSocket;
@@ -28,7 +28,7 @@ export class WebSocketClient {
 
   subscribe<MessageIn, MessageOut>(
     topic: Topic<MessageIn, MessageOut>,
-    onMessage: (MessageIn) => unknown,
+    onMessage: (message: MessageIn) => unknown,
   ) {
     if (this.stompClient.connected) {
       this.stompClient.subscribe(

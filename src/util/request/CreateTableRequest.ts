@@ -1,6 +1,6 @@
 import { MethodType } from '../HttpClient';
 import { RequestWrapper } from './Request';
-import { UserResponse } from './UserInfoRequest';
+import { User } from '../State';
 
 export class TableResponse {
   readonly id!: number;
@@ -14,7 +14,7 @@ export class TableResponse {
   readonly created!: Date;
   readonly lastMessageX?: number;
   readonly lastMessageY?: number;
-  readonly participants?: UserResponse[];
+  readonly participants?: User[];
 }
 
 export class CreateTableRequest implements RequestWrapper<TableResponse> {

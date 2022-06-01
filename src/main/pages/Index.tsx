@@ -1,19 +1,24 @@
 import { useTheme } from '../../theme/Theme';
 import { SimpleButton } from '../../common/SimpleButton';
 import { useStrings } from '../../assets/localization/localization';
-import { createResource, For } from 'solid-js';
-import { TableResponse } from '../../util/request/CreateTableRequest';
+import { For } from 'solid-js';
 import { ChatItem } from '../ChatItem';
-import { getHttpClient } from '../../util/HttpClient';
-import { UserInfoRequest } from '../../util/request/UserInfoRequest';
+import { useIsRouting, useRouteData } from 'solid-app-router';
+import { TableResponse } from '../../util/request/CreateTableRequest';
 
 export const IndexPage = () => {
   const [theme] = useTheme();
   const [getString] = useStrings();
+  const isRouting = useIsRouting();
 
   return (
     <main>
-      <div class="container w-75 h-100 my-w-lg-50">
+      <div
+        class="container w-75 h-100 my-w-lg-50"
+        classList={{
+          'grey-out': isRouting(),
+        }}
+      >
         <div
           class="no-deletable card container mt-2"
           style={{
@@ -37,12 +42,7 @@ export const IndexPage = () => {
 };
 
 const ChatContainer = () => {
-  const [chatList] = createResource<TableResponse[]>(() =>
-    getHttpClient()
-      .proceedRequest(new UserInfoRequest({ includeChats: true }))
-      .then(value => value.chats!)
-      .catch(() => []),
-  );
+  const chatList: () => TableResponse[] = useRouteData();
   return (
     <div class="chat-container scrolling-element overflow-auto">
       <For each={chatList()}>

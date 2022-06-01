@@ -12,9 +12,11 @@ export const LoginPage = () => {
   }
   console.log('Token: ' + token);
 
-  getState()
-    .whenReady()
-    .then(state => state.afterAuthorize(token));
-
-  return <></>;
+  return (
+    <>
+      {getState()
+        .whenReady()
+        .then(state => state.afterAuthorize(token))}
+    </>
+  );
 };

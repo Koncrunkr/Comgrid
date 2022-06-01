@@ -4,6 +4,7 @@ export type Colors = {
   background: string;
   secondaryBackground: string;
   invertedBackground: string;
+  borderColor: string;
   text: string;
   secondaryText: string;
   invertedText: string;
@@ -40,6 +41,7 @@ export const LightTheme: Theme = {
     invertedBackground: '#343A40',
     secondaryBackground: '#F8F9FA',
     background: '#FFFFFF',
+    borderColor: '1px solid ' + 'rgba(10, 10, 10, 0.2)',
     text: '#181819',
     invertedText: '#fff3f3',
     secondaryText: '#000',
@@ -56,6 +58,7 @@ export const LightTheme: Theme = {
     text: 'Tinos',
   },
 };
+
 export const DarkTheme: Theme = {
   id: 'T_007',
   type: ThemeType.DARK,
@@ -63,6 +66,7 @@ export const DarkTheme: Theme = {
     invertedBackground: '#C6A8DA',
     background: '#07021B',
     secondaryBackground: '#1A0F49',
+    borderColor: '1px solid ' + 'rgba(200, 200, 200, 0.2)',
     text: '#B6ADDD',
     invertedText: '#2F0B47',
     secondaryText: '#6D60A4',

@@ -1,7 +1,8 @@
 {
   "search": "Search",
   "index": "Main",
-  "pages": "Tables",
+  "tables": "Tables",
+  "table": "Table",
   "change_theme": "Change theme",
   "my_chats": "My chats",
   "sign_in": "Sign in",
