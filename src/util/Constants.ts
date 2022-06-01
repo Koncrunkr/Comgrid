@@ -5,4 +5,4 @@ export const googleLoginUri =
   apiLink + (import.meta.env.VITE_GOOGLE_LOGIN_URI ?? '/oauth2/authorize/google');
 
 export const authorizationRedirectUri =
-  apiLink + (import.meta.env.VITE_AUTHORIZATION_REDIRECT_URI ?? '/login');
+  import.meta.env.VITE_AUTHORIZATION_REDIRECT_URI ?? '/login';
