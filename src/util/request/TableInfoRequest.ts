@@ -4,6 +4,8 @@ import { TableResponse } from './CreateTableRequest';
 
 export class TableInfoRequest implements RequestWrapper<TableResponse> {
   readonly parameters: Record<string, string>;
+  readonly endpoint: string = '/table/info';
+  readonly methodType: MethodType = MethodType.GET;
 
   constructor(parameters: { chatId: number; includeParticipants?: boolean }) {
     let params: any = {};
@@ -13,9 +15,6 @@ export class TableInfoRequest implements RequestWrapper<TableResponse> {
 
     this.parameters = params;
   }
-
-  readonly endpoint: string = '/table/info';
-  readonly methodType: MethodType = MethodType.GET;
 
   async proceedRequest(response: Response): Promise<TableResponse> {
     const text = await response.text();

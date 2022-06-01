@@ -10,6 +10,7 @@ export class MessageIn {
   senderId!: string;
   text!: string;
 }
+
 export class MessageOut {
   x!: number;
   y!: number;

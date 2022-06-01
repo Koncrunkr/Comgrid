@@ -4,6 +4,12 @@ import { MessageIn } from '../websocket/MessageTopic';
 
 export class TableMessagesRequest implements RequestWrapper<MessageIn[]> {
   readonly body: any;
+  readonly endpoint: string = '/message/list';
+  readonly headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+  readonly methodType: MethodType = MethodType.POST;
+
   constructor(body: {
     chatId: number;
     xcoordLeftTop: number;
@@ -15,11 +21,6 @@ export class TableMessagesRequest implements RequestWrapper<MessageIn[]> {
   }) {
     this.body = JSON.stringify(body);
   }
-  readonly endpoint: string = '/message/list';
-  readonly headers: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
-  readonly methodType: MethodType = MethodType.POST;
 
   async proceedRequest(response: Response): Promise<MessageIn[]> {
     const text = await response.text();

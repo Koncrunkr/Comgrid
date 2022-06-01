@@ -19,6 +19,8 @@ export class TableResponse {
 
 export class CreateTableRequest implements RequestWrapper<TableResponse> {
   readonly body?: FormData;
+  endpoint: string = '/table/create';
+  methodType: MethodType = MethodType.POST;
 
   constructor(body: {
     name: string;
@@ -44,7 +46,4 @@ export class CreateTableRequest implements RequestWrapper<TableResponse> {
     table.created = new Date(table.created);
     return table;
   }
-
-  endpoint: string = '/table/create';
-  methodType: MethodType = MethodType.POST;
 }

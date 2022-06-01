@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - solid
+    paths-ignore:
+      - '**.md'
+      - '.github/**'
 
 jobs:
   prettier:

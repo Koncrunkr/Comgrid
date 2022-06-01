@@ -39,6 +39,7 @@ export class HttpClient {
 }
 
 let httpClient: HttpClient;
+
 export function getHttpClient(): HttpClient {
   if (!httpClient) httpClient = new HttpClient(apiLink);
   return httpClient;

@@ -26,23 +26,25 @@ export const AuthorizationProvider = {
 };
 
 export class State {
-  get authorized(): boolean {
-    return this._authorized;
-  }
   private readonly checker: Promise<boolean>;
+  private currentUser?: User;
+  private token?: string;
+  private isLoading: boolean = false;
+
   constructor() {
     this.token = localStorage.getItem('token') ?? undefined;
     this.checker = this.checkToken();
   }
 
+  private _authorized: boolean = false;
+
+  get authorized(): boolean {
+    return this._authorized;
+  }
+
   whenReady(): Promise<State> {
     return this.checker.then(() => this);
   }
-
-  private currentUser?: User;
-  private token?: string;
-  private _authorized: boolean = false;
-  private isLoading: boolean = false;
 
   async authorize(redirectUri?: string, provider?: keyof typeof AuthorizationProvider) {
     if (this._authorized) {
@@ -100,6 +102,20 @@ export class State {
       });
   }
 
+  getAuthorizationHeader(): Record<string, string> {
+    return {
+      Authorization: 'Bearer ' + this.token,
+    };
+  }
+
+  revokeAuthorization() {
+    this._authorized = false;
+    this.currentUser = undefined;
+    this.token = undefined;
+    localStorage.removeItem('userId');
+    localStorage.removeItem('token');
+  }
+
   private async checkToken(): Promise<boolean> {
     if (!this.token) return false;
     return await fetch(apiLink + '/user/info', {
@@ -123,23 +139,10 @@ export class State {
       }
     });
   }
-
-  getAuthorizationHeader(): Record<string, string> {
-    return {
-      Authorization: 'Bearer ' + this.token,
-    };
-  }
-
-  revokeAuthorization() {
-    this._authorized = false;
-    this.currentUser = undefined;
-    this.token = undefined;
-    localStorage.removeItem('userId');
-    localStorage.removeItem('token');
-  }
 }
 
 let state: State;
+
 export function getState(): State {
   if (!state) state = new State();
   return state;

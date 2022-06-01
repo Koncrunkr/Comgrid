@@ -6,5 +6,6 @@ export abstract class RequestWrapper<T> {
   readonly parameters?: Record<string, string> | undefined;
   readonly body?: any;
   readonly methodType!: MethodType;
+
   abstract proceedRequest(response: Response): Promise<T>;
 }

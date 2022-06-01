@@ -4,6 +4,8 @@ import { MethodType } from '../HttpClient';
 
 export class MessageRequest extends RequestWrapper<MessageIn> {
   readonly parameters: Record<string, string>;
+  readonly endpoint: string = '/message/';
+  readonly methodType: MethodType = MethodType.GET;
 
   constructor(parameters: { chatId: number; x: number; y: number }) {
     super();
@@ -13,9 +15,6 @@ export class MessageRequest extends RequestWrapper<MessageIn> {
       y: parameters.y + '',
     };
   }
-
-  readonly endpoint: string = '/message/';
-  readonly methodType: MethodType = MethodType.GET;
 
   async proceedRequest(response: Response): Promise<MessageIn> {
     const text = await response.text();

@@ -13,6 +13,11 @@ export class UnionResponse {
 
 export class CellUnionsRequest implements RequestWrapper<UnionResponse[]> {
   readonly parameters: Record<string, string>;
+  readonly endpoint: string = '/message/unions';
+  readonly headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+  readonly methodType: MethodType = MethodType.GET;
 
   constructor(parameters: {
     chatId: number;
@@ -29,11 +34,6 @@ export class CellUnionsRequest implements RequestWrapper<UnionResponse[]> {
       ycoordRightBottom: parameters.ycoordRightBottom.toString(),
     };
   }
-  readonly endpoint: string = '/message/unions';
-  readonly headers: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
-  readonly methodType: MethodType = MethodType.GET;
 
   async proceedRequest(response: Response): Promise<UnionResponse[]> {
     const text = await response.text();

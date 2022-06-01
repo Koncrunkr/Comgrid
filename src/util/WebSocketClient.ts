@@ -8,6 +8,7 @@ export class WebSocketClient {
   private readonly stompClient: CompatClient;
   private connected: boolean = false;
   private subscribers = new Array<() => unknown>();
+
   constructor(apiLink: string) {
     this.socket = new SockJS(apiLink);
     this.stompClient = Stomp.over(this.socket);
@@ -20,10 +21,6 @@ export class WebSocketClient {
           }
         });
       });
-  }
-
-  private disconnect() {
-    this.connected = false;
   }
 
   subscribe<MessageIn, MessageOut>(
@@ -62,5 +59,9 @@ export class WebSocketClient {
       getState().getAuthorizationHeader(),
       JSON.stringify(message),
     );
+  }
+
+  private disconnect() {
+    this.connected = false;
   }
 }

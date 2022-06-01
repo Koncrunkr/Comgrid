@@ -16,6 +16,8 @@ import { User } from '../State';
 
 export class UserInfoRequest implements RequestWrapper<User> {
   readonly parameters: Record<string, string>;
+  readonly endpoint: string = '/user/info';
+  readonly methodType: MethodType = MethodType.GET;
 
   constructor(parameters: { includeChats?: boolean; userId?: string }) {
     let params: any = {};
@@ -25,9 +27,6 @@ export class UserInfoRequest implements RequestWrapper<User> {
 
     this.parameters = params;
   }
-
-  readonly endpoint: string = '/user/info';
-  readonly methodType: MethodType = MethodType.GET;
 
   async proceedRequest(response: Response): Promise<User> {
     const text = await response.text();

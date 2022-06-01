@@ -1,7 +1,6 @@
 import type { Component } from 'solid-js';
 import { createEffect, createResource } from 'solid-js';
 import { Route, Routes } from 'solid-app-router';
-import { IndexPage } from './main/pages';
 import { Header } from './main/Header';
 import { useTheme } from './theme/Theme';
 import { LoginPage } from './main/pages/LoginPage';
@@ -9,6 +8,7 @@ import { TablePage } from './main/pages/TablePage';
 import { TableResponse } from './util/request/CreateTableRequest';
 import { getHttpClient } from './util/HttpClient';
 import { UserInfoRequest } from './util/request/UserInfoRequest';
+import { IndexPage } from './main/pages/IndexPage';
 
 export interface PageInfo {
   name: string;

@@ -11,18 +11,16 @@ import { apiLink } from '../util/Constants';
 import { Union } from './Union';
 
 export class Table {
-  private readonly userTopic: UserTopic;
-  private readonly messageTopic: MessageTopic;
-  private readonly cellUnionTopic: CellUnionTopic;
-
-  private readonly width: number;
-  private readonly height: number;
   public readonly cells: Cell[][] = [];
   public readonly unions: Union[] = [];
-
   public readonly websocket: WebSocketClient = new WebSocketClient(
     apiLink + '/websocket',
   );
+  private readonly userTopic: UserTopic;
+  private readonly messageTopic: MessageTopic;
+  private readonly cellUnionTopic: CellUnionTopic;
+  private readonly width: number;
+  private readonly height: number;
   private readonly http: HttpClient = getHttpClient();
 
   constructor(table: TableResponse, unions: UnionResponse[], messages: MessageIn[]) {
@@ -34,6 +32,12 @@ export class Table {
 
     this.fillTable(messages, unions);
   }
+
+  public getCell(x: number, y: number): Cell {
+    if (x >= 0 && x < this.width && y >= 0 && y < this.height) return this.cells[y][x];
+    throw new TypeError('Out of bounds for ' + x + ', ' + y);
+  }
+
   private setWebsocketSubscriptions(): [MessageTopic, UserTopic, CellUnionTopic] {
     let tableId = parseInt(getParam('id')!);
 
@@ -109,11 +113,6 @@ export class Table {
         }
       })();
     }
-  }
-
-  public getCell(x: number, y: number): Cell {
-    if (x >= 0 && x < this.width && y >= 0 && y < this.height) return this.cells[y][x];
-    throw new TypeError('Out of bounds for ' + x + ', ' + y);
   }
 
   private createUnion(union: UnionResponse) {
