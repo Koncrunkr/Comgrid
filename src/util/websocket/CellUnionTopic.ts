@@ -29,7 +29,7 @@ export class CellUnionTopic extends Topic<UnionIn, UnionOut> {
     super('/connection/table_cell_union/{id}', '/connection/table_cell_union', tableId);
   }
 
-  proceedMessage(message): UnionIn {
+  proceedMessage(message: any): UnionIn {
     return JSON.parse(message) as UnionIn;
   }
 }

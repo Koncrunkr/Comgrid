@@ -7,7 +7,7 @@ import { TableResponse } from '../util/request/CreateTableRequest';
 import { UnionResponse } from '../util/request/CellUnionsRequest';
 import { getParam, getSavedUser, resolveUser, slice2DArray } from '../util/Util';
 import { Cell } from './Cell';
-import { wsLink } from '../util/Constants';
+import { apiLink } from '../util/Constants';
 import { Union } from './Union';
 
 export class Table {
@@ -20,7 +20,9 @@ export class Table {
   public readonly cells: Cell[][] = [];
   public readonly unions: Union[] = [];
 
-  public readonly websocket: WebSocketClient = new WebSocketClient(wsLink + '/websocket');
+  public readonly websocket: WebSocketClient = new WebSocketClient(
+    apiLink + '/websocket',
+  );
   private readonly http: HttpClient = getHttpClient();
 
   constructor(table: TableResponse, unions: UnionResponse[], messages: MessageIn[]) {
