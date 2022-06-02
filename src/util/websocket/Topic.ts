@@ -9,7 +9,7 @@ export abstract class Topic<MessageIn, MessageOut> {
     return this.receivePath.replace('{id}', this.identifier);
   }
 
-  sendDestination(): string {
+  sendDestination(message?: MessageOut): string {
     return this.sendPath.replace('{id}', this.identifier);
   }
 

@@ -55,7 +55,7 @@ export class WebSocketClient {
     message: MessageOut,
   ) {
     this.stompClient.send(
-      topic.sendDestination(),
+      topic.sendDestination(message),
       getState().getAuthorizationHeader(),
       JSON.stringify(message),
     );

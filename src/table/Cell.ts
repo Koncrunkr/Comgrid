@@ -12,16 +12,15 @@ export class Cell {
   public readonly setSender: (User: User) => unknown;
   public readonly sender: () => User | undefined;
 
-  public readonly css: () => CSSProperties | undefined;
+  public readonly css: () => CSSProperties;
   private readonly setCss: (css: CSSProperties) => unknown;
-
-  private union: Union | undefined;
 
   constructor(readonly x: number, readonly y: number) {
     [this.text, this.setText] = createSignal();
     [this.sender, this.setSender] = createSignal();
     const [theme] = useTheme();
-    [this.css, this.setCss] = createSignal<CSSProperties>({
+    [this.css, this.setCss] = createSignal();
+    this.setCss({
       'border-left': theme().colors.borderColor,
       'border-right': theme().colors.borderColor,
       'border-bottom': theme().colors.borderColor,
@@ -34,22 +33,22 @@ export class Cell {
     this.setSender(sender);
   }
 
-  makeUnion(union: Union) {
-    let left = true;
-    let right = true;
-    let top = true;
-    let bottom = true;
-    for (let cell of union.iterateOverCells()) {
-      if (cell.x === this.x + 1 && cell.y === this.y) {
-        right = false;
-      } else if (cell.x === this.x - 1 && cell.y === this.y) {
-        left = false;
-      } else if (cell.x === this.x && cell.y === this.y + 1) {
-        bottom = false;
-      } else if (cell.x === this.x && cell.y === this.y - 1) {
-        top = false;
-      }
-    }
+  /**
+   *
+   * @param bottom if bottom border should be shown
+   * @param top if top border should be shown
+   * @param left if left border should be shown
+   * @param right if right border should be shown
+   */
+  makeUnion(
+    union: Union,
+    {
+      bottom,
+      top,
+      left,
+      right,
+    }: { bottom: boolean; top: boolean; left: boolean; right: boolean },
+  ) {
     const [theme] = useTheme();
     this.setCss({
       ...(left && {
@@ -65,6 +64,5 @@ export class Cell {
         'border-bottom': theme().colors.borderColor,
       }),
     });
-    this.union = union;
   }
 }
