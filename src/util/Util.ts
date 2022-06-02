@@ -2,6 +2,7 @@ import { getHttpClient } from './HttpClient';
 import { UserInfoRequest } from './request/UserInfoRequest';
 import { createSignal } from 'solid-js';
 import { User } from './State';
+import { getCookie, setCookie } from 'typescript-cookie';
 
 export function getParam(name: string): string | null {
   const urlParams = new URLSearchParams(window.location.search);
@@ -9,17 +10,24 @@ export function getParam(name: string): string | null {
 }
 
 export const getSavedUser = (userId: string) => {
-  const existingUser = localStorage.getItem('user_' + userId);
-  if (existingUser) return JSON.parse(existingUser) as User;
+  const existingUser = getCookie('user_' + userId, {
+    decodeValue: value => JSON.parse(value) as User,
+  });
+  if (existingUser) return existingUser;
   throw new TypeError('User with id ' + userId + ' not found');
 };
 
 export async function resolveUser(userId: string): Promise<User> {
   const http = getHttpClient();
-  const existingUser = localStorage.getItem('user_' + userId);
-  if (existingUser) return JSON.parse(existingUser) as User;
+  const existingUser = getCookie('user_' + userId, {
+    decodeValue: value => JSON.parse(value) as User,
+  });
+  if (existingUser) return existingUser;
+
   const user = await http.proceedRequest(new UserInfoRequest({ userId }));
-  localStorage.setItem('user_' + userId, JSON.stringify(user));
+  setCookie('user_' + userId, JSON.stringify(user), {
+    expires: 10, // days
+  });
   return user;
 }
 
