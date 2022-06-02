@@ -6,3 +6,6 @@ export const googleLoginUri =
 
 export const authorizationRedirectUri =
   import.meta.env.VITE_AUTHORIZATION_REDIRECT_URI ?? '/login';
+
+export const cellWidth = 32;
+export const cellHeight = 32;

@@ -9,6 +9,7 @@ import { Table } from '../../table/Table';
 import { resolveUser } from '../../util/Util';
 import { HttpError } from '../../error/HttpError';
 import { useTheme } from '../../theme/Theme';
+import { cellHeight, cellWidth } from '../../util/Constants';
 
 export const TablePage = () => {
   const [searchParams] = useSearchParams();
@@ -62,25 +63,27 @@ export const TablePage = () => {
         }}
       >
         <Index each={table()?.cells}>
-          {(column, x) => {
+          {(column, y) => {
             return (
               <div
                 style={{
                   width: 'fit-content',
                   display: 'flex',
                   'flex-direction': 'row',
-                  'min-height': '32px',
-                  'max-height': '32px',
+                  'min-height': cellHeight + 'px',
+                  'max-height': cellHeight + 'px',
                 }}
               >
                 <Index each={column()}>
-                  {(cell, y) => {
+                  {(cell, x) => {
+                    let previousValue: string = '';
                     return (
                       <div
+                        id={x + ', ' + y}
                         style={{
-                          'min-width': '32px',
-                          'max-width': '32px',
-                          'line-height': '28px', // 32 - 2(for borders) - 2
+                          'min-width': cellWidth + 'px',
+                          'max-width': cellWidth + 'px',
+                          'line-height': cellHeight - 2 - 2 + 'px', // 32 - 2(for borders) - 2
                           'border-color': 'rgba(10, 10, 10, 1)',
                           cursor: 'context-menu',
                           'background-color': 'inherit',
