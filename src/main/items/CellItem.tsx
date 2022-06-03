@@ -41,6 +41,7 @@ export const CellItem = (
       }}
     >
       <span
+        id={x + ', ' + y + ', span'}
         ref={span}
         class="no-show-focus user-select-none"
         style={{
@@ -72,6 +73,18 @@ export const CellItem = (
 
           // recover caret position
           recoverCaretPosition(span, currentCaretPosition);
+        }}
+        onkeydown={event => {
+          if (event.code === 'ArrowUp') {
+            document.getElementById(x + ', ' + (y - 1) + ', span')?.focus();
+          } else if (event.code === 'ArrowDown' || event.code === 'Enter') {
+            document.getElementById(x + ', ' + (y + 1) + ', span')?.focus();
+          } else if (event.code === 'ArrowLeft') {
+            document.getElementById(x - 1 + ', ' + y + ', span')?.focus();
+          } else if (event.code === 'ArrowRight') {
+            document.getElementById(x + 1 + ', ' + y + ', span')?.focus();
+          }
+          return false;
         }}
         contenteditable={true}
       />
