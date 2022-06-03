@@ -110,7 +110,7 @@ export const TablePage = () => {
                           class="no-show-focus user-select-none"
                           style={{
                             'white-space': 'nowrap',
-                            'z-index': (table()?.cells?.length ?? 0) - y,
+                            'z-index': (table()?.cells?.length ?? 0) - x,
                             'min-height': '100%',
                             'min-width': '100%',
                             'background-color': cell().sender()?.color ?? 'inherit',
