@@ -130,12 +130,12 @@ export const TablePage = () => {
                                 x,
                                 y,
                                 target.clientWidth,
-                                target.innerHTML,
+                                target.textContent ?? previousValue,
                               )
                             ) {
-                              previousValue = target.innerHTML;
+                              previousValue = target.textContent ?? previousValue;
                             } else {
-                              target.innerHTML = previousValue;
+                              target.textContent = previousValue;
                             }
                             const span = target as HTMLSpanElement;
 
