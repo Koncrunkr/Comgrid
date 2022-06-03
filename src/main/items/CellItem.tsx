@@ -16,12 +16,13 @@ export const CellItem = (
   // @ts-ignore
   let span: HTMLSpanElement = undefined;
   createEffect(() => {
-    try {
-      const offset = document.getSelection()!.getRangeAt(0).startOffset;
+    const selection = document.getSelection()!;
+    if (selection.rangeCount) {
+      const offset = selection.getRangeAt(0).startOffset;
       // @ts-ignore
       span.textContent = cell().text();
       recoverCaretPosition(span, offset);
-    } catch (e) {
+    } else {
       // @ts-ignore
       span.textContent = cell().text();
     }
