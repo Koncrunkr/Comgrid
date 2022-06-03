@@ -117,7 +117,8 @@ export class Table {
     }
 
     // union is not found, then create one, if there is space
-    if (this.inUnion(this.getCell(x + 1, y))) {
+    const nextCell = this.getCell(x + 1, y);
+    if (this.inUnion(nextCell)) {
       // there is union right next to our cell, don't do anything
       return false;
     }
@@ -182,7 +183,7 @@ export class Table {
     if (union.xTo === this.width - 1) return false;
 
     // noinspection JSSuspiciousNameCombination
-    const slice = slice2DArray(
+    const nextColumn = slice2DArray(
       this.cells,
       union.yFrom,
       union.yTo,
@@ -190,11 +191,15 @@ export class Table {
       union.xTo + 1,
     ).flat();
 
-    if (this.anyInUnion(slice)) {
+    if (Table.anyHasMessage(nextColumn)) {
       return false;
     }
 
-    union.appendColumn(slice);
+    if (this.anyInUnion(nextColumn)) {
+      return false;
+    }
+
+    union.appendColumn(nextColumn);
     this.awaiter.sendUnionToServer(union);
     return true;
   }
@@ -238,5 +243,15 @@ export class Table {
     console.log(
       'Something went wrong for setting id for union: ' + JSON.stringify(union),
     );
+  }
+
+  private static anyHasMessage(cells: Cell[]) {
+    for (let i = 0; i < cells.length; i++) {
+      const text = cells[i].text();
+      if (text !== undefined && text.length !== 0) {
+        return true;
+      }
+    }
+    return false;
   }
 }
