@@ -1,8 +1,8 @@
 import { Topic } from './Topic';
 
 export class UnionIn {
-  id!: string;
-  chatId!: string;
+  id!: number;
+  chatId!: number;
   creatorId!: string;
   xcoordLeftTop!: number;
   ycoordLeftTop!: number;
@@ -12,7 +12,7 @@ export class UnionIn {
 
 export class UnionOut {
   id?: number;
-  chatId!: string;
+  chatId!: number;
   xcoordLeftTop!: number;
   ycoordLeftTop!: number;
   xcoordRightBottom!: number;
@@ -28,6 +28,7 @@ export function size(union: UnionOut): number {
 
 export class CellUnionTopic extends Topic<UnionIn, UnionOut> {
   private readonly editPath = '/connection/table_cell_union/edit';
+
   constructor(readonly tableId: number) {
     super('/connection/table_cell_union/{id}', '/connection/table_cell_union', tableId);
   }
