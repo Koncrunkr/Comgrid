@@ -79,8 +79,8 @@ export class Table {
 
     for (let y = 0; y < unionCells.length; y++) {
       for (let x = 0; x < unionCells[y].length; x++) {
-        let bottom = y === unionCells.length - 1;
-        let top = y === 0;
+        let bottom = y === unionCells.length - 1 || unionCells.length === 1;
+        let top = y === 0 || unionCells.length === 1;
         let right = x === unionCells[y].length - 1;
         let left = x === 0;
         unionCells[y][x].makeUnion(newUnion, {

@@ -53,15 +53,15 @@ export class Union {
     for (let i = 0; i < this.cells.length; i++) {
       const cells = this.cells[i];
       cells[cells.length - 1].makeUnion(this, {
-        top: i !== column.length - 1,
-        bottom: i !== 0,
+        top: i !== column.length - 1 || column.length === 1,
+        bottom: i !== 0 || column.length === 1,
         right: false,
         left: this._xFrom === this._xTo,
       });
       cells.push(column[i]);
       column[i].makeUnion(this, {
-        top: i !== column.length - 1,
-        bottom: i !== 0,
+        top: i !== column.length - 1 || column.length === 1,
+        bottom: i !== 0 || column.length === 1,
         left: this._xTo === this.table.width - 1,
         right: true,
       });
