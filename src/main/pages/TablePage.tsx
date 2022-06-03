@@ -6,14 +6,14 @@ import { CellUnionsRequest } from '../../util/request/CellUnionsRequest';
 import { TableMessagesRequest } from '../../util/request/TableMessagesRequest';
 import { getState } from '../../util/State';
 import { Table } from '../../table/Table';
-import { resolveUser } from '../../util/Util';
+import { min, resolveUser } from '../../util/Util';
 import { HttpError } from '../../error/HttpError';
 import { useTheme } from '../../theme/Theme';
 import { cellHeight, cellWidth } from '../../util/Constants';
 
 function recoverCaretPosition(span: HTMLSpanElement, currentOffset: number) {
   const range = document.createRange();
-  range.setStart(span.childNodes[0], currentOffset);
+  range.setStart(span.childNodes[0], min(currentOffset, span.innerHTML.length));
   range.collapse(true);
 
   const selection = window.getSelection()!;
