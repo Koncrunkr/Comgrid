@@ -43,8 +43,12 @@ export const TablePage = () => {
         ycoordRightBottom: table.height - 1,
       }),
     );
-    await Promise.all(messages.map(message => resolveUser(message.senderId)));
-    await Promise.all(unions.map(union => resolveUser(union.creatorId)));
+    for (let i = messages.length - 1; i >= 0; i--) {
+      await resolveUser(messages[i].senderId);
+    }
+    for (let i = unions.length - 1; i >= 0; i--) {
+      await resolveUser(unions[i].creatorId);
+    }
 
     return new Table(table, unions, messages);
   });
@@ -105,7 +109,18 @@ export const TablePage = () => {
                             display: 'inline-block',
                           }}
                           oninput={({ target }) => {
-                            console.log('Hello');
+                            if (
+                              !table()?.updateMessage(
+                                x,
+                                y,
+                                target.clientWidth,
+                                target.innerHTML,
+                              )
+                            ) {
+                              target.innerHTML = previousValue;
+                            } else {
+                              previousValue = target.innerHTML;
+                            }
                           }}
                           contenteditable={true}
                         >

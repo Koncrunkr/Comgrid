@@ -14,28 +14,29 @@ export function getParam(name: string): string | null {
   return urlParams.get(name);
 }
 
-export const getSavedUser = (userId: string) => {
-  const existingUser = getCookie('user_' + userId, {
-    decodeValue: value => JSON.parse(value) as User,
-  });
-  if (existingUser) return existingUser;
+export const getSavedUser = (userId: string): User => {
+  const existingUser = getCookie('user_' + userId);
+  if (existingUser) {
+    return JSON.parse(existingUser) as User;
+  }
   throw new TypeError('User with id ' + userId + ' not found');
 };
 
 export async function resolveUser(userId: string): Promise<User> {
-  const http = getHttpClient();
-  const existingUser = getCookie('user_' + userId, {
-    decodeValue: value => JSON.parse(value) as User,
-  });
-  if (existingUser) return existingUser;
+  const existingUser = getCookie('user_' + userId);
+  if (existingUser) {
+    return JSON.parse(existingUser) as User;
+  }
 
+  const http = getHttpClient();
   const user = await http.proceedRequest(new UserInfoRequest({ userId }));
   setCookie('user_' + userId, JSON.stringify(user), {
     expires: 10, // days
   });
   return user;
 }
-
+//104464598721841231716
+//104464598721841231716
 export function formatDateTime(date: Date): string {
   const today = new Date();
   const outDate = date.toDateString();

@@ -1,34 +1,34 @@
-import { UserTopic } from '../util/websocket/UserTopic';
-import { MessageIn, MessageTopic } from '../util/websocket/MessageTopic';
-import { CellUnionTopic } from '../util/websocket/CellUnionTopic';
-import { WebSocketClient } from '../util/WebSocketClient';
-import { getHttpClient, HttpClient } from '../util/HttpClient';
+import { MessageIn } from '../util/websocket/MessageTopic';
 import { TableResponse } from '../util/request/CreateTableRequest';
-import { UnionResponse } from '../util/request/CellUnionsRequest';
-import { getParam, getSavedUser, resolveUser, slice2DArray } from '../util/Util';
+import { getSavedUser, resolveUser, slice2DArray } from '../util/Util';
 import { Cell } from './Cell';
-import { apiLink } from '../util/Constants';
+import { cellWidth } from '../util/Constants';
 import { Union } from './Union';
+import { WebSocketAwaiter } from './WebSocketAwaiter';
+import { UnionIn } from '../util/websocket/CellUnionTopic';
+import { getCookie } from 'typescript-cookie';
+import { User } from '../util/State';
 
 export class Table {
   public readonly cells: Cell[][] = [];
   public readonly unions: Union[] = [];
-  public readonly websocket: WebSocketClient = new WebSocketClient(
-    apiLink + '/websocket',
-  );
-  private readonly userTopic: UserTopic;
-  private readonly messageTopic: MessageTopic;
-  private readonly cellUnionTopic: CellUnionTopic;
-  private readonly width: number;
-  private readonly height: number;
-  private readonly http: HttpClient = getHttpClient();
 
-  constructor(table: TableResponse, unions: UnionResponse[], messages: MessageIn[]) {
-    [this.messageTopic, this.userTopic, this.cellUnionTopic] =
-      this.setWebsocketSubscriptions();
+  public readonly width: number;
+  public readonly height: number;
+  public readonly id: number;
 
+  private readonly awaiter;
+
+  private readonly currentUser: User;
+
+  constructor(table: TableResponse, unions: UnionIn[], messages: MessageIn[]) {
+    this.id = table.id;
     this.width = table.width;
     this.height = table.height;
+
+    this.awaiter = new WebSocketAwaiter(this);
+
+    this.currentUser = getSavedUser(getCookie('userId')!);
 
     this.fillTable(messages, unions);
   }
@@ -89,6 +89,21 @@ export class Table {
     }
   }
 
+  updateMessage(x: number, y: number, clientWidth: number, text: string): boolean {
+    if (!this.growIfNeeded(x, y, clientWidth)) return false;
+
+    this.getCell(x, y).setMessage(text, this.currentUser);
+
+    this.awaiter.sendMessageToServer({
+      chatId: this.id,
+      x: x,
+      y: y,
+      text: text,
+    });
+
+    return true;
+  }
+
   growIfNeeded(x: number, y: number, clientWidth: number): boolean {
     if (clientWidth <= cellWidth) return true;
     for (let i = 0; i < this.unions.length; i++) {
@@ -96,7 +111,7 @@ export class Table {
         const maxWidth = cellWidth * (this.unions[i].xTo - x + 1);
         if (clientWidth <= maxWidth) return true;
 
-        return this.grow(x, y, clientWidth, this.unions[i]);
+        return this.grow(this.unions[i]);
       }
     }
     return false;
@@ -144,7 +159,7 @@ export class Table {
     }
   }
 
-  private grow(x: number, y: number, clientWidth: number, union: Union) {
+  private grow(union: Union) {
     if (union.xTo === this.width - 1) return false;
 
     // noinspection JSSuspiciousNameCombination
@@ -161,6 +176,7 @@ export class Table {
     }
 
     union.appendColumn(slice);
+    this.awaiter.sendUnionToServer(union);
     return true;
   }
 

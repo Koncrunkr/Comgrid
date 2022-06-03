@@ -5,11 +5,12 @@ export class CookieValue<T> {
 
   constructor(
     private readonly name: string,
+    defaultValue: T,
     private readonly expirationDate?: number | Date,
   ) {
-    this._value = getCookie(name, {
-      decodeValue: value => JSON.parse(value),
-    });
+    const cookie = getCookie(name);
+    if (cookie) this._value = JSON.parse(cookie);
+    else this._value = defaultValue;
   }
 
   get value(): T {
