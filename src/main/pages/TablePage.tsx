@@ -1,4 +1,4 @@
-import { createResource, Index } from 'solid-js';
+import { createEffect, createResource, Index } from 'solid-js';
 import { getHttpClient } from '../../util/HttpClient';
 import { TableInfoRequest } from '../../util/request/TableInfoRequest';
 import { useSearchParams } from 'solid-app-router';
@@ -12,6 +12,7 @@ import { useTheme } from '../../theme/Theme';
 import { cellHeight, cellWidth } from '../../util/Constants';
 
 function recoverCaretPosition(span: HTMLSpanElement, currentOffset: number) {
+  if (currentOffset === -1) return;
   const range = document.createRange();
   range.setStart(span.childNodes[0], min(currentOffset, span.innerHTML.length));
   range.collapse(true);
@@ -92,6 +93,19 @@ export const TablePage = () => {
                 <Index each={column()}>
                   {(cell, x) => {
                     let previousValue: string = '';
+                    // @ts-ignore
+                    let span: HTMLSpanElement = undefined;
+                    createEffect(() => {
+                      try {
+                        const offset = document.getSelection()!.getRangeAt(0).startOffset;
+                        // @ts-ignore
+                        span.textContent = cell().text();
+                        recoverCaretPosition(span, offset);
+                      } catch (e) {
+                        // @ts-ignore
+                        span.textContent = cell().text();
+                      }
+                    });
                     return (
                       <div
                         id={x + ', ' + y}
@@ -107,6 +121,7 @@ export const TablePage = () => {
                         }}
                       >
                         <span
+                          ref={span}
                           class="no-show-focus user-select-none"
                           style={{
                             'white-space': 'nowrap',
@@ -143,9 +158,7 @@ export const TablePage = () => {
                             recoverCaretPosition(span, currentCaretPosition);
                           }}
                           contenteditable={true}
-                        >
-                          {cell().text()}
-                        </span>
+                        />
                       </div>
                     );
                   }}
