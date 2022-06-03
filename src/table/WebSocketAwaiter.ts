@@ -26,12 +26,10 @@ export class WebSocketAwaiter {
     this.outcomingUnions = new CookieValue<(UnionOut & { retries?: number })[]>(
       `outcoming_unions_${table.id}`,
       [],
-      7,
     );
     this.outcomingMessages = new CookieValue<(MessageOut & { retries?: number })[]>(
       `outcoming_messages_${table.id}`,
       [],
-      7,
     );
   }
 

@@ -7,7 +7,6 @@ import {
 } from './Constants';
 import { getHttpClient } from './HttpClient';
 import { UserInfoRequest } from './request/UserInfoRequest';
-import { setCookie } from 'typescript-cookie';
 
 export class User {
   readonly id!: string;
@@ -88,7 +87,7 @@ export class State {
         this.token = token;
         this._authorized = true;
         this.isLoading = false;
-        setCookie('userId', user.id);
+        localStorage.setItem('userId', user.id);
         localStorage.setItem('user_' + user.id, JSON.stringify(user));
         localStorage.setItem('token', token);
         const redirect = localStorage.getItem('redirectAfterAuthorizationUri');

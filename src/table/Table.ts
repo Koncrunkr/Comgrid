@@ -6,7 +6,6 @@ import { cellWidth } from '../util/Constants';
 import { Union } from './Union';
 import { WebSocketAwaiter } from './WebSocketAwaiter';
 import { UnionIn, UnionOut } from '../util/websocket/CellUnionTopic';
-import { getCookie } from 'typescript-cookie';
 import { User } from '../util/State';
 
 export class Table {
@@ -28,7 +27,7 @@ export class Table {
 
     this.awaiter = new WebSocketAwaiter(this);
 
-    this.currentUser = getSavedUser(getCookie('userId')!);
+    this.currentUser = getSavedUser(localStorage.getItem('userId')!);
 
     this.fillTable(messages, unions);
   }

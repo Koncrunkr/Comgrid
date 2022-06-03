@@ -2,7 +2,6 @@ import { getHttpClient } from './HttpClient';
 import { UserInfoRequest } from './request/UserInfoRequest';
 import { createSignal } from 'solid-js';
 import { User } from './State';
-import { getCookie, setCookie } from 'typescript-cookie';
 import { MessageOut } from './websocket/MessageTopic';
 
 export const min = (first: any, second: any) => {
@@ -20,7 +19,7 @@ export function getParam(name: string): string | null {
 }
 
 export const getSavedUser = (userId: string): User => {
-  const existingUser = getCookie('user_' + userId);
+  const existingUser = localStorage.getItem('user_' + userId);
   if (existingUser) {
     return JSON.parse(existingUser) as User;
   }
@@ -28,16 +27,14 @@ export const getSavedUser = (userId: string): User => {
 };
 
 export async function resolveUser(userId: string): Promise<User> {
-  const existingUser = getCookie('user_' + userId);
+  const existingUser = localStorage.getItem('user_' + userId);
   if (existingUser) {
     return JSON.parse(existingUser) as User;
   }
 
   const http = getHttpClient();
   const user = await http.proceedRequest(new UserInfoRequest({ userId }));
-  setCookie('user_' + userId, JSON.stringify(user), {
-    expires: 10, // days
-  });
+  localStorage.setItem('user_' + userId, JSON.stringify(user));
   return user;
 }
 //104464598721841231716
