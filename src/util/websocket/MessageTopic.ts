@@ -1,7 +1,6 @@
 import { Topic } from './Topic';
 
 export class MessageIn {
-  id!: number;
   x!: number;
   y!: number;
   chatId!: number;

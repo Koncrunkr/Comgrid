@@ -3,6 +3,11 @@ import { UserInfoRequest } from './request/UserInfoRequest';
 import { createSignal } from 'solid-js';
 import { User } from './State';
 import { getCookie, setCookie } from 'typescript-cookie';
+import { MessageOut } from './websocket/MessageTopic';
+
+export const messagesIdEqual = (first: MessageOut, second: MessageOut) => {
+  return first.x === second.x && first.y === second.y && first.chatId === second.chatId;
+};
 
 export function getParam(name: string): string | null {
   const urlParams = new URLSearchParams(window.location.search);

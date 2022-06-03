@@ -38,28 +38,73 @@ export class Table {
     throw new TypeError('Out of bounds for ' + x + ', ' + y);
   }
 
-  private setWebsocketSubscriptions(): [MessageTopic, UserTopic, CellUnionTopic] {
-    let tableId = parseInt(getParam('id')!);
-
-    const tableReceiveTopic = new MessageTopic(tableId);
-    // this.websocket.subscribe(tableReceiveTopic, message => {
-    //   if (message.senderId !== localStorage.getItem('userId'))
-    //     this.cells[message.x][message.y].addMessage(message.text, message.senderId);
-    // });
-
-    const cellUnionReceiveTopic = new CellUnionTopic(tableId);
-    // this.websocket.subscribe(cellUnionReceiveTopic, message => {
-    //   this.createUnion(message);
-    // });
-
-    const userTopic = new UserTopic(localStorage.getItem('userId')!);
-    this.websocket.subscribe(userTopic, message => console.log(message));
-    return [tableReceiveTopic, userTopic, cellUnionReceiveTopic];
+  addMessage(message: MessageIn) {
+    try {
+      this.getCell(message.x, message.y).setMessage(
+        message.text,
+        getSavedUser(message.senderId),
+      );
+    } catch (e) {
+      (async () => {
+        this.getCell(message.x, message.y).setMessage(
+          message.text,
+          await resolveUser(message.senderId),
+        );
+      })();
+    }
   }
 
-  private fillTable(messages: MessageIn[], unions: UnionResponse[]) {
+  public addUnion(union: UnionIn) {
+    const unionCells = slice2DArray(
+      this.cells,
+      union.ycoordLeftTop,
+      union.ycoordRightBottom,
+      union.xcoordLeftTop,
+      union.xcoordRightBottom,
+    );
+    const newUnion = new Union(
+      union.id,
+      unionCells,
+      this,
+      union.xcoordLeftTop,
+      union.xcoordRightBottom,
+      union.ycoordLeftTop,
+      union.ycoordRightBottom,
+    );
+    this.unions.push(newUnion);
+
+    for (let y = 0; y < unionCells.length; y++) {
+      for (let x = 0; x < unionCells[y].length; x++) {
+        let bottom = y === unionCells.length - 1;
+        let top = y === 0;
+        let right = x === unionCells[y].length - 1;
+        let left = x === 0;
+        unionCells[y][x].makeUnion(newUnion, {
+          top,
+          bottom,
+          left,
+          right,
+        });
+      }
+    }
+  }
+
+  growIfNeeded(x: number, y: number, clientWidth: number): boolean {
+    if (clientWidth <= cellWidth) return true;
+    for (let i = 0; i < this.unions.length; i++) {
+      if (this.unions[i].contains(x, y)) {
+        const maxWidth = cellWidth * (this.unions[i].xTo - x + 1);
+        if (clientWidth <= maxWidth) return true;
+
+        return this.grow(x, y, clientWidth, this.unions[i]);
+      }
+    }
+    return false;
+  }
+
+  private fillTable(messages: MessageIn[], unions: UnionIn[]) {
     this.fillTableInitial();
-    this.createUnions(unions);
+    this.addUnions(unions);
     this.addMessages(messages);
   }
 
@@ -73,25 +118,9 @@ export class Table {
     }
   }
 
-  private createUnions(unions: UnionResponse[]) {
+  private addUnions(unions: UnionIn[]) {
     for (const union of unions) {
-      this.createUnion(union);
-    }
-  }
-
-  private addMessage(message: MessageIn) {
-    try {
-      this.getCell(message.x, message.y).setMessage(
-        message.text,
-        getSavedUser(message.senderId),
-      );
-    } catch (e) {
-      (async () => {
-        this.getCell(message.x, message.y).setMessage(
-          message.text,
-          await resolveUser(message.senderId),
-        );
-      })();
+      this.addUnion(union);
     }
   }
 
@@ -115,21 +144,41 @@ export class Table {
     }
   }
 
-  private createUnion(union: UnionResponse) {
-    const newUnion = new Union(
-      slice2DArray(
-        this.cells,
-        union.xcoordLeftTop,
-        union.xcoordRightBottom,
-        union.ycoordLeftTop,
-        union.ycoordRightBottom,
-      ).flat(),
-      this,
-    );
-    this.unions.push(newUnion);
+  private grow(x: number, y: number, clientWidth: number, union: Union) {
+    if (union.xTo === this.width - 1) return false;
 
-    for (let cell of newUnion.iterateOverCells()) {
-      cell.makeUnion(newUnion);
+    // noinspection JSSuspiciousNameCombination
+    const slice = slice2DArray(
+      this.cells,
+      union.yFrom,
+      union.yTo,
+      union.xTo + 1,
+      union.xTo + 1,
+    ).flat();
+
+    if (this.anyInUnion(slice)) {
+      return false;
     }
+
+    union.appendColumn(slice);
+    return true;
+  }
+
+  private anyInUnion(cells: Cell[]) {
+    for (let i = 0; i < cells.length; i++) {
+      if (this.inUnion(cells[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private inUnion(cell: Cell) {
+    for (let i = 0; i < this.unions.length; i++) {
+      if (this.unions[i].contains(cell.x, cell.y)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
