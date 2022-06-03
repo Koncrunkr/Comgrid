@@ -4,6 +4,18 @@ import { createSignal } from 'solid-js';
 import { User } from './State';
 import { MessageOut } from './websocket/MessageTopic';
 
+export const recoverCaretPosition = (span: HTMLSpanElement, caretPosition: number) => {
+  if (caretPosition === -1) return;
+  const range = document.createRange();
+  range.setStart(span.childNodes[0], min(caretPosition, span.innerHTML.length));
+  range.collapse(true);
+
+  const selection = window.getSelection()!;
+
+  selection.removeAllRanges();
+  selection.addRange(range);
+};
+
 export const min = (first: any, second: any) => {
   if (first > second) return second;
   return first;

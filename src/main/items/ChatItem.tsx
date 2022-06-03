@@ -1,11 +1,11 @@
-import { useTheme } from '../theme/Theme';
-import { useStrings } from '../assets/localization/localization';
-import { formatDateTime, resolveUser } from '../util/Util';
+import { useTheme } from '../../theme/Theme';
+import { useStrings } from '../../assets/localization/localization';
+import { formatDateTime, resolveUser } from '../../util/Util';
 import { createResource, Suspense } from 'solid-js';
-import { TableResponse } from '../util/request/CreateTableRequest';
-import { getHttpClient } from '../util/HttpClient';
-import { MessageRequest } from '../util/request/MessageRequest';
-import { apiLink } from '../util/Constants';
+import { TableResponse } from '../../util/request/CreateTableRequest';
+import { getHttpClient } from '../../util/HttpClient';
+import { MessageRequest } from '../../util/request/MessageRequest';
+import { apiLink } from '../../util/Constants';
 import { Link } from 'solid-app-router';
 
 export const imgOnLoad = (props: { currentTarget: EventTarget & HTMLImageElement }) => {

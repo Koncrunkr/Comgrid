@@ -2,7 +2,7 @@ import { useTheme } from '../../theme/Theme';
 import { SimpleButton } from '../../common/SimpleButton';
 import { useStrings } from '../../assets/localization/localization';
 import { createMemo, For } from 'solid-js';
-import { ChatItem } from '../ChatItem';
+import { ChatItem } from '../items/ChatItem';
 import { useIsRouting, useRouteData } from 'solid-app-router';
 import { TableResponse } from '../../util/request/CreateTableRequest';
 import { AlertItem, AlertType } from '../../util/component/AlertItem';
@@ -15,12 +15,7 @@ export const IndexPage = () => {
 
   return (
     <main>
-      <div
-        class="container w-75 h-100 my-w-lg-50"
-        classList={{
-          'grey-out': isRouting(),
-        }}
-      >
+      <div class="container w-75 h-100 my-w-lg-50">
         <div
           class="no-deletable card container mt-2"
           style={{

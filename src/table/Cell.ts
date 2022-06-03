@@ -19,8 +19,7 @@ export class Cell {
     [this.text, this.setText] = createSignal();
     [this.sender, this.setSender] = createSignal();
     const [theme] = useTheme();
-    [this.css, this.setCss] = createSignal();
-    this.setCss({
+    [this.css, this.setCss] = createSignal({
       'border-left': theme().colors.borderColor,
       'border-right': theme().colors.borderColor,
       'border-bottom': theme().colors.borderColor,

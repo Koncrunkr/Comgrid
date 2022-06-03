@@ -6,7 +6,12 @@ import { cellWidth } from '../util/Constants';
 import { Union } from './Union';
 import { WebSocketAwaiter } from './WebSocketAwaiter';
 import { UnionIn, UnionOut } from '../util/websocket/CellUnionTopic';
-import { User } from '../util/State';
+import { getState, User } from '../util/State';
+import { getHttpClient } from '../util/HttpClient';
+import { HttpError } from '../error/HttpError';
+import { TableInfoRequest } from '../util/request/TableInfoRequest';
+import { CellUnionsRequest } from '../util/request/CellUnionsRequest';
+import { TableMessagesRequest } from '../util/request/TableMessagesRequest';
 
 export class Table {
   public readonly cells: Cell[][] = [];
@@ -253,5 +258,45 @@ export class Table {
       }
     }
     return false;
+  }
+
+  static async load(id: number): Promise<Table> {
+    let http = getHttpClient();
+    const state = await getState().whenReady();
+    if (!state.authorized) {
+      throw new HttpError({ status: 403, errorText: 'Unauthorized' });
+    }
+
+    const table = await http.proceedRequest(
+      new TableInfoRequest({
+        chatId: id,
+      }),
+    );
+    const unions = await http.proceedRequest(
+      new CellUnionsRequest({
+        chatId: id,
+        xcoordLeftTop: 0,
+        ycoordLeftTop: 0,
+        xcoordRightBottom: table.width - 1,
+        ycoordRightBottom: table.height - 1,
+      }),
+    );
+    const messages = await http.proceedRequest(
+      new TableMessagesRequest({
+        chatId: id,
+        xcoordLeftTop: 0,
+        ycoordLeftTop: 0,
+        xcoordRightBottom: table.width - 1,
+        ycoordRightBottom: table.height - 1,
+      }),
+    );
+    for (let i = messages.length - 1; i >= 0; i--) {
+      await resolveUser(messages[i].senderId);
+    }
+    for (let i = unions.length - 1; i >= 0; i--) {
+      await resolveUser(unions[i].creatorId);
+    }
+
+    return new Table(table, unions, messages);
   }
 }
