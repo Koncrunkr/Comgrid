@@ -37,6 +37,6 @@ jobs:
         known_hosts: ${{ secrets.KNOWN_HOSTS }}
       
     - name: Deploy with rsync
-      run: rsync -avz ./ ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST }}:/var/www/html/
+      run: rsync -avz ./public/ ${{ secrets.HOST_USERNAME }}@${{ secrets.HOST }}:/var/www/html/public/
 
 
