@@ -126,16 +126,16 @@ export const TablePage = () => {
                               .getRangeAt(0).startOffset;
                             //
                             if (
-                              !table()?.updateMessage(
+                              table()?.updateMessage(
                                 x,
                                 y,
                                 target.clientWidth,
                                 target.innerHTML,
                               )
                             ) {
-                              target.innerHTML = previousValue;
-                            } else {
                               previousValue = target.innerHTML;
+                            } else {
+                              target.innerHTML = previousValue;
                             }
                             const span = target as HTMLSpanElement;
 
