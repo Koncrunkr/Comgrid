@@ -1,10 +1,12 @@
 import { useTheme } from '../../theme/Theme';
 import { SimpleButton } from '../../common/SimpleButton';
 import { useStrings } from '../../assets/localization/localization';
-import { For } from 'solid-js';
+import { createMemo, For } from 'solid-js';
 import { ChatItem } from '../ChatItem';
 import { useIsRouting, useRouteData } from 'solid-app-router';
 import { TableResponse } from '../../util/request/CreateTableRequest';
+import { AlertItem, AlertType } from '../../util/component/AlertItem';
+import { If } from '../../util/component/If';
 
 export const IndexPage = () => {
   const [theme] = useTheme();
@@ -43,13 +45,30 @@ export const IndexPage = () => {
 
 const ChatContainer = () => {
   const chatList: () => TableResponse[] = useRouteData();
+  const error = createMemo(() => {
+    const error = chatList() as unknown as { code: number; errorText: string };
+    if (error === undefined) return undefined;
+    if (error.code !== undefined) {
+      return error;
+    } else {
+      return undefined;
+    }
+  });
+  if (chatList()) {
+  }
   return (
     <div class="chat-container scrolling-element overflow-auto">
-      <For each={chatList()}>
-        {item => {
-          return <ChatItem table={item} />;
-        }}
-      </For>
+      <If
+        condition={!error()}
+        onTrue={
+          <For each={chatList()}>
+            {item => {
+              return <ChatItem table={item} />;
+            }}
+          </For>
+        }
+        onFalse={<AlertItem type={AlertType.Error} message={'You are wrong!'} />}
+      />
     </div>
   );
 };

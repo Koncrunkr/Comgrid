@@ -51,11 +51,11 @@ const App: Component = () => {
           path={IndexPageInfo.path}
           element={<IndexPage />}
           data={() =>
-            createResource<TableResponse[]>(() =>
+            createResource<TableResponse[] | { code: number; errorText: string }>(() =>
               getHttpClient()
                 .proceedRequest(new UserInfoRequest({ includeChats: true }))
                 .then(value => value.chats!)
-                .catch(() => []),
+                .catch(e => JSON.parse((e as TypeError).message)),
             )[0]
           }
         />
