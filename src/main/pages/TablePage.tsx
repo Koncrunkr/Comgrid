@@ -11,6 +11,17 @@ import { HttpError } from '../../error/HttpError';
 import { useTheme } from '../../theme/Theme';
 import { cellHeight, cellWidth } from '../../util/Constants';
 
+function recoverCaretPosition(span: HTMLSpanElement, currentOffset: number) {
+  const range = document.createRange();
+  range.setStart(span.childNodes[0], currentOffset);
+  range.collapse(true);
+
+  const selection = window.getSelection()!;
+
+  selection.removeAllRanges();
+  selection.addRange(range);
+}
+
 export const TablePage = () => {
   const [searchParams] = useSearchParams();
   const [table] = createResource<Table>(async () => {
@@ -109,6 +120,11 @@ export const TablePage = () => {
                             display: 'inline-block',
                           }}
                           oninput={({ target }) => {
+                            // save caret position
+                            const currentCaretPosition = document
+                              .getSelection()!
+                              .getRangeAt(0).startOffset;
+                            //
                             if (
                               !table()?.updateMessage(
                                 x,
@@ -121,6 +137,10 @@ export const TablePage = () => {
                             } else {
                               previousValue = target.innerHTML;
                             }
+                            const span = target as HTMLSpanElement;
+
+                            // recover caret position
+                            recoverCaretPosition(span, currentCaretPosition);
                           }}
                           contenteditable={true}
                         >
