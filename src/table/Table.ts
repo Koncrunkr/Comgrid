@@ -139,7 +139,7 @@ export class Table {
     });
     this.awaiter.sendUnionToServer(newUnion);
 
-    return false;
+    return true;
   }
 
   private fillTable(messages: MessageIn[], unions: UnionIn[]) {
