@@ -5,6 +5,11 @@ import { User } from './State';
 import { getCookie, setCookie } from 'typescript-cookie';
 import { MessageOut } from './websocket/MessageTopic';
 
+export const min = (first: any, second: any) => {
+  if (first > second) return second;
+  return first;
+};
+
 export const messagesIdEqual = (first: MessageOut, second: MessageOut) => {
   return first.x === second.x && first.y === second.y && first.chatId === second.chatId;
 };

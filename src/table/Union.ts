@@ -4,7 +4,7 @@ import { UnionOut } from '../util/websocket/CellUnionTopic';
 
 export class Union {
   constructor(
-    readonly id: number,
+    public id: number | undefined,
     private readonly cells: Cell[][],
     private readonly table: Table,
     private readonly _xFrom: number,

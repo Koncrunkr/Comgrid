@@ -58,10 +58,14 @@ export class WebSocketAwaiter {
     let tableId = this.table.id;
 
     const messageReceiveTopic = new MessageTopic(tableId);
-    this.websocket.subscribe(messageReceiveTopic, this.handleIncomingMessage);
+    this.websocket.subscribe(messageReceiveTopic, message => {
+      this.handleIncomingMessage(message);
+    });
 
     const cellUnionReceiveTopic = new CellUnionTopic(tableId);
-    this.websocket.subscribe(cellUnionReceiveTopic, this.handleIncomingCellUnions);
+    this.websocket.subscribe(cellUnionReceiveTopic, union => {
+      this.handleIncomingCellUnions(union);
+    });
 
     const userTopic = new UserTopic(localStorage.getItem('userId')!);
     this.websocket.subscribe(userTopic, message => console.log(message));
@@ -72,7 +76,19 @@ export class WebSocketAwaiter {
     setTimeout(() => {
       this.outcomingUnions.update(unionOuts => {
         for (let i = 0; i < unionOuts.length; i++) {
-          if (unionOuts[i].id === union.id) {
+          if (
+            unionOuts[i].id === union.id ||
+            Union.bordersEqual(
+              {
+                chatId: 0, // it isn't being checked
+                ycoordLeftTop: union.yFrom,
+                ycoordRightBottom: union.yTo,
+                xcoordLeftTop: union.xFrom,
+                xcoordRightBottom: union.xTo,
+              },
+              unionOuts[i],
+            )
+          ) {
             const retries = unionOuts[i].retries ?? 1;
             if (retries > 10) {
               // TODO: message is not sent, mark it as unsent and suggest to resend
@@ -94,20 +110,27 @@ export class WebSocketAwaiter {
 
   private handleIncomingCellUnions(union: UnionIn) {
     let isNew = true;
-    this.outcomingUnions.update(outUnions => {
-      for (let i = 0; i < outUnions.length; i++) {
-        if (outUnions[i].id === union.id) {
-          if (!Union.bordersEqual(union, outUnions[i])) {
+    this.outcomingUnions.update(unionOuts => {
+      for (let i = 0; i < unionOuts.length; i++) {
+        if (unionOuts[i].id === union.id) {
+          if (!Union.bordersEqual(union, unionOuts[i])) {
             // incoming union is different from ours, skip
             // TODO: maybe handle it?
-            return outUnions;
+            return unionOuts;
           }
-          outUnions.splice(i);
+          unionOuts.splice(i);
           isNew = false;
-          return outUnions;
+          return unionOuts;
+        } else if (Union.bordersEqual(union, unionOuts[i])) {
+          if (this.table.currentUser.id === union.creatorId) {
+            this.table.setIdForUnion(union);
+            unionOuts.splice(i);
+            isNew = false;
+            return unionOuts;
+          }
         }
       }
-      return outUnions;
+      return unionOuts;
     });
 
     if (isNew) {
@@ -136,7 +159,7 @@ export class WebSocketAwaiter {
         }
         return outMessages;
       });
-    });
+    }, 1000);
   }
 
   private handleIncomingMessage(message: MessageIn) {

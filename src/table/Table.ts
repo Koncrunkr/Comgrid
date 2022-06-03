@@ -5,7 +5,7 @@ import { Cell } from './Cell';
 import { cellWidth } from '../util/Constants';
 import { Union } from './Union';
 import { WebSocketAwaiter } from './WebSocketAwaiter';
-import { UnionIn } from '../util/websocket/CellUnionTopic';
+import { UnionIn, UnionOut } from '../util/websocket/CellUnionTopic';
 import { getCookie } from 'typescript-cookie';
 import { User } from '../util/State';
 
@@ -19,7 +19,7 @@ export class Table {
 
   private readonly awaiter;
 
-  private readonly currentUser: User;
+  readonly currentUser: User;
 
   constructor(table: TableResponse, unions: UnionIn[], messages: MessageIn[]) {
     this.id = table.id;
@@ -54,7 +54,7 @@ export class Table {
     }
   }
 
-  public addUnion(union: UnionIn) {
+  public addUnion(union: UnionIn | UnionOut): Union {
     const unionCells = slice2DArray(
       this.cells,
       union.ycoordLeftTop,
@@ -87,6 +87,7 @@ export class Table {
         });
       }
     }
+    return newUnion;
   }
 
   updateMessage(x: number, y: number, clientWidth: number, text: string): boolean {
@@ -106,6 +107,7 @@ export class Table {
 
   growIfNeeded(x: number, y: number, clientWidth: number): boolean {
     if (clientWidth <= cellWidth) return true;
+    if (x === this.width - 1) return false;
     for (let i = 0; i < this.unions.length; i++) {
       if (this.unions[i].contains(x, y)) {
         const maxWidth = cellWidth * (this.unions[i].xTo - x + 1);
@@ -114,6 +116,24 @@ export class Table {
         return this.grow(this.unions[i]);
       }
     }
+
+    // union is not found, then create one, if there is space
+    if (this.inUnion(this.getCell(x + 1, y))) {
+      // there is union right next to our cell, don't do anything
+      return false;
+    }
+    // there is no union right to our cell
+    const newUnion = this.addUnion({
+      id: undefined,
+      chatId: this.id,
+      creatorId: this.currentUser.id,
+      xcoordLeftTop: x,
+      xcoordRightBottom: x + 1,
+      ycoordLeftTop: y,
+      ycoordRightBottom: y,
+    });
+    this.awaiter.sendUnionToServer(newUnion);
+
     return false;
   }
 
@@ -196,5 +216,28 @@ export class Table {
       }
     }
     return false;
+  }
+
+  setIdForUnion(union: UnionIn) {
+    for (let i = 0; i < this.unions.length; i++) {
+      if (
+        Union.bordersEqual(
+          {
+            chatId: this.id,
+            xcoordLeftTop: this.unions[i].xFrom,
+            xcoordRightBottom: this.unions[i].xTo,
+            ycoordLeftTop: this.unions[i].yFrom,
+            ycoordRightBottom: this.unions[i].yTo,
+          },
+          union,
+        )
+      ) {
+        this.unions[i].id = union.id;
+        return;
+      }
+    }
+    console.log(
+      'Something went wrong for setting id for union: ' + JSON.stringify(union),
+    );
   }
 }
