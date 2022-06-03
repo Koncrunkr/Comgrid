@@ -1,17 +1,8 @@
 import { RequestWrapper } from './Request';
 import { MethodType } from '../HttpClient';
+import { UnionIn } from '../websocket/CellUnionTopic';
 
-export class UnionResponse {
-  readonly id!: number;
-  readonly xcoordLeftTop!: number;
-  readonly ycoordLeftTop!: number;
-  readonly xcoordRightBottom!: number;
-  readonly ycoordRightBottom!: number;
-  readonly chatId!: number;
-  readonly creatorId!: string;
-}
-
-export class CellUnionsRequest implements RequestWrapper<UnionResponse[]> {
+export class CellUnionsRequest implements RequestWrapper<UnionIn[]> {
   readonly parameters: Record<string, string>;
   readonly endpoint: string = '/message/unions';
   readonly headers: HeadersInit = {
@@ -35,8 +26,8 @@ export class CellUnionsRequest implements RequestWrapper<UnionResponse[]> {
     };
   }
 
-  async proceedRequest(response: Response): Promise<UnionResponse[]> {
+  async proceedRequest(response: Response): Promise<UnionIn[]> {
     const text = await response.text();
-    return JSON.parse(text) as UnionResponse[];
+    return JSON.parse(text) as UnionIn[];
   }
 }
