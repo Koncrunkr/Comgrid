@@ -37,7 +37,7 @@ export const CellItem = (
         cursor: 'context-menu',
         'background-color': 'inherit',
         color: theme().colors.secondaryText,
-        ...cell().css(),
+        ...cell().css()(),
       }}
     >
       <span

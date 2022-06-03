@@ -66,7 +66,7 @@ export const DarkTheme: Theme = {
     invertedBackground: '#C6A8DA',
     background: '#07021B',
     secondaryBackground: '#1A0F49',
-    borderColor: '1px solid ' + 'rgba(200, 200, 200, 0.8)',
+    borderColor: '1px solid ' + 'rgba(200, 200, 200, 0.2)',
     text: '#B6ADDD',
     invertedText: '#2F0B47',
     secondaryText: '#6D60A4',

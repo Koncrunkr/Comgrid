@@ -12,19 +12,19 @@ export class Cell {
   public readonly setSender: (User: User) => unknown;
   public readonly sender: () => User | undefined;
 
-  public readonly css: () => CSSProperties;
-  private readonly setCss: (css: CSSProperties) => unknown;
+  public readonly css: () => () => CSSProperties;
+  private readonly setCss: (css: () => () => CSSProperties) => unknown;
 
   constructor(readonly x: number, readonly y: number) {
     [this.text, this.setText] = createSignal();
     [this.sender, this.setSender] = createSignal();
     const [theme] = useTheme();
-    [this.css, this.setCss] = createSignal({
+    [this.css, this.setCss] = createSignal(() => ({
       'border-left': theme().colors.borderColor,
       'border-right': theme().colors.borderColor,
       'border-bottom': theme().colors.borderColor,
       'border-top': theme().colors.borderColor,
-    });
+    }));
   }
 
   setMessage(text: string, sender: User) {
@@ -49,7 +49,7 @@ export class Cell {
     }: { bottom: boolean; top: boolean; left: boolean; right: boolean },
   ) {
     const [theme] = useTheme();
-    this.setCss({
+    this.setCss(() => () => ({
       ...(left && {
         'border-left': theme().colors.borderColor,
       }),
@@ -62,6 +62,6 @@ export class Cell {
       ...(bottom && {
         'border-bottom': theme().colors.borderColor,
       }),
-    });
+    }));
   }
 }
