@@ -95,6 +95,12 @@ export class Table {
   }
 
   updateMessage(x: number, y: number, clientWidth: number, text: string): boolean {
+    const existingText = this.getCell(x, y).text();
+    if (!text || text === '') {
+      if (!existingText || existingText === '') {
+        return false;
+      }
+    }
     if (!this.growIfNeeded(x, y, clientWidth)) return false;
 
     this.getCell(x, y).setMessage(text, this.currentUser);

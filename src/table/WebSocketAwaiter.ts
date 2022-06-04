@@ -31,19 +31,33 @@ export class WebSocketAwaiter {
       `outcoming_messages_${table.id}`,
       [],
     );
+    this.handlePendingOutcomes();
+  }
+
+  private handlePendingOutcomes() {
+    const outMessages = this.outcomingMessages.value;
+    for (let i = 0; i < outMessages.length; i++) {
+      this.handleOutcomingMessage(outMessages[i]);
+    }
+    const outUnions = this.outcomingUnions.value;
+    for (let i = 0; i < outUnions.length; i++) {
+      this.handleOutcomingUnion(outUnions[i]);
+    }
   }
 
   sendUnionToServer(union: Union) {
+    if (union.xFrom === union.xTo && union.yFrom === union.yTo) return;
     const unionMessage = union.toMessage();
     this.outcomingUnions.update(list => {
       list.push(unionMessage);
       return list;
     });
-    this.handleOutcomingUnion(union);
+    this.handleOutcomingUnion(unionMessage);
     this.websocket.sendMessage(this.cellUnionTopic, unionMessage);
   }
 
   sendMessageToServer(message: MessageOut) {
+    if (!message.text || message.text === '') return;
     this.outcomingMessages.update(list => {
       list.push(message);
       return list;
@@ -70,23 +84,11 @@ export class WebSocketAwaiter {
     return [messageReceiveTopic, userTopic, cellUnionReceiveTopic];
   }
 
-  private handleOutcomingUnion(union: Union) {
+  private handleOutcomingUnion(union: UnionOut) {
     setTimeout(() => {
       this.outcomingUnions.update(unionOuts => {
         for (let i = 0; i < unionOuts.length; i++) {
-          if (
-            unionOuts[i].id === union.id ||
-            Union.bordersEqual(
-              {
-                chatId: 0, // it isn't being checked
-                ycoordLeftTop: union.yFrom,
-                ycoordRightBottom: union.yTo,
-                xcoordLeftTop: union.xFrom,
-                xcoordRightBottom: union.xTo,
-              },
-              unionOuts[i],
-            )
-          ) {
+          if (unionOuts[i].id === union.id || Union.bordersEqual(union, unionOuts[i])) {
             const retries = unionOuts[i].retries ?? 1;
             if (retries > 10) {
               // TODO: message is not sent, mark it as unsent and suggest to resend
