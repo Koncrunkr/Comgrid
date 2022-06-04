@@ -4,7 +4,7 @@ import { UnionIn } from '../websocket/CellUnionTopic';
 
 export class CellUnionsRequest implements RequestWrapper<UnionIn[]> {
   readonly parameters: Record<string, string>;
-  readonly endpoint: string = '/message/unions';
+  readonly endpoint: string = '/union/list';
   readonly headers: HeadersInit = {
     'Content-Type': 'application/json',
   };
