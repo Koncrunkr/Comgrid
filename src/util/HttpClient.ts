@@ -24,6 +24,7 @@ export class HttpClient {
     return fetch(finalLink.toString(), {
       method: request.methodType,
       headers: headers,
+      credentials: 'omit',
       body: request.body,
     }).then(async response => {
       if (response.status === 200) {
