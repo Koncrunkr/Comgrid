@@ -30,7 +30,7 @@ export class CellUnionTopic extends Topic<UnionIn, UnionOut> {
   private readonly editPath = '/connection/table_cell_union/edit';
 
   constructor(readonly tableId: number) {
-    super('/connection/table_cell_union/{id}', '/connection/table_cell_union', tableId);
+    super('/amq/queue/table_cell_union.{id}', '/connection/table_cell_union', tableId);
   }
 
   sendDestination(message?: UnionOut): string {

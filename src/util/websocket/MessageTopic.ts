@@ -20,7 +20,7 @@ export class MessageOut {
 export class MessageTopic extends Topic<MessageIn, MessageOut> {
   constructor(readonly tableId: number) {
     super(
-      '/connection/table_message/{id}',
+      '/amq/queue/table_message.{id}',
       '/connection/table_message/edit_or_send',
       tableId,
     );
