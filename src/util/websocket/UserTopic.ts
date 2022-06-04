@@ -2,7 +2,7 @@ import { Topic } from './Topic';
 
 export class UserTopic extends Topic<any, unknown> {
   constructor(userId: string) {
-    super('/amq/queue/user.{id}', '', userId);
+    super('/queue/user.{id}', '', userId);
   }
 
   proceedMessage(message: any): any {
