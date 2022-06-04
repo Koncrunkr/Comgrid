@@ -35,7 +35,7 @@ export class HttpClient {
             }else{
                 const errorText = await response.text();
                 onFailure(response.status, errorText);
-                throw new TypeError(errorText);
+                return Promise.reject({status: response.status, error: errorText})
             }
         })
     }

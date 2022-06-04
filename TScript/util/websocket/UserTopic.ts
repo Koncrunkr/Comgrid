@@ -6,6 +6,6 @@ export class UserTopic extends Topic<any, unknown>{
         return message
     }
     constructor(userId: string) {
-        super("/connection/user/{id}", "", userId);
+        super("/queue/user.{id}", "", userId);
     }
 }

@@ -23,7 +23,7 @@ export function size(union: UnionOut): number {
 }
 export class CellUnionTopic extends Topic<UnionIn, UnionOut> {
     constructor(readonly tableId: number) {
-        super("/connection/table_cell_union/{id}", "/connection/table_cell_union", tableId);
+        super("/queue/table_cell_union.{id}", "/connection/table_cell_union", tableId);
     }
 
     proceedMessage(message): UnionIn {
