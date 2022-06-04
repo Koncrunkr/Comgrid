@@ -7,8 +7,6 @@ export enum AlertType {
   Success = 'rgba(56, 237, 43, 0.9)',
 }
 
-export const makeAlert = (type: AlertType) => {};
-
 export const AlertItem = (props: { type: AlertType; message: string }) => {
   const [visible, setVisible] = createSignal(true);
   setTimeout(() => {

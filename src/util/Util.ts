@@ -55,7 +55,7 @@ export function formatDateTime(date: Date): string {
   const today = new Date();
   const outDate = date.toDateString();
   if (today.toDateString() === outDate) {
-    return date.toLocaleTimeString();
+    return date.toLocaleTimeString('ru-RU');
   }
   return outDate;
 }

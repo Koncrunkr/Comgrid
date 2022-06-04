@@ -18,21 +18,19 @@ export const ChatItem = (props: { table: TableResponse }) => {
   const [theme] = useTheme();
   const [getString] = useStrings();
   const [lastMessage] = createResource(async () => {
-    if (props.table.lastMessageX != null) {
-      const lastMessage = await getHttpClient().proceedRequest(
-        new MessageRequest({
-          chatId: props.table.id,
-          x: props.table.lastMessageX!,
-          y: props.table.lastMessageY!,
-        }),
-      );
-      return {
-        ...lastMessage,
-        sender: await resolveUser(lastMessage.senderId),
-      };
-    } else {
-      return Promise.resolve(undefined);
-    }
+    if (props.table.lastMessageX === null) return Promise.resolve(undefined);
+
+    const lastMessage = await getHttpClient().proceedRequest(
+      new MessageRequest({
+        chatId: props.table.id,
+        x: props.table.lastMessageX!,
+        y: props.table.lastMessageY!,
+      }),
+    );
+    return {
+      ...lastMessage,
+      sender: await resolveUser(lastMessage.senderId),
+    };
   });
 
   return (
@@ -46,8 +44,8 @@ export const ChatItem = (props: { table: TableResponse }) => {
       <Suspense fallback={<div>Loading...</div>}>
         <Link
           href={`/table?id=${props.table.id}`}
-          class="text-decoration-none"
           style={{
+            'text-decoration': 'none',
             background: theme().colors.secondaryBackground,
             color: theme().colors.secondaryText,
           }}
@@ -56,6 +54,11 @@ export const ChatItem = (props: { table: TableResponse }) => {
             <div class="col-lg-1 p-1 m-n1">
               <img
                 class="img-fluid rounded-circle"
+                style={{
+                  'max-width': '100%',
+                  'border-radius': '50%',
+                  height: 'auto',
+                }}
                 src={
                   props.table.avatar.link.startsWith('/')
                     ? apiLink + props.table.avatar.link
@@ -74,7 +77,6 @@ export const ChatItem = (props: { table: TableResponse }) => {
                   }}
                 >
                   {lastMessage()?.sender.name}
-                  {lastMessage() ? ':' : ''}
                 </span>
                 <span class="chat-text">{lastMessage()?.text}</span>
               </div>

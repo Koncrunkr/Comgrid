@@ -3,15 +3,14 @@ import { SimpleButton } from '../../common/SimpleButton';
 import { useStrings } from '../../assets/localization/localization';
 import { createMemo, For } from 'solid-js';
 import { ChatItem } from '../items/ChatItem';
-import { useIsRouting, useRouteData } from 'solid-app-router';
+import { useRouteData } from 'solid-app-router';
 import { TableResponse } from '../../util/request/CreateTableRequest';
-import { AlertItem, AlertType } from '../../util/component/AlertItem';
-import { If } from '../../util/component/If';
+import { AlertItem, AlertType } from '../../common/AlertItem';
+import { If } from '../../common/If';
 
 export const IndexPage = () => {
   const [theme] = useTheme();
   const [getString] = useStrings();
-  const isRouting = useIsRouting();
 
   return (
     <main>
@@ -49,8 +48,6 @@ const ChatContainer = () => {
       return undefined;
     }
   });
-  if (chatList()) {
-  }
   return (
     <div class="chat-container scrolling-element overflow-auto">
       <If
