@@ -6,14 +6,18 @@ import { MessageOut } from './websocket/MessageTopic';
 
 export const recoverCaretPosition = (span: HTMLSpanElement, caretPosition: number) => {
   if (caretPosition === -1) return;
-  const range = document.createRange();
-  range.setStart(span.childNodes[0], min(caretPosition, span.innerHTML.length));
-  range.collapse(true);
+  try {
+    const range = document.createRange();
+    range.setStart(span.childNodes[0], min(caretPosition, span.innerHTML.length));
+    range.collapse(true);
 
-  const selection = window.getSelection()!;
+    const selection = window.getSelection()!;
 
-  selection.removeAllRanges();
-  selection.addRange(range);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  } catch (e) {
+    console.log('Weird error: ' + e);
+  }
 };
 
 export const min = (first: any, second: any) => {
