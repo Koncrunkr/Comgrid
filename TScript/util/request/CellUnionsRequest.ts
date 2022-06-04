@@ -29,7 +29,7 @@ export class CellUnionsRequest implements RequestWrapper<UnionResponse[]>{
             ycoordRightBottom: parameters.ycoordRightBottom.toString()
         }
     }
-    readonly endpoint: string = '/message/unions';
+    readonly endpoint: string = '/union/list';
     readonly headers: HeadersInit = {
         "Content-Type": "application/json"
     };
