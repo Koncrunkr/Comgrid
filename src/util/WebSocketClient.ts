@@ -4,14 +4,16 @@ import { getState } from './State';
 import SockJS from 'sockjs-client';
 
 export class WebSocketClient {
-  private readonly socket: WebSocket;
+  // @ts-ignore
+  private socket: WebSocket;
   private readonly stompClient: CompatClient;
   private connected: boolean = false;
   private subscribers = new Array<() => unknown>();
 
   constructor(apiLink: string) {
-    this.socket = new SockJS(apiLink);
-    this.stompClient = Stomp.over(this.socket);
+    this.stompClient = Stomp.over(() => {
+      return (this.socket = new SockJS(apiLink));
+    });
     getState()
       .whenReady()
       .then(state => {
