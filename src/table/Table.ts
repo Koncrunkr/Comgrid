@@ -133,6 +133,11 @@ export class Table {
       // there is union right next to our cell, don't do anything
       return false;
     }
+
+    if (nextCell.text()) {
+      // if there is other message, don't do anything
+      return false;
+    }
     // there is no union right to our cell
     const newUnion = this.addUnion({
       id: undefined,
