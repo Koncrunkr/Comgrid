@@ -6,7 +6,14 @@
   "change_theme": "Change theme",
   "my_chats": "My chats",
   "sign_in": "Sign in",
-  "sign_in-form": "Sign in",
+  "sign_in_form": "Sign in",
+  "search_label": "Search messages",
+  "search_exact_match": "Exact match",
+  "search_button": "Search",
+  "search_clear_button": "Clear",
+  "sign_in_first": "You have to sign in first!",
+  "unknown_error": "Unknown error has occurred.",
+  "search_text": "Text",
   "sign_out": "Sign out",
   "size": "Size"
 }

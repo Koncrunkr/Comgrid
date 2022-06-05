@@ -7,14 +7,22 @@ export enum AlertType {
   Success = 'rgba(56, 237, 43, 0.9)',
 }
 
-export const AlertItem = (props: { type: AlertType; message: string }) => {
+let container = document.createElement('div');
+container.id = 'alert-container';
+let id = 0;
+
+export const AlertItem = (props: { type: AlertType; message: () => string }) => {
   const [visible, setVisible] = createSignal(true);
+  const currentId = id++;
   setTimeout(() => {
     setVisible(false);
+    document.getElementById('alert-item' + currentId)?.remove();
   }, 3000);
+
   return (
     <Portal>
       <div
+        id={'alert-item-' + currentId}
         style={{
           'background-color': props.type,
           color: 'black',
@@ -22,7 +30,7 @@ export const AlertItem = (props: { type: AlertType; message: string }) => {
           height: 'fit-content',
           padding: '15px 20px',
           visibility: visible() ? 'visible' : 'hidden',
-          transition: '1s',
+          transition: 'all 300ms',
           'border-radius': '25px',
           position: 'fixed',
           bottom: '25px',
@@ -31,7 +39,7 @@ export const AlertItem = (props: { type: AlertType; message: string }) => {
           'overflow-wrap': 'break-word',
         }}
       >
-        {props.message}
+        {props.message()}
       </div>
     </Portal>
   );

@@ -38,18 +38,32 @@ export const IndexPage = () => {
 };
 
 const ChatContainer = () => {
+  const [getString] = useStrings();
   const chatList: () => TableResponse[] = useRouteData();
   const error = createMemo(() => {
-    const error = chatList() as unknown as { code: number; errorText: string };
-    if (error === undefined) return undefined;
-    if (error.code !== undefined) {
-      return error;
-    } else {
+    const response = chatList() as any;
+    if (!response) return undefined;
+    const message = response.message;
+    try {
+      const error = JSON.parse(message) as { code: number; errorText: string };
+      if (error === undefined) return undefined;
+      if (error.code !== undefined) {
+        return error;
+      } else {
+        return undefined;
+      }
+    } catch (e) {
       return undefined;
     }
   });
   return (
-    <div class="chat-container scrolling-element overflow-auto">
+    <div
+      id="chat-container"
+      class="chat-container scrolling-element overflow-auto"
+      style={{
+        'max-height': '78vh',
+      }}
+    >
       <If
         condition={!error()}
         onTrue={
@@ -59,7 +73,18 @@ const ChatContainer = () => {
             }}
           </For>
         }
-        onFalse={<AlertItem type={AlertType.Error} message={'You are wrong!'} />}
+        onFalse={
+          <AlertItem
+            type={AlertType.Error}
+            message={() => {
+              const err = error()!;
+              if (err.code === 401) {
+                return getString('sign_in_first')();
+              }
+              return getString('unknown_error')();
+            }}
+          />
+        }
       />
     </div>
   );

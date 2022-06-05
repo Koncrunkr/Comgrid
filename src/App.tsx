@@ -53,9 +53,9 @@ const App: Component = () => {
           data={() =>
             createResource<TableResponse[] | { code: number; errorText: string }>(() =>
               getHttpClient()
-                .proceedRequest(new UserInfoRequest({ includeChats: true }))
+                .proceedRequest(new UserInfoRequest({ includeChats: true }), () => {})
                 .then(value => value.chats!)
-                .catch(e => JSON.parse((e as TypeError).message)),
+                .catch(e => e),
             )[0]
           }
         />

@@ -6,7 +6,7 @@ import { Link } from 'solid-app-router';
 import { SimpleButton } from '../common/SimpleButton';
 import { Portal } from 'solid-js/web';
 import { getState } from '../util/State';
-import { JSX } from 'solid-js';
+import { createSignal, JSX } from 'solid-js';
 
 export const Header = (props: { currentPage: PageInfo; pages: PageInfo[] }) => {
   const [theme] = useTheme();
@@ -76,8 +76,142 @@ const HeaderPageItem = (props: { page: PageInfo }) => {
 
 export const SearchItem = () => {
   const [getString] = useStrings();
+  const [theme] = useTheme();
 
-  return <SimpleButton onClick={() => null}>{getString('search')}</SimpleButton>;
+  const [opened, setOpened] = createSignal();
+
+  let searchDiv: HTMLDivElement;
+  return (
+    <>
+      <Portal>
+        <form id="search-messages-form">
+          <div
+            id="search-messages-sidenav"
+            ref={ref => (searchDiv = ref)}
+            style={{
+              height: '100%' /* 100% Full-height */,
+              width: opened()
+                ? '17vw'
+                : '0px' /* 0 width - change this with JavaScript */,
+              position: 'fixed' /* Stay in place */,
+              'z-index': 1 /* Stay on top */,
+              top: 0,
+              left: 0,
+              'background-color': theme().colors.background,
+              color: theme().colors.text,
+              'overflow-x': 'hidden' /* Disable horizontal scroll */,
+              'padding-top': '60px' /* Place content 60px from the top */,
+              transition: '0.5s',
+            }}
+          >
+            <div
+              class="modal-header"
+              style={{
+                'background-color': theme().colors.secondaryBackground,
+                color: theme().colors.secondaryText,
+              }}
+            >
+              <h5 class="modal-title">{getString('search_label')}</h5>
+              <button
+                id="close-search-button"
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+                onclick={() => {
+                  const tableContainer = document.getElementById('table-container')!;
+                  tableContainer.style.marginLeft = '1vw';
+                  tableContainer.style.width = '98vw';
+                  setOpened(false);
+                }}
+              >
+                <span
+                  aria-hidden="true"
+                  style={{
+                    color: theme().colors.text,
+                  }}
+                >
+                  &times;
+                </span>
+              </button>
+            </div>
+            <div class="modal-body container">
+              <div class="form-row row">
+                <div class="form-group col-md-12 col-12">
+                  <label for="message-text-input">{getString('search_text')}</label>
+                  <input
+                    id="message-text-input"
+                    type="text"
+                    class="form-control"
+                    placeholder={getString('search_text_placeholder')()}
+                    style={{
+                      'background-color': theme().colors.background,
+                      color: theme().colors.text,
+                    }}
+                    required
+                  />
+                </div>
+              </div>
+              <div class="form-group form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="exact-match-input"
+                  style={{
+                    'background-color': theme().colors.background,
+                  }}
+                  value="option1"
+                />
+                <label class="form-check-label" for="exact-match-input" id="">
+                  {getString('search_exact_match')}
+                </label>
+              </div>
+            </div>
+            <div class="modal-footer text-right p-1">
+              <button
+                type="reset"
+                style={{
+                  'background-color': theme().colors.button.background,
+                  color: theme().colors.button.text,
+                }}
+                class="btn btn-dark mr-1"
+              >
+                {getString('search_clear_button')}
+              </button>
+              <button
+                type="button"
+                class="btn mr-1"
+                style={{
+                  'background-color': theme().colors.button.background,
+                  color: theme().colors.button.text,
+                }}
+                id="search-messages-button"
+              >
+                {getString('search_button')}
+              </button>
+            </div>
+            <div class="search-message-container scrolling-element overflow-auto"></div>
+          </div>
+        </form>
+      </Portal>
+      <SimpleButton
+        onClick={() => {
+          const tableContainer = document.getElementById('table-container')!;
+          const isOpened = opened();
+          if (isOpened) {
+            tableContainer.style.marginLeft = '1vw';
+            tableContainer.style.width = '98vw';
+          } else {
+            tableContainer.style.marginLeft = '18vw';
+            tableContainer.style.width = '81vw';
+          }
+          setOpened(!isOpened);
+        }}
+      >
+        {getString('search')}
+      </SimpleButton>
+    </>
+  );
 };
 
 export const ChangeThemeItem = () => {

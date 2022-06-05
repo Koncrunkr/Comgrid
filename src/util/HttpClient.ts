@@ -33,7 +33,7 @@ export class HttpClient {
         const errorText = await response.text();
         onFailure(response.status, errorText);
         // @ts-ignore
-        throw new TypeError({ code: response.status, errorText });
+        throw new TypeError(JSON.stringify({ code: response.status, errorText }));
       }
     });
   }

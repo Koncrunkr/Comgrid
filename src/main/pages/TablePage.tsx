@@ -1,7 +1,6 @@
 import { createResource, Index } from 'solid-js';
 import { useSearchParams } from 'solid-app-router';
 import { Table } from '../../table/Table';
-import { useTheme } from '../../theme/Theme';
 import { cellHeight } from '../../util/Constants';
 import { CellItem } from '../items/CellItem';
 
@@ -11,16 +10,18 @@ export const TablePage = () => {
     async () => await Table.load(parseInt(searchParams.id)),
   );
 
-  const [theme] = useTheme();
   return (
     <>
       <main
-        class="scrolling-element mt-3 mx-3 overflow-auto"
+        id="table-container"
+        class="scrolling-element overflow-auto"
         style={{
           'max-height': '83vh',
           'flex-direction': 'column',
+          margin: '1vw',
           width: '98vw',
           display: 'flex',
+          transition: 'all .5s',
           flex: '1 0',
         }}
       >
