@@ -53,8 +53,7 @@ export async function resolveUser(userId: string): Promise<User> {
   localStorage.setItem('user_' + userId, JSON.stringify(user));
   return user;
 }
-//104464598721841231716
-//104464598721841231716
+
 export function formatDateTime(date: Date): string {
   const today = new Date();
   const outDate = date.toDateString();

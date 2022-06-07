@@ -1,7 +1,7 @@
 import type { Component } from 'solid-js';
 import { createEffect, createResource } from 'solid-js';
 import { Route, Routes } from 'solid-app-router';
-import { Header } from './main/Header';
+import { Header } from './main/header/Header';
 import { useTheme } from './theme/Theme';
 import { LoginPage } from './main/pages/LoginPage';
 import { TablePage } from './main/pages/TablePage';

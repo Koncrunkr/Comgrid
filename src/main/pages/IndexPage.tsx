@@ -14,7 +14,14 @@ export const IndexPage = () => {
 
   return (
     <main>
-      <div class="container w-75 h-100 my-w-lg-50">
+      <div
+        class="container h-100 my-w-lg-50"
+        id="chat-container-div"
+        style={{
+          width: '75%',
+          transition: 'all .5s',
+        }}
+      >
         <div
           class="no-deletable card container mt-2"
           style={{
