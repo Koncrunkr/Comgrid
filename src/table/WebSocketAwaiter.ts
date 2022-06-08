@@ -3,15 +3,13 @@ import { MessageIn, MessageOut, MessageTopic } from '../util/websocket/MessageTo
 import { CellUnionTopic, UnionIn, UnionOut } from '../util/websocket/CellUnionTopic';
 import { UserTopic } from '../util/websocket/UserTopic';
 import { WebSocketClient } from '../util/WebSocketClient';
-import { apiLink } from '../util/Constants';
 import { Table } from './Table';
 import { CookieValue } from '../util/CookieValue';
 import { messagesIdEqual } from '../util/Util';
+import { wsLink } from '../util/Constants';
 
 export class WebSocketAwaiter {
-  public readonly websocket: WebSocketClient = new WebSocketClient(
-    apiLink + '/websocket',
-  );
+  public readonly websocket: WebSocketClient = new WebSocketClient(wsLink + '/websocket');
   private readonly userTopic: UserTopic;
   private readonly messageTopic: MessageTopic;
   private readonly cellUnionTopic: CellUnionTopic;

@@ -245,9 +245,9 @@ export class Table {
   }
 
   getContiguousCellToLeft(x: number, y: number) {
+    if (x === 0) return null;
     const cell = this.getCell(x, y);
     const union = this.getUnion(cell);
-    if (x === 0) return null;
     if (union) {
       const contiguousX = union.xFrom - 1;
       if (contiguousX === -1) {
@@ -257,6 +257,25 @@ export class Table {
     }
 
     return this.getCell(x - 1, y);
+  }
+
+  getMostLeftCellOfUnion(x: number, y: number) {
+    const cell = this.getCell(x, y);
+    if (x === 0) return cell;
+    const union = this.getUnion(cell);
+    if (union) {
+      const firstX = union.xFrom;
+      return this.getCell(firstX, y);
+    }
+    return cell;
+  }
+
+  hasRightsToEdit(x: number, y: number) {
+    const cell = this.getCell(x, y);
+    if (cell.text()) {
+      return cell.sender()?.id === this.currentUser.id;
+    }
+    return true;
   }
 
   setIdForUnion(union: UnionIn) {

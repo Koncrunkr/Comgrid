@@ -1,7 +1,6 @@
 import { CompatClient, Stomp } from '@stomp/stompjs';
 import { Topic } from './websocket/Topic';
 import { getState } from './State';
-import SockJS from 'sockjs-client';
 
 export class WebSocketClient {
   // @ts-ignore
@@ -12,7 +11,7 @@ export class WebSocketClient {
 
   constructor(apiLink: string) {
     this.stompClient = Stomp.over(() => {
-      return (this.socket = new SockJS(apiLink));
+      return (this.socket = new WebSocket(apiLink));
     });
     getState()
       .whenReady()

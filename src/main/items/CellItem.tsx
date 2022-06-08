@@ -1,5 +1,5 @@
 import { Cell } from '../../table/Cell';
-import { createEffect, Resource } from 'solid-js';
+import { createEffect, createSignal, Resource } from 'solid-js';
 import { Table } from '../../table/Table';
 import { useTheme } from '../../theme/Theme';
 import { cellHeight, cellWidth } from '../../util/Constants';
@@ -27,6 +27,8 @@ export const CellItem = (
       span.textContent = cell().text();
     }
   });
+
+  const [mouseDown, setMouseDown] = createSignal(false);
   return (
     <div
       id={x + ', ' + y}
@@ -92,6 +94,26 @@ export const CellItem = (
               ?.focus();
           }
           return false;
+        }}
+        onclick={() => {
+          const left = table()?.getMostLeftCellOfUnion(x, y);
+          if (left) {
+            document.getElementById(left.x + ', ' + left.y + ', span')?.focus();
+            if (!table()?.hasRightsToEdit(left.x, left.y)) {
+              document.getElementById(left.x + ', ' + left.y + ', span')?.blur();
+            }
+          }
+          setMouseDown(false);
+          return false;
+        }}
+        onmousedown={() => {
+          setMouseDown(true);
+        }}
+        onmouseleave={() => {
+          if (mouseDown()) {
+            document.getElementById(x + ', ' + y + ', span')?.blur();
+            setMouseDown(false);
+          }
         }}
         contenteditable={true}
       />

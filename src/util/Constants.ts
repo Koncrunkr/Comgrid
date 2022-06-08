@@ -1,4 +1,5 @@
 export const apiLink = import.meta.env.VITE_API_LINK ?? 'https://comgrid.ru:8443';
+export const wsLink = import.meta.env.VITE_API_LINK ?? 'wss://comgrid.ru:8443';
 export const vkLoginUri =
   apiLink + (import.meta.env.VITE_VK_LOGIN_URI ?? '/oauth2/authorize/vk');
 export const googleLoginUri =

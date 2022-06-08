@@ -15,9 +15,7 @@ export const recoverCaretPosition = (span: HTMLSpanElement, caretPosition: numbe
 
     selection.removeAllRanges();
     selection.addRange(range);
-  } catch (e) {
-    console.log('Weird error: ' + e);
-  }
+  } catch (e) {}
 };
 
 export const messagesIdEqual = (first: MessageOut, second: MessageOut) => {
