@@ -1,16 +1,11 @@
 import { Cell } from '../../table/Cell';
-import { createEffect, createSignal, Resource } from 'solid-js';
+import { createEffect, createSignal } from 'solid-js';
 import { Table } from '../../table/Table';
 import { useTheme } from '../../theme/Theme';
 import { cellHeight, cellWidth } from '../../util/Constants';
 import { recoverCaretPosition } from '../../util/Util';
 
-export const CellItem = (
-  cell: () => Cell,
-  x: number,
-  y: number,
-  table: Resource<Table | undefined>,
-) => {
+export const CellItem = (cell: () => Cell, x: number, y: number, table: () => Table) => {
   const [theme] = useTheme();
   let previousValue: string = '';
   // @ts-ignore
@@ -49,7 +44,7 @@ export const CellItem = (
         class="no-show-focus user-select-none"
         style={{
           'white-space': 'nowrap',
-          'z-index': (table()?.cells?.length ?? 0) - x,
+          'z-index': (table().cells?.length ?? 0) - x,
           'min-height': '100%',
           'min-width': '100%',
           'background-color': cell().sender()?.color ?? 'inherit',
@@ -61,7 +56,7 @@ export const CellItem = (
         oninput={({ target }) => {
           const currentCaretPosition = document.getSelection()!.getRangeAt(0).startOffset;
           if (
-            table()?.updateMessage(
+            table().updateMessage(
               x,
               y,
               target.clientWidth,
@@ -83,12 +78,12 @@ export const CellItem = (
           } else if (event.code === 'ArrowDown' || event.code === 'Enter') {
             document.getElementById(x + ', ' + (y + 1) + ', span')?.focus();
           } else if (event.code === 'ArrowLeft') {
-            const contiguousCell = table()?.getContiguousCellToLeft(x, y);
+            const contiguousCell = table().getContiguousCellToLeft(x, y);
             document
               .getElementById(contiguousCell?.x + ', ' + contiguousCell?.y + ', span')
               ?.focus();
           } else if (event.code === 'ArrowRight') {
-            const contiguousCell = table()?.getContiguousCellToRight(x, y);
+            const contiguousCell = table().getContiguousCellToRight(x, y);
             document
               .getElementById(contiguousCell?.x + ', ' + contiguousCell?.y + ', span')
               ?.focus();
@@ -96,10 +91,10 @@ export const CellItem = (
           return false;
         }}
         onclick={() => {
-          const left = table()?.getMostLeftCellOfUnion(x, y);
+          const left = table().getMostLeftCellOfUnion(x, y);
           if (left) {
             document.getElementById(left.x + ', ' + left.y + ', span')?.focus();
-            if (!table()?.hasRightsToEdit(left.x, left.y)) {
+            if (!table().hasRightsToEdit(left.x, left.y)) {
               document.getElementById(left.x + ', ' + left.y + ', span')?.blur();
             }
           }

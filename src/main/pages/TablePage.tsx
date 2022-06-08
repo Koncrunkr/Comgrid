@@ -1,17 +1,17 @@
-import { createResource, Index } from 'solid-js';
-import { useSearchParams } from 'solid-app-router';
+import { Index } from 'solid-js';
+import { useRouteData } from 'solid-app-router';
 import { Table } from '../../table/Table';
 import { cellHeight } from '../../util/Constants';
 import { CellItem } from '../items/CellItem';
+import { Header } from '../header/Header';
+import { IndexPageInfo, TablePageInfo } from '../../App';
 
 export const TablePage = () => {
-  const [searchParams] = useSearchParams();
-  const [table] = createResource<Table>(
-    async () => await Table.load(parseInt(searchParams.id)),
-  );
+  const table: () => Table = useRouteData();
 
   return (
     <>
+      <Header currentPage={TablePageInfo} pages={[IndexPageInfo]} />
       <main
         id="table-container"
         class="scrolling-element overflow-auto"

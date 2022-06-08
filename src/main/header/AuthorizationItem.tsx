@@ -8,7 +8,7 @@ export const AuthorizationItem = () => {
   const [theme] = useTheme();
   return (
     <>
-      <div class="clickable navbar-elem mx-3" id="sign-in-div">
+      <div class="clickable navbar-elem" id="sign-in-div">
         <button
           class="btn"
           data-toggle="modal"
@@ -16,6 +16,7 @@ export const AuthorizationItem = () => {
           style={{
             'background-color': theme().colors.button.background,
             color: theme().colors.button.text,
+            'margin-left': '1rem',
           }}
         >
           {getString('sign_in')}

@@ -1,7 +1,6 @@
 import type { Component } from 'solid-js';
 import { createEffect, createResource } from 'solid-js';
 import { Route, Routes } from 'solid-app-router';
-import { Header } from './main/header/Header';
 import { useTheme } from './theme/Theme';
 import { LoginPage } from './main/pages/LoginPage';
 import { TablePage } from './main/pages/TablePage';
@@ -9,6 +8,7 @@ import { TableResponse } from './util/request/CreateTableRequest';
 import { getHttpClient } from './util/HttpClient';
 import { UserInfoRequest } from './util/request/UserInfoRequest';
 import { IndexPage } from './main/pages/IndexPage';
+import { Table } from './table/Table';
 
 export interface PageInfo {
   name: string;
@@ -26,7 +26,7 @@ export const TablesPageInfo: PageInfo = {
 };
 
 export const TablePageInfo: PageInfo = {
-  name: 'page',
+  name: 'table',
   path: '/table',
 };
 
@@ -45,7 +45,6 @@ const App: Component = () => {
         'flex-direction': 'column',
       }}
     >
-      <Header currentPage={IndexPageInfo} pages={[IndexPageInfo]} />
       <Routes>
         <Route
           path={IndexPageInfo.path}
@@ -59,7 +58,13 @@ const App: Component = () => {
             )[0]
           }
         />
-        <Route path={TablePageInfo.path} element={<TablePage />} />
+        <Route
+          path={TablePageInfo.path}
+          data={({ location }) =>
+            createResource(() => Table.load(parseInt(location.query.id)))[0]
+          }
+          element={<TablePage />}
+        />
         <Route path="/login" element={<LoginPage />} />
       </Routes>
       <footer

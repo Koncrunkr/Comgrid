@@ -7,40 +7,45 @@ import { useRouteData } from 'solid-app-router';
 import { TableResponse } from '../../util/request/CreateTableRequest';
 import { AlertItem, AlertType } from '../../common/AlertItem';
 import { If } from '../../common/If';
+import { Header } from '../header/Header';
+import { IndexPageInfo } from '../../App';
 
 export const IndexPage = () => {
   const [theme] = useTheme();
   const [getString] = useStrings();
 
   return (
-    <main>
-      <div
-        class="container h-100 my-w-lg-50"
-        id="chat-container-div"
-        style={{
-          width: '75%',
-          transition: 'all .5s',
-        }}
-      >
+    <>
+      <Header currentPage={IndexPageInfo} pages={[IndexPageInfo]} />
+      <main>
         <div
-          class="no-deletable card container mt-2"
+          class="container h-100 my-w-lg-50"
+          id="chat-container-div"
           style={{
-            'background-color': theme().colors.invertedBackground,
-            color: theme().colors.invertedText,
+            width: '75%',
+            transition: 'all .5s',
           }}
         >
-          <div class="card-body row p-2 align-items-center">
-            <div class="ml-1 pl-0 col">{getString('my_chats')}</div>
-            <div class="col text-right">
-              <SimpleButton onClick={() => null}>
-                <i class="fas fa-plus"></i>
-              </SimpleButton>
+          <div
+            class="no-deletable card container mt-2"
+            style={{
+              'background-color': theme().colors.invertedBackground,
+              color: theme().colors.invertedText,
+            }}
+          >
+            <div class="card-body row p-2 align-items-center">
+              <div class="ml-1 pl-0 col">{getString('my_chats')}</div>
+              <div class="col text-right">
+                <SimpleButton onClick={() => null}>
+                  <i class="fas fa-plus"></i>
+                </SimpleButton>
+              </div>
             </div>
           </div>
+          <ChatContainer />
         </div>
-        <ChatContainer />
-      </div>
-    </main>
+      </main>
+    </>
   );
 };
 

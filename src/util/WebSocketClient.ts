@@ -13,6 +13,7 @@ export class WebSocketClient {
     this.stompClient = Stomp.over(() => {
       return (this.socket = new WebSocket(apiLink));
     });
+    this.stompClient.debug = () => {};
     getState()
       .whenReady()
       .then(state => {

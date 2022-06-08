@@ -1,6 +1,6 @@
 import { MessageIn } from '../util/websocket/MessageTopic';
 import { TableResponse } from '../util/request/CreateTableRequest';
-import { getSavedUser, resolveUser, slice2DArray } from '../util/Util';
+import { getSavedUser, resolveUser, saveUser, slice2DArray } from '../util/Util';
 import { Cell } from './Cell';
 import { cellWidth } from '../util/Constants';
 import { Union } from './Union';
@@ -20,6 +20,8 @@ export class Table {
   public readonly width: number;
   public readonly height: number;
   public readonly id: number;
+  public readonly name: string;
+  public readonly participants: User[] | undefined;
 
   private readonly awaiter;
 
@@ -29,6 +31,8 @@ export class Table {
     this.id = table.id;
     this.width = table.width;
     this.height = table.height;
+    this.name = table.name;
+    this.participants = table.participants;
 
     this.awaiter = new WebSocketAwaiter(this);
 
@@ -321,6 +325,7 @@ export class Table {
     const table = await http.proceedRequest(
       new TableInfoRequest({
         chatId: id,
+        includeParticipants: true,
       }),
     );
     const unions = await http.proceedRequest(
@@ -341,11 +346,10 @@ export class Table {
         ycoordRightBottom: table.height - 1,
       }),
     );
-    for (let i = messages.length - 1; i >= 0; i--) {
-      await resolveUser(messages[i].senderId);
-    }
-    for (let i = unions.length - 1; i >= 0; i--) {
-      await resolveUser(unions[i].creatorId);
+    if (table.participants) {
+      for (let i = table.participants!.length - 1; i >= 0; i--) {
+        saveUser(table.participants[i]);
+      }
     }
 
     return new Table(table, unions, messages);

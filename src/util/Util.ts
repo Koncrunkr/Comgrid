@@ -35,6 +35,10 @@ export const getSavedUser = (userId: string): User => {
   throw new TypeError('User with id ' + userId + ' not found');
 };
 
+export function saveUser(user: User) {
+  localStorage.setItem('user_' + user.id, JSON.stringify(user));
+}
+
 export async function resolveUser(userId: string): Promise<User> {
   const existingUser = localStorage.getItem('user_' + userId);
   if (existingUser) {

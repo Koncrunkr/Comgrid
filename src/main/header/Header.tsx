@@ -2,10 +2,13 @@ import { useTheme } from '../../theme/Theme';
 import { useStrings } from '../../assets/localization/localization';
 
 import { PageInfo, TablesPageInfo } from '../../App';
-import { Link } from 'solid-app-router';
+import { Link, useRouteData } from 'solid-app-router';
 import { SimpleButton } from '../../common/SimpleButton';
 import { AuthorizationItem } from './AuthorizationItem';
 import { SearchItem } from './SearchItem';
+import { If } from '../../common/If';
+import { TableInfoItem } from './TableInfo/TableInfoItem';
+import { LogoItem } from './LogoItem';
 
 export const Header = (props: { currentPage: PageInfo; pages: PageInfo[] }) => {
   const [theme] = useTheme();
@@ -23,36 +26,18 @@ export const Header = (props: { currentPage: PageInfo; pages: PageInfo[] }) => {
         </div>
         <div class="navbar-nav">
           <SearchItem />
+          <If
+            condition={props.currentPage.name === 'table'}
+            onTrue={<TableInfoItem table={useRouteData()} />}
+            onFalse={<></>}
+          />
         </div>
         <div class="navbar-nav">
           <ChangeThemeItem />
-        </div>
-        <div class="navbar-nav">
           <AuthorizationItem />
         </div>
       </nav>
     </header>
-  );
-};
-
-export const LogoItem = () => {
-  const [theme] = useTheme();
-  return (
-    <Link
-      class="navbar-brand"
-      href="#"
-      style={{
-        color: theme().colors.text,
-      }}
-    >
-      <i
-        class="fas fa-table"
-        style={{
-          'margin-right': '10px',
-        }}
-      ></i>
-      Comgrid
-    </Link>
   );
 };
 
