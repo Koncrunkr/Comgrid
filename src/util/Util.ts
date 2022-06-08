@@ -8,7 +8,7 @@ export const recoverCaretPosition = (span: HTMLSpanElement, caretPosition: numbe
   if (caretPosition === -1) return;
   try {
     const range = document.createRange();
-    range.setStart(span.childNodes[0], min(caretPosition, span.innerHTML.length));
+    range.setStart(span.childNodes[0], Math.min(caretPosition, span.innerHTML.length));
     range.collapse(true);
 
     const selection = window.getSelection()!;
@@ -18,11 +18,6 @@ export const recoverCaretPosition = (span: HTMLSpanElement, caretPosition: numbe
   } catch (e) {
     console.log('Weird error: ' + e);
   }
-};
-
-export const min = (first: any, second: any) => {
-  if (first > second) return second;
-  return first;
 };
 
 export const messagesIdEqual = (first: MessageOut, second: MessageOut) => {
