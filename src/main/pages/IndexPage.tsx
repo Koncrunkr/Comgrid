@@ -1,5 +1,4 @@
 import { useTheme } from '../../theme/Theme';
-import { SimpleButton } from '../../common/SimpleButton';
 import { useStrings } from '../../assets/localization/localization';
 import { createMemo, For } from 'solid-js';
 import { ChatItem } from '../items/ChatItem';
@@ -9,6 +8,7 @@ import { AlertItem, AlertType } from '../../common/AlertItem';
 import { If } from '../../common/If';
 import { Header } from '../header/Header';
 import { IndexPageInfo } from '../../App';
+import { CreateTableItem } from '../items/CreateTableItem';
 
 export const IndexPage = () => {
   const [theme] = useTheme();
@@ -27,7 +27,7 @@ export const IndexPage = () => {
           }}
         >
           <div
-            class="no-deletable card container mt-2"
+            class="card container mt-2"
             style={{
               'background-color': theme().colors.invertedBackground,
               color: theme().colors.invertedText,
@@ -36,15 +36,25 @@ export const IndexPage = () => {
             <div class="card-body row p-2 align-items-center">
               <div class="ml-1 pl-0 col">{getString('my_chats')}</div>
               <div class="col text-right">
-                <SimpleButton onClick={() => null}>
+                <button
+                  class="btn"
+                  data-toggle="modal"
+                  data-target="#create_table_menu"
+                  style={{
+                    'background-color': theme().colors.button.background,
+                    color: theme().colors.button.text,
+                    'margin-left': '1rem',
+                  }}
+                >
                   <i class="fas fa-plus"></i>
-                </SimpleButton>
+                </button>
               </div>
             </div>
           </div>
           <ChatContainer />
         </div>
       </main>
+      <CreateTableItem />
     </>
   );
 };
