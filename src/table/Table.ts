@@ -229,13 +229,34 @@ export class Table {
     return false;
   }
 
-  private inUnion(cell: Cell) {
-    for (let i = 0; i < this.unions.length; i++) {
-      if (this.unions[i].contains(cell.x, cell.y)) {
-        return true;
+  getContiguousCellToRight(x: number, y: number) {
+    const cell = this.getCell(x, y);
+    const union = this.getUnion(cell);
+    if (union) {
+      const contiguousX = union.xTo + 1;
+      if (contiguousX === this.width) {
+        return null;
       }
+      return this.getCell(contiguousX, y);
     }
-    return false;
+    if (x + 1 === this.width) return null;
+
+    return this.getCell(x + 1, y);
+  }
+
+  getContiguousCellToLeft(x: number, y: number) {
+    const cell = this.getCell(x, y);
+    const union = this.getUnion(cell);
+    if (x === 0) return null;
+    if (union) {
+      const contiguousX = union.xFrom - 1;
+      if (contiguousX === -1) {
+        return null;
+      }
+      return this.getCell(contiguousX, y);
+    }
+
+    return this.getCell(x - 1, y);
   }
 
   setIdForUnion(union: UnionIn) {
@@ -309,5 +330,18 @@ export class Table {
     }
 
     return new Table(table, unions, messages);
+  }
+
+  private getUnion(cell: Cell) {
+    for (let i = 0; i < this.unions.length; i++) {
+      if (this.unions[i].contains(cell.x, cell.y)) {
+        return this.unions[i];
+      }
+    }
+    return null;
+  }
+
+  private inUnion(cell: Cell) {
+    return this.getUnion(cell) != null;
   }
 }

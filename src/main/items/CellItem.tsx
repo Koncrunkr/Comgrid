@@ -81,9 +81,15 @@ export const CellItem = (
           } else if (event.code === 'ArrowDown' || event.code === 'Enter') {
             document.getElementById(x + ', ' + (y + 1) + ', span')?.focus();
           } else if (event.code === 'ArrowLeft') {
-            document.getElementById(x - 1 + ', ' + y + ', span')?.focus();
+            const contiguousCell = table()?.getContiguousCellToLeft(x, y);
+            document
+              .getElementById(contiguousCell?.x + ', ' + contiguousCell?.y + ', span')
+              ?.focus();
           } else if (event.code === 'ArrowRight') {
-            document.getElementById(x + 1 + ', ' + y + ', span')?.focus();
+            const contiguousCell = table()?.getContiguousCellToRight(x, y);
+            document
+              .getElementById(contiguousCell?.x + ', ' + contiguousCell?.y + ', span')
+              ?.focus();
           }
           return false;
         }}
