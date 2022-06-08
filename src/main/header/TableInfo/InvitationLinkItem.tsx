@@ -4,9 +4,11 @@ import { getHttpClient } from '../../../util/HttpClient';
 import { GetLinkRequest } from '../../../util/request/GetLinkRequest';
 import { getParam } from '../../../util/Util';
 import { If } from '../../../common/If';
+import { useTheme } from '../../../theme/Theme';
 
 export const InvitationLinkItem = () => {
   const [getString] = useStrings();
+  const [theme] = useTheme();
   const [code] = createResource(() => {
     return getHttpClient()
       .proceedRequest(
@@ -36,10 +38,26 @@ export const InvitationLinkItem = () => {
             </span>
           </div>
           <div class="col-4 text-right">
-            <button type="button" id="invitation-create-button" class="btn btn-dark">
+            <button
+              type="button"
+              id="invitation-create-button"
+              class="btn"
+              style={{
+                'background-color': theme().colors.button.background,
+                color: theme().colors.button.text,
+              }}
+            >
               {getString('create_invitation_link')}
             </button>
-            <button type="button" id="invitation-disable-button" class="btn btn-dark">
+            <button
+              type="button"
+              id="invitation-disable-button"
+              class="btn"
+              style={{
+                'background-color': theme().colors.button.background,
+                color: theme().colors.button.text,
+              }}
+            >
               {getString('revoke_invitation_link')}
             </button>
           </div>
