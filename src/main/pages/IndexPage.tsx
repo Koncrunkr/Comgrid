@@ -1,11 +1,10 @@
 import { useTheme } from '../../theme/Theme';
 import { useStrings } from '../../assets/localization/localization';
-import { createMemo, For } from 'solid-js';
+import { createEffect, createMemo, createSignal, For, Show } from 'solid-js';
 import { ChatItem } from '../items/ChatItem';
 import { useRouteData } from 'solid-app-router';
 import { TableResponse } from '../../util/request/CreateTableRequest';
-import { AlertItem, AlertType } from '../../common/AlertItem';
-import { If } from '../../common/If';
+import { AlertType, makeAlert } from '../../common/AlertItem';
 import { Header } from '../header/Header';
 import { IndexPageInfo } from '../../App';
 import { CreateTableItem } from '../items/CreateTableItem';
@@ -54,22 +53,31 @@ export const IndexPage = () => {
           <ChatContainer />
         </div>
       </main>
-      <CreateTableItem />
     </>
   );
 };
 
 const ChatContainer = () => {
   const [getString] = useStrings();
-  const chatList: () => TableResponse[] = useRouteData();
+  const chatListData: () => TableResponse[] = useRouteData();
+  const [chatList, setChatList] = createSignal<TableResponse[]>([]);
   const error = createMemo(() => {
-    const response = chatList() as any;
+    const response = chatListData() as any;
     if (!response) return undefined;
     const message = response.message;
     try {
       const error = JSON.parse(message) as { code: number; errorText: string };
       if (error === undefined) return undefined;
       if (error.code !== undefined) {
+        makeAlert({
+          type: AlertType.Error,
+          message: () => {
+            if (error.code === 401) {
+              return getString('sign_in_first')();
+            }
+            return getString('unknown_error')();
+          },
+        });
         return error;
       } else {
         return undefined;
@@ -78,36 +86,27 @@ const ChatContainer = () => {
       return undefined;
     }
   });
+  createEffect(() => {
+    setChatList(chatListData());
+  });
   return (
-    <div
-      id="chat-container"
-      class="chat-container scrolling-element overflow-auto"
-      style={{
-        'max-height': '78vh',
-      }}
-    >
-      <If
-        condition={!error()}
-        onTrue={
+    <>
+      <CreateTableItem chatList={chatList} setChatList={setChatList} />
+      <div
+        id="chat-container"
+        class="chat-container scrolling-element overflow-auto"
+        style={{
+          'max-height': '78vh',
+        }}
+      >
+        <Show when={!error()}>
           <For each={chatList()}>
             {item => {
               return <ChatItem table={item} />;
             }}
           </For>
-        }
-        onFalse={
-          <AlertItem
-            type={AlertType.Error}
-            message={() => {
-              const err = error()!;
-              if (err.code === 401) {
-                return getString('sign_in_first')();
-              }
-              return getString('unknown_error')();
-            }}
-          />
-        }
-      />
-    </div>
+        </Show>
+      </div>
+    </>
   );
 };

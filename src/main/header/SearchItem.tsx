@@ -9,6 +9,7 @@ import { formatDateTime, getParam, resolveUser } from '../../util/Util';
 import { apiLink } from '../../util/Constants';
 import { getHttpClient } from '../../util/HttpClient';
 import { SearchMessagesRequest } from '../../util/request/SearchMessagesRequest';
+import { AlertType, makeAlert } from '../../common/AlertItem';
 
 export const SearchItem = () => {
   const [getString] = useStrings();
@@ -157,10 +158,13 @@ export const SearchItem = () => {
                 onclick={() => {
                   console.log('Clicked');
                   if (searchString() === '') {
-                    alert('Input any text!');
+                    makeAlert({
+                      type: AlertType.Error,
+                      message: getString('input_any_text'),
+                    });
                     return;
                   }
-                  const messages = getHttpClient()
+                  getHttpClient()
                     .proceedRequest(
                       new SearchMessagesRequest({
                         text: searchString(),

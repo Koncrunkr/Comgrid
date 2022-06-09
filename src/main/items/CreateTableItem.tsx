@@ -2,8 +2,15 @@ import { createSignal } from 'solid-js';
 import { useStrings } from '../../assets/localization/localization';
 import { useTheme } from '../../theme/Theme';
 import { ModalItem } from '../../common/ModalItem';
+import { CreateTableRequest, TableResponse } from '../../util/request/CreateTableRequest';
+import { getHttpClient } from '../../util/HttpClient';
+import { AlertType, makeAlert } from '../../common/AlertItem';
+import { closeModal } from '../../util/Util';
 
-export const CreateTableItem = () => {
+export const CreateTableItem = (props: {
+  chatList: () => TableResponse[];
+  setChatList: (tables: TableResponse[]) => unknown;
+}) => {
   let [name, setName] = createSignal('');
   let [width, setWidth] = createSignal(50);
   let [height, setHeight] = createSignal(50);
@@ -13,8 +20,10 @@ export const CreateTableItem = () => {
   const [getString] = useStrings();
   const [theme] = useTheme();
 
+  let modalRef: HTMLDivElement;
+
   return (
-    <ModalItem formId="create_table">
+    <ModalItem modalRef={ref => (modalRef = ref)} formId="create_table">
       <div class="form-row row">
         <div class="form-group col-md-6 col-12">
           <label for="table-name-input">{getString('table_name_label')}</label>
@@ -24,7 +33,7 @@ export const CreateTableItem = () => {
             class="form-control"
             placeholder={getString('table_name_label')()}
             oninput={({ target }) => {
-              setName(target.textContent ?? '');
+              setName((target as HTMLInputElement).value ?? '');
             }}
             value={name()}
             style={{
@@ -45,7 +54,7 @@ export const CreateTableItem = () => {
             value={width()}
             oninput={({ target }) => {
               try {
-                setWidth(parseInt(target.textContent ?? '50'));
+                setWidth(parseInt((target as HTMLInputElement).value ?? '50'));
               } catch (e) {}
             }}
             style={{
@@ -66,7 +75,7 @@ export const CreateTableItem = () => {
             value={height()}
             oninput={({ target }) => {
               try {
-                setHeight(parseInt(target.textContent ?? '50'));
+                setHeight(parseInt((target as HTMLInputElement).value ?? '50'));
               } catch (e) {}
             }}
             style={{
@@ -86,7 +95,10 @@ export const CreateTableItem = () => {
             placeholder="https://image.png"
             value={imageLink()}
             oninput={({ target }) => {
-              setImageLink(target.textContent ?? '');
+              if ((target as HTMLInputElement).value) {
+                setImageLink((target as HTMLInputElement).value);
+                setImageFile(undefined);
+              }
             }}
             style={{
               'background-color': theme().colors.background,
@@ -120,6 +132,7 @@ export const CreateTableItem = () => {
                 const files = input.files;
                 if (files) {
                   setImageFile(files[0]);
+                  setImageLink('');
                 }
               }
             }}
@@ -133,11 +146,73 @@ export const CreateTableItem = () => {
         }}
       >
         <button
-          type="submit"
+          type="button"
           class="btn mr-1"
           style={{
             'background-color': theme().colors.button.background,
             color: theme().colors.button.text,
+          }}
+          onclick={() => {
+            if (name().length === 0) {
+              makeAlert({
+                type: AlertType.Error,
+                message: getString('table_name_empty'),
+              });
+              return;
+            }
+
+            if (height() * width() > 10000) {
+              makeAlert({
+                type: AlertType.Error,
+                message: () => getString('table_size_too_high')() + height() * width(),
+              });
+              return;
+            }
+
+            if (height() <= 0 || width() <= 0) {
+              makeAlert({
+                type: AlertType.Error,
+                message: getString('negative_size'),
+              });
+              return;
+            }
+
+            if (imageLink() === '' && imageFile() === undefined) {
+              makeAlert({
+                type: AlertType.Error,
+                message: getString('table_image_empty'),
+              });
+              return;
+            }
+
+            getHttpClient()
+              .proceedRequest(
+                new CreateTableRequest({
+                  name: name(),
+                  width: width(),
+                  height: height(),
+                  avatarLink: imageLink(),
+                  avatarFile: imageFile(),
+                }),
+                (code, errorText) =>
+                  makeAlert({
+                    type: AlertType.Error,
+                    message: () => errorText,
+                  }),
+              )
+              .then(newTable => {
+                props.setChatList([newTable, ...props.chatList()]);
+                makeAlert({
+                  type: AlertType.Success,
+                  message: () => 'Chat is created!',
+                });
+              });
+            makeAlert({
+              type: AlertType.Info,
+              message: () => 'Chat is being created',
+            });
+            closeModal(modalRef);
+            return false;
           }}
         >
           {getString('table_create_button')}

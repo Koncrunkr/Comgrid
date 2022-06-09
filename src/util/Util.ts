@@ -4,6 +4,15 @@ import { createSignal } from 'solid-js';
 import { User } from './State';
 import { MessageOut } from './websocket/MessageTopic';
 
+export const closeModal = (modalRef: HTMLDivElement) => {
+  modalRef.className = 'modal';
+  modalRef.style.display = 'none';
+  modalRef.ariaHidden = 'true';
+  modalRef.removeAttribute('role');
+  modalRef.removeAttribute('aria-modal');
+  document.getElementsByClassName('modal-backdrop show')[0].remove();
+};
+
 export const recoverCaretPosition = (span: HTMLSpanElement, caretPosition: number) => {
   if (caretPosition === -1) return;
   try {

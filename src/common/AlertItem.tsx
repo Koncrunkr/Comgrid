@@ -1,5 +1,6 @@
 import { Portal } from 'solid-js/web';
-import { createSignal } from 'solid-js';
+import { For, onMount, untrack } from 'solid-js';
+import { createStore } from 'solid-js/store';
 
 export enum AlertType {
   Error = 'rgba(253,94,94,0.9)',
@@ -7,39 +8,71 @@ export enum AlertType {
   Success = 'rgba(56, 237, 43, 0.9)',
 }
 
-let container = document.createElement('div');
-container.id = 'alert-container';
-let id = 0;
+const [alertItems, setAlertItems] = createStore<
+  Array<{ type: AlertType; message: () => string }>
+>([]);
 
-export const AlertItem = (props: { type: AlertType; message: () => string }) => {
-  const [visible, setVisible] = createSignal(true);
-  const currentId = id++;
-  setTimeout(() => {
-    setVisible(false);
-    document.getElementById('alert-item' + currentId)?.remove();
-  }, 3000);
+export const makeAlert = (alert: { type: AlertType; message: () => string }) => {
+  setAlertItems(prev => [...prev, alert]);
+};
 
+export const AlertItems = () => {
+  let ref: HTMLDivElement;
   return (
     <Portal>
       <div
-        id={'alert-item-' + currentId}
         style={{
-          'background-color': props.type,
-          color: 'black',
-          width: '250px',
-          height: 'fit-content',
-          padding: '15px 20px',
-          visibility: visible() ? 'visible' : 'hidden',
-          transition: 'all 300ms',
-          'border-radius': '25px',
+          'flex-direction': 'column-reverse',
+          transition: 'all .3s',
           position: 'fixed',
           bottom: '25px',
           right: '25px',
-          'word-wrap': 'normal',
-          'overflow-wrap': 'break-word',
         }}
+        ref={div => (ref = div)}
       >
-        {props.message()}
+        <For each={alertItems}>
+          {item => {
+            console.log('Is something wrong');
+            let itemRef: HTMLDivElement;
+            onMount(() => {
+              setTimeout(() => {
+                itemRef.style.height = 'fit-content';
+                itemRef.style.opacity = '1';
+                itemRef.style.marginTop = '10px';
+                itemRef.style.padding = '15px 20px';
+                setTimeout(() => {
+                  itemRef.style.opacity = '0';
+                  setTimeout(() => {
+                    itemRef.remove();
+                  }, 300);
+                }, 3000);
+              }, 300);
+            });
+            return untrack(() => {
+              return (
+                <>
+                  <div
+                    ref={ref => (itemRef = ref)}
+                    style={{
+                      'background-color': item.type,
+                      color: 'black',
+                      width: '250px',
+                      height: '0',
+                      opacity: 0,
+                      'transition-property': 'all',
+                      'transition-duration': '.3s',
+                      'border-radius': '25px',
+                      'word-wrap': 'normal',
+                      'overflow-wrap': 'break-word',
+                    }}
+                  >
+                    {item.message()}
+                  </div>
+                </>
+              );
+            });
+          }}
+        </For>
       </div>
     </Portal>
   );

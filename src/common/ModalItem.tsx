@@ -3,13 +3,18 @@ import { useTheme } from '../theme/Theme';
 import { useStrings } from '../assets/localization/localization';
 import { Portal } from 'solid-js/web';
 
-export const ModalItem = (props: { formId: string; children: JSX.Element }) => {
+export const ModalItem = (props: {
+  formId: string;
+  modalRef?: (ref: HTMLDivElement) => unknown;
+  children: JSX.Element;
+}) => {
   const [theme] = useTheme();
   const [getString] = useStrings();
   return (
     <Portal>
       <form id={props.formId}>
         <div
+          ref={props.modalRef}
           id={props.formId + '_menu'}
           class="modal"
           role="dialog"

@@ -1,6 +1,7 @@
 import { RequestWrapper } from './request/Request';
 import { apiLink } from './Constants';
 import { getState } from './State';
+import { AlertType, makeAlert } from '../common/AlertItem';
 
 export class HttpClient {
   constructor(private readonly apiLink: string) {}
@@ -8,7 +9,7 @@ export class HttpClient {
   async proceedRequest<T>(
     request: RequestWrapper<T>,
     onFailure: (code: number, errorText: string) => unknown = (code, errorText) =>
-      alert(`code: ${code}, error: ${errorText}`),
+      makeAlert({ type: AlertType.Error, message: () => errorText }),
     onNetworkFailure: (reason: any) => unknown = reason =>
       alert(`network error: ${reason}`),
   ): Promise<T> {

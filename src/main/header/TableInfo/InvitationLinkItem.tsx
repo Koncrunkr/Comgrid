@@ -6,6 +6,7 @@ import { getParam } from '../../../util/Util';
 import { If } from '../../../common/If';
 import { useTheme } from '../../../theme/Theme';
 import { DeleteLinkRequest } from '../../../util/request/DeleteLinkRequest';
+import { AlertType, makeAlert } from '../../../common/AlertItem';
 
 export const InvitationLinkItem = () => {
   const chatId = parseInt(getParam('id')!);
@@ -58,7 +59,10 @@ export const InvitationLinkItem = () => {
                   .proceedRequest(
                     new GetLinkRequest({ chatId: chatId, createIfNone: true }),
                     (code, errorText) => {
-                      alert('Error happened: ' + errorText);
+                      makeAlert({
+                        type: AlertType.Error,
+                        message: () => 'Error happened: ' + errorText,
+                      });
                     },
                   )
                   .then(value => {

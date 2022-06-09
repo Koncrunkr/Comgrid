@@ -9,35 +9,46 @@ import { SearchItem } from './SearchItem';
 import { If } from '../../common/If';
 import { TableInfoItem } from './TableInfo/TableInfoItem';
 import { LogoItem } from './LogoItem';
+import { AlertItems, AlertType, makeAlert } from '../../common/AlertItem';
 
 export const Header = (props: { currentPage: PageInfo; pages: PageInfo[] }) => {
   const [theme] = useTheme();
   return (
-    <header>
-      <nav
-        class="navbar navbar-expand justify-content-between"
-        style={{
-          'background-color': theme().colors.secondaryBackground,
-        }}
-      >
-        <div class="navbar-nav mx-2">
-          <LogoItem />
-          <HeaderPageItem page={TablesPageInfo} />
-        </div>
-        <div class="navbar-nav">
-          <SearchItem />
-          <If
-            condition={props.currentPage.name === 'table'}
-            onTrue={<TableInfoItem table={useRouteData()} />}
-            onFalse={<></>}
-          />
-        </div>
-        <div class="navbar-nav">
-          <ChangeThemeItem />
-          <AuthorizationItem />
-        </div>
-      </nav>
-    </header>
+    <>
+      <header>
+        <nav
+          class="navbar navbar-expand justify-content-between"
+          style={{
+            'background-color': theme().colors.secondaryBackground,
+          }}
+        >
+          <div class="navbar-nav mx-2">
+            <LogoItem />
+            <HeaderPageItem page={TablesPageInfo} />
+          </div>
+          <div class="navbar-nav">
+            <SearchItem />
+            <If
+              condition={props.currentPage.name === 'table'}
+              onTrue={<TableInfoItem table={useRouteData()} />}
+              onFalse={<></>}
+            />
+          </div>
+          <div class="navbar-nav">
+            <ChangeThemeItem />
+            <AuthorizationItem />
+            <button
+              type="button"
+              class="btn"
+              onclick={() => makeAlert({ type: AlertType.Error, message: () => 'Hello' })}
+            >
+              Click me
+            </button>
+          </div>
+        </nav>
+      </header>
+      <AlertItems />
+    </>
   );
 };
 
