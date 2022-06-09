@@ -1161,10 +1161,15 @@ solid-bootstrap@^1.0.8:
     solid-bootstrap-core "^1.0.8"
     solid-react-transition "^1.0.8"
 
-solid-js@^1.3.3, solid-js@^1.4.2:
+solid-js@^1.3.3:
   version "1.4.2"
   resolved "https://registry.npmjs.org/solid-js/-/solid-js-1.4.2.tgz"
   integrity sha512-IU5yKuT8P/n5F5g8j1rTXqxUdPYmoZDk/074TG94AEYf/nyXAeG82BSge4/lLIbCfUcnGUJ6DRdebIjujOAYyg==
+
+solid-js@^1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-1.4.3.tgz#9805f894a832bced72f6fe1eb011973d15ce72f4"
+  integrity sha512-3uh2cbT4ICronIasLAxycF6SVgvqcfwFCDCzlEA9CEahn1qQg8Rw8aRGiI4O51PrHcN5aPRO9knYYRCs0PgzcQ==
 
 solid-react-transition@^1.0.8:
   version "1.0.8"

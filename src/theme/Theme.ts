@@ -93,6 +93,36 @@ let isInitialized = false;
 let currentTheme: () => Theme;
 let setTheme: (themeType: ThemeType) => unknown;
 
+function themeListener(event: MediaQueryListEvent) {
+  if (event.matches) {
+    setTheme(ThemeType.DARK);
+  } else {
+    setTheme(ThemeType.LIGHT);
+  }
+}
+
+function recoverThemeFromCookies<U>(
+  setTheme0: (<U extends Theme>(value: (prev: Theme) => U) => U) &
+    (<U extends Theme>(value: Exclude<U, Function>) => U) &
+    (<U extends Theme>(value: Exclude<U, Function> | ((prev: Theme) => U)) => U),
+) {
+  const preferredTheme = localStorage.getItem('preferred_theme');
+  if (preferredTheme === 'DARK') {
+    setTheme0(DarkTheme);
+  } else if (preferredTheme === 'LIGHT') {
+    setTheme0(LightTheme);
+  } else {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setTheme0(DarkTheme);
+    } else {
+      setTheme0(LightTheme);
+    }
+    window
+      .matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', themeListener);
+  }
+}
+
 export const useTheme: () => [
   () => Theme,
   (themeType: ThemeType) => unknown,
@@ -104,6 +134,8 @@ export const useTheme: () => [
 
   let [theme, setTheme0] = createSignal(LightTheme);
 
+  recoverThemeFromCookies(setTheme0);
+
   setTheme = themeType => {
     setTheme0(themes[themeType]);
   };
@@ -113,9 +145,15 @@ export const useTheme: () => [
 };
 
 const changeTheme = () => {
+  window
+    .matchMedia('(prefers-color-scheme: dark)')
+    .removeEventListener('change', themeListener);
+
   if (currentTheme().type === ThemeType.DARK) {
+    localStorage.setItem('preferred_theme', 'LIGHT');
     setTheme(ThemeType.LIGHT);
   } else {
+    localStorage.setItem('preferred_theme', 'DARK');
     setTheme(ThemeType.DARK);
   }
 };

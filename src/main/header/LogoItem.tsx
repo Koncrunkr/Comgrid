@@ -6,7 +6,7 @@ export const LogoItem = () => {
   return (
     <Link
       class="navbar-brand"
-      href="#"
+      href={window.location.protocol + '//' + window.location.host}
       style={{
         color: theme().colors.text,
       }}
