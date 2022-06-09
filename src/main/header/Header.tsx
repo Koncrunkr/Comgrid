@@ -9,7 +9,7 @@ import { SearchItem } from './SearchItem';
 import { If } from '../../common/If';
 import { TableInfoItem } from './TableInfo/TableInfoItem';
 import { LogoItem } from './LogoItem';
-import { AlertItems, AlertType, makeAlert } from '../../common/AlertItem';
+import { AlertItems } from '../../common/AlertItem';
 
 export const Header = (props: { currentPage: PageInfo; pages: PageInfo[] }) => {
   const [theme] = useTheme();
@@ -37,13 +37,6 @@ export const Header = (props: { currentPage: PageInfo; pages: PageInfo[] }) => {
           <div class="navbar-nav">
             <ChangeThemeItem />
             <AuthorizationItem />
-            <button
-              type="button"
-              class="btn"
-              onclick={() => makeAlert({ type: AlertType.Error, message: () => 'Hello' })}
-            >
-              Click me
-            </button>
           </div>
         </nav>
       </header>
