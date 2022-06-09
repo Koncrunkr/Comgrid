@@ -15,10 +15,6 @@ export const SearchItem = () => {
   const [getString] = useStrings();
   const [theme] = useTheme();
 
-  const chatId = createMemo(() => {
-    return parseInt(getParam('id')!);
-  });
-
   const [opened, setOpened] = createSignal();
   createEffect(() => {
     const currentPage = useLocation().pathname;
@@ -168,7 +164,7 @@ export const SearchItem = () => {
                     .proceedRequest(
                       new SearchMessagesRequest({
                         text: searchString(),
-                        chatId: chatId(),
+                        chatId: parseInt(getParam('id')!),
                         exactMatch: searchExact(),
                         chunkNumber: 0,
                       }),
