@@ -13,9 +13,11 @@ export class GetLinkRequest implements RequestWrapper<LinkGet> {
   };
   readonly methodType: MethodType = MethodType.GET;
 
-  constructor(parameters: { chatId: number }) {
+  constructor(parameters: { chatId: number; createIfNone?: boolean }) {
     this.parameters = {
       chatId: parameters.chatId.toString(),
+      createIfNone:
+        parameters.createIfNone === undefined ? 'true' : '' + parameters.createIfNone,
     };
   }
 
