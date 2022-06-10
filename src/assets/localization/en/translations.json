@@ -21,6 +21,8 @@
   "sign_in_first": "You have to sign in first!",
   "create_table_form": "Create table",
   "table_name_label": "Name",
+  "chat_creating": "Chat is being created",
+  "chat_created": "Chat is created!",
   "table_width_label": "Width",
   "table_height_label": "Height",
   "table_link_label": "Image link",

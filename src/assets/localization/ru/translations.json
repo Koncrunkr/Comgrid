@@ -20,6 +20,8 @@
   "user_id": "ID пользователя:",
   "sign_in_first": "Для начала нужно войти!",
   "create_table_form": "Создать таблицу",
+  "chat_creating": "Чат создаётся",
+  "chat_created": "Чат создался!",
   "table_name_label": "Название",
   "table_width_label": "Ширина",
   "table_height_label": "Высота",

@@ -204,12 +204,12 @@ export const CreateTableItem = (props: {
                 props.setChatList([newTable, ...props.chatList()]);
                 makeAlert({
                   type: AlertType.Success,
-                  message: () => 'Chat is created!',
+                  message: getString('chat_created'),
                 });
               });
             makeAlert({
               type: AlertType.Info,
-              message: () => 'Chat is being created',
+              message: getString('chat_creating'),
             });
             closeModal(modalRef);
             return false;
