@@ -69,7 +69,7 @@ export const AuthorizationItem = () => {
               onClick={() =>
                 getState()
                   .whenReady()
-                  .then(state => state.authorize(undefined, 'google'))
+                  .then(state => state.authorize(undefined, 'vk'))
               }
             >
               <img
