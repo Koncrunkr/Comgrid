@@ -31,6 +31,7 @@
   "table_size_too_high": "Table size is too high: ",
   "table_name_empty": "Table name is empty.",
   "table_image_empty": "Table image is not set.",
+  "table_participant_added": "Participant was added.",
   "negative_size": "Negative sizes of table, huh? To leave unexisting messages?",
   "input_any_text": "Input any text!",
   "unknown_error": "Unknown error has occurred.",
