@@ -39,7 +39,7 @@ export const CellItem = (cell: () => Cell, x: number, y: number, table: () => Ta
         ...cell().css()(),
       }}
     >
-      <textarea
+      <div
         id={x + ', ' + y + ', span'}
         class="no-show-focus user-select-none"
         style={{
