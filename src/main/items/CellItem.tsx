@@ -27,6 +27,7 @@ export const CellItem = (cell: () => Cell, x: number, y: number, table: () => Ta
   return (
     <div
       id={x + ', ' + y}
+      class="cell-item"
       style={{
         'min-width': cellWidth + 'px',
         'max-width': cellWidth + 'px',

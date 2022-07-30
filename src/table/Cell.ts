@@ -34,6 +34,7 @@ export class Cell {
 
   /**
    *
+   * @param union
    * @param bottom if bottom border should be shown
    * @param top if top border should be shown
    * @param left if left border should be shown
