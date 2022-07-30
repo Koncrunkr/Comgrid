@@ -33,10 +33,7 @@ code {
     border: 3px solid gray;
 }
 
-.cell-item:focus-within {
-    border-color: #b318f0!important;
-}
-
 .cell-item>span:focus-visible {
     outline: none;
+    border: 1px solid black;
 }
