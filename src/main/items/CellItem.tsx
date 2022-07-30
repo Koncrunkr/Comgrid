@@ -39,9 +39,8 @@ export const CellItem = (cell: () => Cell, x: number, y: number, table: () => Ta
         ...cell().css()(),
       }}
     >
-      <span
+      <textarea
         id={x + ', ' + y + ', span'}
-        ref={span}
         class="no-show-focus user-select-none"
         style={{
           'white-space': 'nowrap',

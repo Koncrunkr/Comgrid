@@ -33,7 +33,7 @@ code {
     border: 3px solid gray;
 }
 
-.cell-item>span:focus-visible {
+.cell-item>textarea:focus-visible {
     outline: none;
     border: 1px solid black;
 }
