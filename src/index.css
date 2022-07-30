@@ -33,7 +33,7 @@ code {
     border: 3px solid gray;
 }
 
-.cell-item:focus-visible {
+.cell-item:focus-within {
     border-color: #b318f0!important;
 }
 
