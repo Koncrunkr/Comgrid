@@ -27,6 +27,7 @@ export const CellItem = (cell: () => Cell, x: number, y: number, table: () => Ta
   return (
     <div
       id={x + ', ' + y}
+      class="cell-item"
       style={{
         'min-width': cellWidth + 'px',
         'max-width': cellWidth + 'px',
@@ -38,9 +39,8 @@ export const CellItem = (cell: () => Cell, x: number, y: number, table: () => Ta
         ...cell().css()(),
       }}
     >
-      <span
+      <div
         id={x + ', ' + y + ', span'}
-        ref={span}
         class="no-show-focus user-select-none"
         style={{
           'white-space': 'nowrap',
